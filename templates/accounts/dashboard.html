@@ -522,24 +522,43 @@
 <!-- Mobile Menu JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard loaded - checking mobile menu...');
+    
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('mobileSidebarOverlay');
     
+    console.log('Elements found:', {
+        mobileMenuBtn: !!mobileMenuBtn,
+        sidebar: !!sidebar,
+        overlay: !!overlay
+    });
+    
     function openSidebar() {
+        console.log('Opening sidebar...');
         sidebar.classList.remove('-translate-x-full');
         overlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
     
     function closeSidebar() {
+        console.log('Closing sidebar...');
         sidebar.classList.add('-translate-x-full');
         overlay.classList.add('hidden');
         document.body.style.overflow = '';
     }
     
-    mobileMenuBtn.addEventListener('click', openSidebar);
-    overlay.addEventListener('click', closeSidebar);
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Menu button clicked!');
+            openSidebar();
+        });
+    }
+    
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
     
     // Close sidebar when clicking on links (mobile)
     const sidebarLinks = sidebar.querySelectorAll('a');
