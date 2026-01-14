@@ -218,14 +218,21 @@ python manage.py test
 L'application est déployée automatiquement sur Vercel :
 **https://restaurant-management.vercel.app**
 
+### Production (Render)
+Déploiement alternatif sur Render avec PostgreSQL :
+**Guide complet dans `RENDER_DEPLOYMENT.md`**
+
+- Configuration `render.yaml` incluse
+- Base de données PostgreSQL gratuite
+- CI/CD automatique
+- SSL et monitoring inclus
+
 ### Mise à jour
 Chaque `git push` sur la branche `main` déploie automatiquement la dernière version.
 
-### Configuration Vercel
-- Runtime : Python 3.13
-- Serveur : Gunicorn
-- Base de données : PostgreSQL (Vercel)
-- Fichiers statiques : Optimisés automatiquement
+### Configuration Plateformes
+- **Vercel** : Python 3.13 + PostgreSQL
+- **Render** : Python 3.13 + PostgreSQL + Monitoring
 
 ## 👨‍💻 Support
 
