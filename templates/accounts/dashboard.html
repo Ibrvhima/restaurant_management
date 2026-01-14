@@ -16,6 +16,50 @@
     /* Cacher les messages flash de base.html */
     .fixed.top-4.right-4.z-50 { display: none !important; }
     
+    /* Forcer l'affichage des éléments de la sidebar */
+    #sidebar * {
+        visibility: visible !important;
+        opacity: 1 !important;
+        color: inherit !important;
+    }
+    
+    #sidebar .text-white {
+        color: #ffffff !important;
+    }
+    
+    #sidebar .text-slate-300 {
+        color: #cbd5e1 !important;
+    }
+    
+    #sidebar .text-slate-400 {
+        color: #94a3b8 !important;
+    }
+    
+    #sidebar .text-slate-500 {
+        color: #64748b !important;
+    }
+    
+    #sidebar .text-slate-600 {
+        color: #475569 !important;
+    }
+    
+    #sidebar .text-slate-700 {
+        color: #334155 !important;
+    }
+    
+    #sidebar .text-slate-800 {
+        color: #1e293b !important;
+    }
+    
+    #sidebar .text-slate-900 {
+        color: #0f172a !important;
+    }
+    
+    #sidebar svg {
+        fill: currentColor !important;
+        stroke: currentColor !important;
+    }
+    
     /* Forcer la sidebar mobile à être visible */
     #sidebar {
         position: fixed !important;
@@ -26,6 +70,8 @@
         z-index: 999 !important; /* Augmenté pour passer au-dessus du header */
         transform: translateX(-100%) !important;
         transition: transform 0.3s ease-in-out !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     #sidebar.show {
