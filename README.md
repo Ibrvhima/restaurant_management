@@ -212,9 +212,20 @@ python manage.py test
 - **Export Excel** : openpyxl
 - **Export PDF** : ReportLab
 
-## 📝 License
+## 🌐 Déploiement
 
-Ce projet est développé dans le cadre d'un système de gestion de restaurant.
+### Production (Vercel)
+L'application est déployée automatiquement sur Vercel :
+**https://restaurant-management.vercel.app**
+
+### Mise à jour
+Chaque `git push` sur la branche `main` déploie automatiquement la dernière version.
+
+### Configuration Vercel
+- Runtime : Python 3.13
+- Serveur : Gunicorn
+- Base de données : PostgreSQL (Vercel)
+- Fichiers statiques : Optimisés automatiquement
 
 ## 👨‍💻 Support
 
