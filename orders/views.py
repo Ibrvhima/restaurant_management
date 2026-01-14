@@ -45,6 +45,11 @@ def commande_detail(request, commande_id):
 @login_required
 def nouvelle_commande(request):
     """Créer une nouvelle commande"""
+    # Seul le rôle Table peut créer des commandes
+    if request.user.role != 'Rtable':
+        messages.error(request, "Accès non autorisé. Seules les tables peuvent créer des commandes.")
+        return redirect('accounts:dashboard')
+    
     # Récupérer la table pré-sélectionnée si passée en paramètre
     table_preselectionnee = request.GET.get('table')
     
