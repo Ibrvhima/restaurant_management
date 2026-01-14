@@ -555,60 +555,80 @@
 
 <!-- Mobile Menu JavaScript -->
 <script>
+// Test direct pour voir si le JavaScript fonctionne
+console.log('=== SCRIPT LOADED ===');
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Dashboard loaded - checking mobile menu...');
+    console.log('=== DOM CONTENT LOADED ===');
     
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('mobileSidebarOverlay');
     
-    console.log('Elements found:', {
-        mobileMenuBtn: !!mobileMenuBtn,
-        sidebar: !!sidebar,
-        overlay: !!overlay
-    });
+    console.log('=== ELEMENTS CHECK ===');
+    console.log('mobileMenuBtn:', mobileMenuBtn);
+    console.log('sidebar:', sidebar);
+    console.log('overlay:', overlay);
     
-    function openSidebar() {
-        console.log('Opening sidebar...');
-        sidebar.classList.add('show');
-        overlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeSidebar() {
-        console.log('Closing sidebar...');
-        sidebar.classList.remove('show');
-        overlay.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-    
+    // Test simple : ajouter un événement de clic direct
     if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Menu button clicked!');
-            openSidebar();
+        console.log('=== ADDING CLICK LISTENER ===');
+        
+        mobileMenuBtn.onclick = function() {
+            console.log('=== BUTTON CLICKED! ===');
+            console.log('Current sidebar classes:', sidebar.className);
+            
+            // Toggle la sidebar
+            if (sidebar.classList.contains('show')) {
+                console.log('=== CLOSING SIDEBAR ===');
+                sidebar.classList.remove('show');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            } else {
+                console.log('=== OPENING SIDEBAR ===');
+                sidebar.classList.add('show');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+        
+        // Test visuel : changer la couleur du bouton au survol
+        mobileMenuBtn.addEventListener('mouseenter', function() {
+            console.log('Mouse enter button');
+            this.style.backgroundColor = '#e5e7eb';
         });
+        
+        mobileMenuBtn.addEventListener('mouseleave', function() {
+            console.log('Mouse leave button');
+            this.style.backgroundColor = '';
+        });
+    } else {
+        console.error('=== MOBILE MENU BUTTON NOT FOUND ===');
     }
     
+    // Fermeture overlay
     if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
+        overlay.onclick = function() {
+            console.log('=== OVERLAY CLICKED ===');
+            sidebar.classList.remove('show');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        };
     }
     
-    // Close sidebar when clicking on links (mobile)
+    // Fermeture liens
     const sidebarLinks = sidebar.querySelectorAll('a');
     sidebarLinks.forEach(link => {
-        link.addEventListener('click', () => {
+        link.onclick = function() {
             if (window.innerWidth < 1024) {
-                closeSidebar();
+                console.log('=== LINK CLICKED - CLOSING SIDEBAR ===');
+                sidebar.classList.remove('show');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
             }
-        });
+        };
     });
     
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) {
-            closeSidebar();
-        }
-    });
+    console.log('=== SETUP COMPLETE ===');
 });
 </script>
