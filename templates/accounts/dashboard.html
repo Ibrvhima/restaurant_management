@@ -279,167 +279,167 @@
                 {% endif %}
 
                 <!-- Stats Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
                     <!-- Carte Commandes -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div class="p-3 lg:p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-2 lg:p-3 bg-blue-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                     </svg>
                                 </div>
-                                <div class="ml-3 lg:ml-4">
-                                    <p class="text-xs lg:text-sm text-gray-600 font-medium">Commandes en cours</p>
-                                    <p class="text-xl lg:text-3xl font-bold text-gray-900">{{ commandes_en_cours }}</p>
+                                <div class="ml-2 lg:ml-3">
+                                    <p class="text-xs text-gray-600 font-medium">Commandes</p>
+                                    <p class="text-lg lg:text-xl font-bold text-gray-900">{{ commandes_en_cours }}</p>
                                 </div>
                             </div>
                             <div class="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </div>
                         </div>
-                        <div class="mt-3 lg:mt-4 flex items-center justify-between">
+                        <div class="mt-2 lg:mt-3 flex items-center justify-between">
                             <span class="text-xs text-gray-500">+12% cette semaine</span>
-                            <a href="{% url 'orders:commande_list' %}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold group-hover:text-blue-700 transition-colors">
-                                Voir tout →
+                            <a href="{% url 'orders:commande_list' %}" class="text-blue-600 hover:text-blue-800 text-xs font-medium group-hover:text-blue-700 transition-colors">
+                                Voir →
                             </a>
                         </div>
                     </div>
 
                     <!-- Carte Menu -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div class="p-3 lg:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-2 lg:p-3 bg-emerald-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                     </svg>
                                 </div>
-                                <div class="ml-3 lg:ml-4">
-                                    <p class="text-xs lg:text-sm text-gray-600 font-medium">Plats disponibles</p>
-                                    <p class="text-xl lg:text-3xl font-bold text-gray-900">{{ plats_disponibles }}</p>
+                                <div class="ml-2 lg:ml-3">
+                                    <p class="text-xs text-gray-600 font-medium">Plats</p>
+                                    <p class="text-lg lg:text-xl font-bold text-gray-900">{{ plats_disponibles }}</p>
                                 </div>
                             </div>
                             <div class="text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </div>
                         </div>
-                        <div class="mt-3 lg:mt-4 flex items-center justify-between">
+                        <div class="mt-2 lg:mt-3 flex items-center justify-between">
                             <span class="text-xs text-gray-500">Menu complet</span>
-                            <a href="{% url 'restaurant:menu_list' %}" class="text-emerald-600 hover:text-emerald-800 text-sm font-semibold group-hover:text-emerald-700 transition-colors">
-                                Voir menu →
+                            <a href="{% url 'restaurant:menu_list' %}" class="text-emerald-600 hover:text-emerald-800 text-xs font-medium group-hover:text-emerald-700 transition-colors">
+                                Voir →
                             </a>
                         </div>
                     </div>
 
                     <!-- Carte Paiements -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div class="p-3 lg:p-4 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-2 lg:p-3 bg-amber-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                     </svg>
                                 </div>
-                                <div class="ml-3 lg:ml-4">
-                                    <p class="text-xs lg:text-sm text-gray-600 font-medium">Paiements aujourd'hui</p>
-                                    <p class="text-xl lg:text-3xl font-bold text-gray-900">{{ paiements_aujourdhui }}</p>
+                                <div class="ml-2 lg:ml-3">
+                                    <p class="text-xs text-gray-600 font-medium">Paiements</p>
+                                    <p class="text-lg lg:text-xl font-bold text-gray-900">{{ paiements_aujourdhui }}</p>
                                 </div>
                             </div>
                             <div class="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </div>
                         </div>
-                        <div class="mt-3 lg:mt-4 flex items-center justify-between">
+                        <div class="mt-2 lg:mt-3 flex items-center justify-between">
                             <span class="text-xs text-gray-500">+5% cette semaine</span>
-                            <a href="{% url 'payments:paiement_list' %}" class="text-amber-600 hover:text-amber-800 text-sm font-semibold group-hover:text-amber-700 transition-colors">
-                                Voir tout →
+                            <a href="{% url 'payments:paiement_list' %}" class="text-amber-600 hover:text-amber-800 text-xs font-medium group-hover:text-amber-700 transition-colors">
+                                Voir →
                             </a>
                         </div>
                     </div>
 
                     <!-- Carte Revenus -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div class="p-3 lg:p-4 bg-gradient-to-br from-green-500 to-green-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-2 lg:p-3 bg-green-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
-                                <div class="ml-3 lg:ml-4">
-                                    <p class="text-xs lg:text-sm text-gray-600 font-medium">Revenus journaliers</p>
-                                    <p class="text-xl lg:text-3xl font-bold text-gray-900">{{ revenus_aujourdhui }}€</p>
+                                <div class="ml-2 lg:ml-3">
+                                    <p class="text-xs text-gray-600 font-medium">Revenus</p>
+                                    <p class="text-lg lg:text-xl font-bold text-gray-900">{{ revenus_aujourdhui }}€</p>
                                 </div>
                             </div>
                             <div class="text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </div>
                         </div>
-                        <div class="mt-3 lg:mt-4 flex items-center justify-between">
-                            <span class="text-xs text-green-600 font-semibold">+8% cette semaine</span>
-                            <a href="{% url 'payments:paiement_list' %}" class="text-green-600 hover:text-green-800 text-sm font-semibold group-hover:text-green-700 transition-colors">
-                                Voir tout →
+                        <div class="mt-2 lg:mt-3 flex items-center justify-between">
+                            <span class="text-xs text-green-600 font-medium">+8% cette semaine</span>
+                            <a href="{% url 'payments:paiement_list' %}" class="text-green-600 hover:text-green-800 text-xs font-medium group-hover:text-green-700 transition-colors">
+                                Voir →
                             </a>
                         </div>
                     </div>
 
                     <!-- Carte Dépenses -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div class="p-3 lg:p-4 bg-gradient-to-br from-red-500 to-red-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-2 lg:p-3 bg-red-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
-                                <div class="ml-3 lg:ml-4">
-                                    <p class="text-xs lg:text-sm text-gray-600 font-medium">Dépenses</p>
-                                    <p class="text-xl lg:text-3xl font-bold text-gray-900">{{ depenses_aujourdhui }}€</p>
+                                <div class="ml-2 lg:ml-3">
+                                    <p class="text-xs text-gray-600 font-medium">Dépenses</p>
+                                    <p class="text-lg lg:text-xl font-bold text-gray-900">{{ depenses_aujourdhui }}€</p>
                                 </div>
                             </div>
                             <div class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </div>
                         </div>
-                        <div class="mt-3 lg:mt-4 flex items-center justify-between">
-                            <span class="text-xs text-red-600 font-semibold">-3% cette semaine</span>
-                            <a href="{% url 'expenses:depense_list' %}" class="text-red-600 hover:text-red-800 text-sm font-semibold group-hover:text-red-700 transition-colors">
-                                Voir tout →
+                        <div class="mt-2 lg:mt-3 flex items-center justify-between">
+                            <span class="text-xs text-red-600 font-medium">-3% cette semaine</span>
+                            <a href="{% url 'expenses:depense_list' %}" class="text-red-600 hover:text-red-800 text-xs font-medium group-hover:text-red-700 transition-colors">
+                                Voir →
                             </a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Actions rapides -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 hover:shadow-lg transition-all duration-300">
-                    <div class="flex justify-between items-center mb-6">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:p-5 hover:shadow-md transition-all duration-300">
+                    <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h2 class="text-xl lg:text-2xl font-bold text-gray-900">Actions rapides</h2>
-                            <p class="text-sm text-gray-600 mt-1">Accédez rapidement aux fonctionnalités principales</p>
+                            <h2 class="text-lg lg:text-xl font-bold text-gray-900">Actions rapides</h2>
+                            <p class="text-xs text-gray-600 mt-1">Accédez rapidement aux fonctionnalités</p>
                         </div>
                         {% if user.role == 'Radmin' %}
                         <div class="flex space-x-2">
                             <a href="{% url 'accounts:export_excel_dashboard' %}" 
-                               class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 flex items-center text-sm font-medium shadow-md">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="bg-green-50 text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-all duration-300 flex items-center text-xs font-medium">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                                 Excel
                             </a>
                             <a href="{% url 'accounts:export_pdf_dashboard' %}" 
-                               class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 flex items-center text-sm font-medium shadow-md">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="bg-red-50 text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-all duration-300 flex items-center text-xs font-medium">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                                 PDF
@@ -447,52 +447,52 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         {% if user.role == 'Rserveur' or user.role == 'Radmin' %}
-                        <a href="{% url 'orders:nouvelle_commande' %}" class="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-center font-medium">
+                        <a href="{% url 'orders:nouvelle_commande' %}" class="group bg-blue-50 text-blue-700 p-3 rounded-lg hover:bg-blue-100 transition-all duration-300 text-center font-medium">
                             <div class="flex flex-col items-center space-y-2">
-                                <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-300">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-semibold">Nouvelle commande</span>
+                                <span class="text-xs font-medium">Nouvelle commande</span>
                             </div>
                         </a>
                         {% endif %}
                         {% if user.role == 'Rcaissier' or user.role == 'Radmin' %}
-                        <a href="{% url 'payments:nouveau_paiement' %}" class="group bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-center font-medium">
+                        <a href="{% url 'payments:nouveau_paiement' %}" class="group bg-green-50 text-green-700 p-3 rounded-lg hover:bg-green-100 transition-all duration-300 text-center font-medium">
                             <div class="flex flex-col items-center space-y-2">
-                                <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors duration-300">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-semibold">Nouveau paiement</span>
+                                <span class="text-xs font-medium">Nouveau paiement</span>
                             </div>
                         </a>
                         {% endif %}
                         {% if user.role == 'Rcuisinier' or user.role == 'Radmin' %}
-                        <a href="{% url 'restaurant:nouveau_plat' %}" class="group bg-gradient-to-br from-orange-500 to-orange-600 text-white p-4 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-center font-medium">
+                        <a href="{% url 'restaurant:nouveau_plat' %}" class="group bg-orange-50 text-orange-700 p-3 rounded-lg hover:bg-orange-100 transition-all duration-300 text-center font-medium">
                             <div class="flex flex-col items-center space-y-2">
-                                <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors duration-300">
+                                    <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-semibold">Nouveau plat</span>
+                                <span class="text-xs font-medium">Nouveau plat</span>
                             </div>
                         </a>
                         {% endif %}
                         {% if user.role == 'Radmin' %}
-                        <a href="{% url 'expenses:nouvelle_depense' %}" class="group bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-center font-medium">
+                        <a href="{% url 'expenses:nouvelle_depense' %}" class="group bg-red-50 text-red-700 p-3 rounded-lg hover:bg-red-100 transition-all duration-300 text-center font-medium">
                             <div class="flex flex-col items-center space-y-2">
-                                <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors duration-300">
+                                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-semibold">Nouvelle dépense</span>
+                                <span class="text-xs font-medium">Nouvelle dépense</span>
                             </div>
                         </a>
                         {% endif %}
