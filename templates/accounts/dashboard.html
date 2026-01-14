@@ -4,6 +4,12 @@
 {% block title %}Tableau de bord - Restaurant Management{% endblock %}
 
 {% block content %}
+<!-- Désactiver le header/footer de base pour le dashboard -->
+<style>
+    main.pt-16 { padding-top: 0 !important; }
+    footer { display: none !important; }
+    .navbar { display: none !important; }
+</style>
 <div class="flex h-screen bg-gray-100">
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 lg:z-30 w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:w-64 shadow-2xl">
@@ -423,6 +429,8 @@
         </footer>
     </div>
 </div>
+
+{% endblock %}
 
 <!-- Mobile Menu JavaScript -->
 <script>
