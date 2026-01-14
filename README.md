@@ -24,7 +24,7 @@ Application web Django pour la gestion complète d'un restaurant avec prise de c
 
 1. **Cloner le projet**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Ibrvhima/restaurant_management.git
 cd restaurant_management
 ```
 
