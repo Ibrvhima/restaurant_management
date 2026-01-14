@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: restaurant-management
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: core.settings_production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: DB_NAME
+        value: restaurant_management
+      - key: DB_USER
+        value: postgres
+      - key: DB_HOST
+        value: localhost
+      - key: DB_PORT
+        value: 5432
+    autoDeploy: true
+
+databases:
+  - name: restaurant-db
+    databaseName: restaurant_management
+    user: postgres
+    plan: free
