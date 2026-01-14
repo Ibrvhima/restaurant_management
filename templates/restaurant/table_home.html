@@ -5,28 +5,30 @@
 
 {% block content %}
 <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
+    <!-- Header responsive -->
     <div class="bg-blue-600 text-white">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center">
+        <div class="container mx-auto px-4 py-4 sm:py-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                 <div>
-                    <h1 class="text-2xl font-bold">Table {{ table.numero_table }}</h1>
-                    <p class="text-blue-100">{{ table.nombre_places }} places</p>
+                    <h1 class="text-xl sm:text-2xl font-bold">Table {{ table.numero_table }}</h1>
+                    <p class="text-blue-100 text-sm sm:text-base">{{ table.nombre_places }} places</p>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                     <!-- Panier -->
                     <div class="relative">
-                        <button id="panier-btn" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition flex items-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button id="panier-btn" class="bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-50 transition flex items-center space-x-2 text-sm sm:text-base">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
-                            <span>Panier</span>
-                            <span id="panier-count" class="bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                            <span class="hidden sm:inline">Panier</span>
+                            <span class="sm:hidden">🛒</span>
+                            <span id="panier-count" class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-2">0</span>
                         </button>
                     </div>
                     <!-- Commandes -->
-                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
-                        Mes Commandes
+                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-50 transition text-sm sm:text-base">
+                        <span class="hidden sm:inline">Mes Commandes</span>
+                        <span class="sm:hidden">📋</span>
                     </a>
                     <!-- État Commandes Cuisine -->
                     <button id="etat-commandes-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center space-x-2">

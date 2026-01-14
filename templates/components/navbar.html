@@ -9,12 +9,22 @@
                     <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
-                    <span class="text-xl font-bold text-gray-800">Restaurant Management</span>
+                    <span class="text-xl font-bold text-gray-800 hidden sm:block">Restaurant Management</span>
+                    <span class="text-lg font-bold text-gray-800 sm:hidden">RM</span>
                 </a>
             </div>
             
-            <!-- Menu de navigation -->
-            <div class="flex items-center space-x-4">
+            <!-- Menu hamburger pour mobile -->
+            <div class="flex items-center sm:hidden">
+                <button type="button" class="text-gray-700 hover:text-blue-600 p-2 rounded-md" onclick="toggleMobileMenu()">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Menu de navigation desktop -->
+            <div class="hidden sm:flex items-center space-x-4">
                 <!-- Affichage selon le rôle -->
                 {% if user.is_table %}
                     <a href="{% url 'restaurant:table_home' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
@@ -56,7 +66,7 @@
                     </a>
                 {% endif %}
                 
-                <!-- Info utilisateur -->
+                <!-- Info utilisateur desktop -->
                 <div class="flex items-center space-x-2 border-l pl-4">
                     <div class="text-sm">
                         <p class="font-medium text-gray-800">{{ user.login }}</p>
@@ -68,5 +78,69 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Menu mobile (caché par défaut) -->
+        <div id="mobileMenu" class="hidden sm:hidden border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <!-- Affichage selon le rôle -->
+                {% if user.is_table %}
+                    <a href="{% url 'restaurant:table_home' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Menu
+                    </a>
+                    <a href="{% url 'restaurant:table_commandes' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Mes Commandes
+                    </a>
+                {% elif user.is_serveur %}
+                    <a href="{% url 'restaurant:table_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Tables
+                    </a>
+                    <a href="{% url 'orders:commande_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Commandes
+                    </a>
+                {% elif user.is_cuisinier %}
+                    <a href="{% url 'restaurant:menu_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Plats
+                    </a>
+                    <a href="{% url 'restaurant:nouveau_plat' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Ajouter un plat
+                    </a>
+                {% elif user.is_comptable %}
+                    <a href="{% url 'payments:caisse_dashboard' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Caisse
+                    </a>
+                    <a href="{% url 'payments:paiement_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Paiements
+                    </a>
+                    <a href="{% url 'expenses:depense_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Dépenses
+                    </a>
+                {% elif user.is_admin %}
+                    <a href="{% url 'accounts:dashboard' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Dashboard
+                    </a>
+                    <a href="/admin/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                        Administration
+                    </a>
+                {% endif %}
+                
+                <!-- Info utilisateur mobile -->
+                <div class="border-t border-gray-200 pt-4 mt-4">
+                    <div class="px-3 py-2">
+                        <p class="font-medium text-gray-800">{{ user.login }}</p>
+                        <p class="text-sm text-gray-500">{{ user.get_role_display }}</p>
+                    </div>
+                    <a href="{% url 'accounts:logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50">
+                        Déconnexion
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+}
+</script>

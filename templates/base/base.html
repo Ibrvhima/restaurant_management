@@ -27,8 +27,8 @@
     {% if messages %}
     <div class="fixed top-4 right-4 z-50 space-y-2">
         {% for message in messages %}
-        <div class="{% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% elif message.tags == 'warning' %}bg-yellow-500{% else %}bg-blue-500{% endif %} text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
-            <span>{{ message }}</span>
+        <div class="{% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% elif message.tags == 'warning' %}bg-yellow-500{% else %}bg-blue-500{% endif %} text-white px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 max-w-sm mx-auto sm:max-w-md">
+            <span class="text-sm">{{ message }}</span>
             <button onclick="this.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -39,8 +39,8 @@
     </div>
     {% endif %}
     
-    <!-- Contenu principal -->
-    <main class="{% if user.is_authenticated %}pt-16{% endif %}">
+    <!-- Contenu principal avec padding pour la navbar -->
+    <main class="pt-16 sm:pt-16 min-h-screen">
         {% block content %}{% endblock %}
     </main>
     
