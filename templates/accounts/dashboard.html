@@ -18,7 +18,7 @@
     
     /* Forcer l'affichage des éléments de la sidebar */
     #sidebar {
-        background: red !important; /* DEBUG: Fond rouge pour voir si la sidebar s'affiche */
+        background: linear-gradient(to bottom, #1e293b, #0f172a) !important; /* Fond sombre normal */
     }
     
     #sidebar * {
@@ -30,63 +30,68 @@
     
     #sidebar .text-white {
         color: #ffffff !important;
-        background: blue !important; /* DEBUG: Fond bleu pour voir le texte */
     }
     
     #sidebar .text-slate-300 {
         color: #cbd5e1 !important;
-        background: green !important; /* DEBUG: Fond vert pour voir le texte */
     }
     
     #sidebar .text-slate-400 {
         color: #94a3b8 !important;
-        background: yellow !important; /* DEBUG: Fond jaune pour voir le texte */
     }
     
     #sidebar .text-slate-500 {
         color: #64748b !important;
-        background: orange !important; /* DEBUG: Fond orange pour voir le texte */
     }
     
     #sidebar .text-slate-600 {
         color: #475569 !important;
-        background: purple !important; /* DEBUG: Fond violet pour voir le texte */
     }
     
     #sidebar .text-slate-700 {
         color: #334155 !important;
-        background: pink !important; /* DEBUG: Fond rose pour voir le texte */
     }
     
     #sidebar .text-slate-800 {
         color: #1e293b !important;
-        background: cyan !important; /* DEBUG: Fond cyan pour voir le texte */
     }
     
     #sidebar .text-slate-900 {
         color: #0f172a !important;
-        background: lime !important; /* DEBUG: Fond vert clair pour voir le texte */
     }
     
     #sidebar svg {
         fill: currentColor !important;
         stroke: currentColor !important;
-        background: white !important; /* DEBUG: Fond blanc pour voir les icônes */
-        border: 2px solid black !important; /* DEBUG: Bordure noire pour voir les icônes */
     }
     
     #sidebar a {
-        background: magenta !important; /* DEBUG: Fond magenta pour voir les liens */
-        border: 2px solid black !important; /* DEBUG: Bordure noire pour voir les liens */
-        padding: 10px !important; /* DEBUG: Plus grand padding */
-        margin: 5px !important; /* DEBUG: Marge pour espacer */
+        display: flex !important;
+        align-items: center !important;
+        padding: 0.75rem !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    #sidebar a:hover {
+        background-color: #334155 !important;
     }
     
     #sidebar span {
-        background: lime !important; /* DEBUG: Fond vert clair pour voir le texte */
-        color: black !important; /* DEBUG: Texte noir sur fond clair */
-        font-size: 16px !important; /* DEBUG: Police plus grande */
-        font-weight: bold !important; /* DEBUG: Texte gras */
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+    }
+    
+    #sidebar .font-bold {
+        font-weight: 700 !important;
+    }
+    
+    #sidebar .text-xl {
+        font-size: 1.25rem !important;
+    }
+    
+    #sidebar .text-xs {
+        font-size: 0.75rem !important;
     }
     
     /* Forcer la sidebar mobile à être visible */
