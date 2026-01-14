@@ -1,0 +1,126 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Nouveau Paiement - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-6">Nouveau Paiement</h1>
+
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Sélection de la commande -->
+                    <div class="mb-6">
+                        <label for="commande" class="block text-sm font-medium text-gray-700 mb-2">
+                            Commande *
+                        </label>
+                        <select name="commande" id="commande" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Sélectionnez une commande</option>
+                            {% for commande in commandes %}
+                            <option value="{{ commande.id }}"
+                                    {% if request.GET.commande == commande.id|stringformat:"s" %}selected{% endif %}
+                                    data-total="{{ commande.total }}">
+                                Commande #{{ commande.id }} - Table {{ commande.table.numero_table }} ({{ commande.total }} GNF)
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Méthode de paiement -->
+                    <div class="mb-6">
+                        <label for="methode" class="block text-sm font-medium text-gray-700 mb-2">
+                            Méthode de paiement *
+                        </label>
+                        <select name="methode" id="methode" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Sélectionnez une méthode</option>
+                            {% for methode_value, methode_label in methodes %}
+                            <option value="{{ methode_value }}">{{ methode_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Montant -->
+                    <div class="mb-6">
+                        <label for="montant" class="block text-sm font-medium text-gray-700 mb-2">
+                            Montant *
+                        </label>
+                        <input type="number" name="montant" id="montant" 
+                               step="0.01" min="0" required
+                               placeholder="0.00"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        <p class="mt-1 text-sm text-gray-600">Montant en GNF</p>
+                    </div>
+
+                    <!-- Informations de la commande sélectionnée -->
+                    <div id="commande-info" class="mb-6 p-4 bg-gray-50 rounded-lg hidden">
+                        <h3 class="text-sm font-medium text-gray-900 mb-2">Détails de la commande</h3>
+                        <div class="text-sm text-gray-600">
+                            <p>Total à payer: <span id="commande-total" class="font-bold text-blue-600">0</span> GNF</p>
+                        </div>
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="flex justify-between">
+                        <a href="{% url 'payments:paiement_list' %}" 
+                           class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">
+                            Annuler
+                        </a>
+                        <button type="submit" 
+                                class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                            Enregistrer le paiement
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const commandeSelect = document.getElementById('commande');
+    const montantInput = document.getElementById('montant');
+    const commandeInfo = document.getElementById('commande-info');
+    const commandeTotal = document.getElementById('commande-total');
+
+    commandeSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const total = selectedOption.dataset.total || '0';
+            commandeTotal.textContent = total;
+            commandeInfo.classList.remove('hidden');
+            montantInput.value = total;
+        } else {
+            commandeInfo.classList.add('hidden');
+            montantInput.value = '';
+        }
+    });
+
+    // Si une commande est pré-sélectionnée
+    if (commandeSelect.value) {
+        const selectedOption = commandeSelect.options[commandeSelect.selectedIndex];
+        const total = selectedOption.dataset.total || '0';
+        commandeTotal.textContent = total;
+        commandeInfo.classList.remove('hidden');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Tables - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Tables du Restaurant</h1>
+                <p class="text-gray-600">Gestion des tables</p>
+            </div>
+            {% if user.role == 'Radmin' %}
+            <a href="{% url 'restaurant:nouvelle_table' %}" 
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Nouvelle table
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for table in tables %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900">Table {{ table.numero_table }}</h3>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full
+                            {% if table.est_occupee %}
+                                bg-red-100 text-red-800
+                            {% else %}
+                                bg-green-100 text-green-800
+                            {% endif %}">
+                            {% if table.est_occupee %}
+                                Occupée
+                            {% else %}
+                                Libre
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Places:</span>
+                            <span class="font-medium">{{ table.nombre_places }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Responsable:</span>
+                            <span class="font-medium">{{ table.utilisateur.login|default:"Non assigné" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <a href="{% url 'restaurant:table_detail' table.id %}" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-center block">
+                            Voir détails
+                        </a>
+                        {% if user.role == 'Rserveur' or user.role == 'Radmin' %}
+                        <button onclick="creerCommande('{{ table.id }}')" 
+                                class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                            Nouvelle commande
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500 text-lg">Aucune table disponible.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function creerCommande(tableId) {
+    window.location.href = '/orders/nouvelle/?table=' + tableId;
+}
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load restaurant_tags %}
+
+{% block title %}Valider la commande - Table {{ table.numero_table }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <a href="{% url 'restaurant:table_home' %}" class="text-blue-600 hover:text-blue-800 mb-4 inline-block">
+                    ← Retour au menu
+                </a>
+                <h1 class="text-3xl font-bold text-gray-900">Valider ma commande</h1>
+                <p class="text-gray-600">Table {{ table.numero_table }}</p>
+            </div>
+
+            {% if panier %}
+            <!-- Récapitulatif de la commande -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                <div class="bg-blue-600 text-white p-6">
+                    <h2 class="text-xl font-bold">Récapitulatif de la commande</h2>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4 mb-6">
+                        {% for plat_id, item in panier.items %}
+                        <div class="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-lg">{{ item.nom }}</h4>
+                                <p class="text-sm text-gray-600">{{ item.prix }} GNF × {{ item.quantite }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-blue-600">{{ item.prix|multiply:item.quantite }} GNF</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="border-t pt-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold">Total de la commande:</span>
+                            <span class="text-2xl font-bold text-blue-600">{{ total }} GNF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire de validation -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-4">Confirmation</h3>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <p class="text-sm text-yellow-800">
+                                    <strong>Important:</strong> Une fois validée, votre commande sera envoyée en cuisine et ne pourra plus être modifiée.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <a href="{% url 'restaurant:table_home' %}" class="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition text-center">
+                                Modifier le panier
+                            </a>
+                            <button type="submit" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                                Confirmer la commande
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <!-- Panier vide -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Votre panier est vide</h3>
+                    <p class="text-gray-600 mb-6">Ajoutez des plats à votre panier avant de valider votre commande.</p>
+                    <a href="{% url 'restaurant:table_home' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                        Retour au menu
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

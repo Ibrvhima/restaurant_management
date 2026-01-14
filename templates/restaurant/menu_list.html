@@ -1,0 +1,348 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Menu - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<style>
+.search-container {
+    position: relative;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 50;
+    margin-top: 0.25rem;
+}
+
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.suggestion-item:hover {
+    background-color: #f9fafb;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    margin-right: 0.75rem;
+}
+
+.suggestion-details {
+    flex: 1;
+}
+
+.suggestion-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.suggestion-meta {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.suggestion-price {
+    font-weight: 700;
+    color: #2563eb;
+    margin-left: auto;
+}
+
+.search-loading {
+    padding: 1rem;
+    text-align: center;
+    color: #6b7280;
+}
+
+.no-suggestions {
+    padding: 1rem;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Menu du Restaurant</h1>
+            <p class="text-gray-600">Découvrez nos plats délicieux</p>
+        </div>
+
+        <!-- Filtres de recherche -->
+        <div class="mb-6">
+            <div class="flex flex-wrap gap-4">
+                <!-- Recherche textuelle avec suggestions -->
+                <div class="flex-1 min-w-64 search-container">
+                    <div class="relative">
+                        <input type="text" 
+                               name="search" 
+                               id="searchInput"
+                               value="{{ search_query }}" 
+                               placeholder="Rechercher un plat en temps réel..." 
+                               autocomplete="off"
+                               class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <!-- Suggestions dropdown -->
+                        <div id="searchSuggestions" class="search-suggestions hidden">
+                            <!-- Les suggestions seront insérées ici par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtre par type de plat -->
+                <div>
+                    <select name="type_plat" id="typePlatFilter" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <option value="">Tous les types</option>
+                        {% for type_value, type_label in type_plat_choices %}
+                        <option value="{{ type_value }}" {% if type_plat_filter == type_value %}selected{% endif %}>
+                            {{ type_label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Filtre par catégorie -->
+                <div>
+                    <select name="categorie" id="categorieFilter" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <option value="">Toutes les catégories</option>
+                        {% for categorie in categories %}
+                        <option value="{{ categorie.id }}" {% if categorie_filter == categorie.id|stringformat:"s" %}selected{% endif %}>
+                            {{ categorie.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Bouton de réinitialisation -->
+                <div>
+                    <a href="{% url 'restaurant:menu_list' %}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition focus:ring-2 focus:ring-gray-200">
+                        Réinitialiser tout
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres rapides par catégorie -->
+        <div class="mb-6">
+            <div class="flex flex-wrap gap-2">
+                <a href="{% url 'restaurant:menu_list' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    Tous
+                </a>
+                {% for categorie in categories %}
+                <a href="?categorie={{ categorie.id }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                    {{ categorie.nom }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Grille des plats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for plat in plats %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                <!-- Image du plat -->
+                {% if plat.image %}
+                <div class="h-48 bg-gray-200">
+                    <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="w-full h-full object-cover">
+                </div>
+                {% else %}
+                <div class="h-48 bg-gray-200 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                {% endif %}
+                
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plat.nom }}</h3>
+                    {% if plat.type_plat %}
+                    <p class="text-sm text-purple-600 font-medium mb-2">{{ plat.get_type_plat_display }}</p>
+                    {% endif %}
+                    {% if plat.categorie %}
+                    <p class="text-sm text-gray-500 mb-2">{{ plat.categorie.nom }}</p>
+                    {% endif %}
+                    <p class="text-gray-600 text-sm mb-4">{{ plat.description|truncatewords:20 }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">{{ plat.prix_unitaire }} GNF</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full
+                            {% if plat.disponible %}
+                                bg-green-100 text-green-800
+                            {% else %}
+                                bg-red-100 text-red-800
+                            {% endif %}">
+                            {% if plat.disponible %}
+                                Disponible
+                            {% else %}
+                                Indisponible
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'restaurant:plat_detail' plat.id %}" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-center block">
+                            Voir détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500 text-lg">Aucun plat disponible pour le moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let searchTimeout;
+const searchInput = document.getElementById('searchInput');
+const suggestionsContainer = document.getElementById('searchSuggestions');
+const typePlatFilter = document.getElementById('typePlatFilter');
+const categorieFilter = document.getElementById('categorieFilter');
+
+// Fonction pour afficher les suggestions
+function showSuggestions(suggestions) {
+    if (suggestions.length === 0) {
+        suggestionsContainer.innerHTML = '<div class="no-suggestions">Aucune suggestion trouvée</div>';
+    } else {
+        let html = '';
+        suggestions.forEach(function(suggestion) {
+            const imageUrl = suggestion.image ? suggestion.image : '/static/images/placeholder-food.jpg';
+            html += `
+                <div class="suggestion-item" onclick="selectSuggestion('${suggestion.url}', '${suggestion.nom}')">
+                    ${suggestion.image ? `<img src="${imageUrl}" alt="${suggestion.nom}" class="suggestion-image">` : '<div class="suggestion-image" style="background: #f3f4f6; display: flex; align-items: center; justify-content: center;"><svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></div>'}
+                    <div class="suggestion-details">
+                        <div class="suggestion-name">${suggestion.nom}</div>
+                        <div class="suggestion-meta">${suggestion.type_plat}</div>
+                    </div>
+                    <div class="suggestion-price">${suggestion.prix} GNF</div>
+                </div>
+            `;
+        });
+        suggestionsContainer.innerHTML = html;
+    }
+    suggestionsContainer.classList.remove('hidden');
+}
+
+// Fonction pour masquer les suggestions
+function hideSuggestions() {
+    setTimeout(() => {
+        suggestionsContainer.classList.add('hidden');
+    }, 200); // Délai pour permettre le clic sur une suggestion
+}
+
+// Fonction pour sélectionner une suggestion
+function selectSuggestion(url, name) {
+    window.location.href = url;
+}
+
+// Fonction pour rechercher des suggestions
+function fetchSuggestions(query) {
+    if (query.length < 2) {
+        suggestionsContainer.classList.add('hidden');
+        return;
+    }
+
+    // Afficher un indicateur de chargement
+    suggestionsContainer.innerHTML = '<div class="search-loading">🔍 Recherche en cours...</div>';
+    suggestionsContainer.classList.remove('hidden');
+
+    fetch(`/restaurant/api/search-suggestions/?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            showSuggestions(data.suggestions);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la recherche:', error);
+            suggestionsContainer.innerHTML = '<div class="no-suggestions">Erreur de recherche</div>';
+        });
+}
+
+// Fonction pour appliquer les filtres en temps réel
+function applyFilters() {
+    const search = searchInput.value.trim();
+    const typePlat = typePlatFilter.value;
+    const categorie = categorieFilter.value;
+    
+    let url = '{% url "restaurant:menu_list" %}?';
+    const params = [];
+    
+    if (search) params.push(`search=${encodeURIComponent(search)}`);
+    if (typePlat) params.push(`type_plat=${encodeURIComponent(typePlat)}`);
+    if (categorie) params.push(`categorie=${encodeURIComponent(categorie)}`);
+    
+    if (params.length > 0) {
+        url += params.join('&');
+    }
+    
+    window.location.href = url;
+}
+
+// Écouteur d'événements pour le champ de recherche
+searchInput.addEventListener('input', function(e) {
+    clearTimeout(searchTimeout);
+    const query = e.target.value.trim();
+    
+    if (query.length >= 2) {
+        searchTimeout = setTimeout(() => {
+            fetchSuggestions(query);
+        }, 300); // Délai de 300ms pour éviter trop de requêtes
+    } else {
+        suggestionsContainer.classList.add('hidden');
+    }
+});
+
+// Écouteurs pour les filtres (temps réel)
+typePlatFilter.addEventListener('change', applyFilters);
+categorieFilter.addEventListener('change', applyFilters);
+
+// Masquer les suggestions en cliquant ailleurs
+document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+        suggestionsContainer.classList.add('hidden');
+    }
+});
+
+// Gérer les touches du clavier
+searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        suggestionsContainer.classList.add('hidden');
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        applyFilters();
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

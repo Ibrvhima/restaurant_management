@@ -1,0 +1,112 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Mes commandes - Table {{ table.numero_table }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <a href="{% url 'restaurant:table_home' %}" class="text-blue-600 hover:text-blue-800">
+                        ← Retour au menu
+                    </a>
+                    <a href="{% url 'restaurant:table_home' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Nouvelle commande
+                    </a>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900">Mes commandes</h1>
+                <p class="text-gray-600">Table {{ table.numero_table }}</p>
+            </div>
+
+            {% if commandes %}
+            <!-- Liste des commandes -->
+            <div class="space-y-6">
+                {% for commande in commandes %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="bg-gradient-to-r {% if commande.etat == 'TERMINEE' %}from-green-500 to-green-600{% elif commande.etat == 'EN_COURS' %}from-yellow-500 to-yellow-600{% elif commande.etat == 'EN_PREPARATION' %}from-blue-500 to-blue-600{% else %}from-red-500 to-red-600{% endif %} text-white p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold">Commande #{{ commande.id }}</h3>
+                                <p class="text-sm opacity-90">{{ commande.date_commande|date:"d/m/Y H:i" }}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-semibold">
+                                    {{ commande.get_etat_display }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- Détails des plats -->
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Plats commandés</h4>
+                            <div class="space-y-3">
+                                {% for item in commande.commandeplat_set.all %}
+                                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                                    <div class="flex-1">
+                                        <p class="font-medium">{{ item.plat.nom }}</p>
+                                        <p class="text-sm text-gray-600">{{ item.prix_unitaire }} GNF × {{ item.quantite }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-blue-600">{{ item.sous_total }} GNF</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Total -->
+                        <div class="border-t pt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900">Total de la commande:</span>
+                                <span class="text-xl font-bold text-blue-600">{{ commande.total }} GNF</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="mt-6 flex space-x-4">
+                            {% if commande.etat == 'EN_ATTENTE' %}
+                            <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition" disabled>
+                                En attente de validation
+                            </button>
+                            {% elif commande.etat == 'EN_PREPARATION' %}
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" disabled>
+                                En préparation...
+                            </button>
+                            {% elif commande.etat == 'EN_COURS' %}
+                            <button class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition" disabled>
+                                En cours de service
+                            </button>
+                            {% elif commande.etat == 'TERMINEE' %}
+                            <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition" disabled>
+                                Commande terminée
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Aucune commande -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune commande</h3>
+                    <p class="text-gray-600 mb-6">Vous n'avez pas encore passé de commande.</p>
+                    <a href="{% url 'restaurant:table_home' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                        Passer ma première commande
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

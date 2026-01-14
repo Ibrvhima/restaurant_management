@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ categorie.nom }} - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">{{ categorie.nom }}</h1>
+            <p class="text-gray-600">Plats de cette catégorie</p>
+        </div>
+
+        <div class="mb-6">
+            <a href="{% url 'restaurant:menu_list' %}" class="text-blue-600 hover:text-blue-800">
+                ← Retour au menu complet
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for plat in plats %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plat.nom }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ plat.description|truncatewords:20 }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">{{ plat.prix_unitaire }} GNF</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                            Disponible
+                        </span>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'restaurant:plat_detail' plat.id %}" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-center block">
+                            Voir détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500 text-lg">Aucun plat disponible dans cette catégorie.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

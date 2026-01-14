@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Nouvelle Commande - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-6">Nouvelle Commande</h1>
+
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Sélection de la table -->
+                    <div class="mb-6">
+                        <label for="table" class="block text-sm font-medium text-gray-700 mb-2">
+                            Table *
+                        </label>
+                        <select name="table" id="table" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Sélectionnez une table</option>
+                            {% for table in tables %}
+                            <option value="{{ table.id }}" 
+                                    {% if table_preselectionnee == table.id|stringformat:"s" %}selected{% endif %}>
+                                Table {{ table.numero_table }} ({{ table.nombre_places }} places)
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Sélection des plats -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Sélection des plats</h3>
+                        <div class="space-y-4">
+                            {% for plat in plats %}
+                            <div class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-900">{{ plat.nom }}</h4>
+                                    <p class="text-sm text-gray-600">{{ plat.prix_unitaire }} GNF</p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="plats" value="{{ plat.id }}" 
+                                               class="mr-2 plat-checkbox" data-prix="{{ plat.prix_unitaire }}">
+                                        <span>Ajouter</span>
+                                    </label>
+                                    <input type="number" name="quantites" min="1" value="1" 
+                                           class="w-20 px-2 py-1 border border-gray-300 rounded quantite-input"
+                                           disabled>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-medium text-gray-900">Total:</span>
+                            <span id="total" class="text-2xl font-bold text-blue-600">0 GNF</span>
+                        </div>
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="flex justify-between">
+                        <a href="{% url 'orders:commande_list' %}" 
+                           class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">
+                            Annuler
+                        </a>
+                        <button type="submit" 
+                                class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                            Créer la commande
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const platCheckboxes = document.querySelectorAll('.plat-checkbox');
+    const quantiteInputs = document.querySelectorAll('.quantite-input');
+    const totalElement = document.getElementById('total');
+    const form = document.querySelector('form');
+
+    function calculerTotal() {
+        let total = 0;
+        platCheckboxes.forEach((checkbox, index) => {
+            if (checkbox.checked) {
+                const prix = parseFloat(checkbox.dataset.prix);
+                const quantite = parseInt(quantiteInputs[index].value) || 1;
+                total += prix * quantite;
+            }
+        });
+        totalElement.textContent = total + ' GNF';
+    }
+
+    platCheckboxes.forEach((checkbox, index) => {
+        checkbox.addEventListener('change', function() {
+            quantiteInputs[index].disabled = !this.checked;
+            if (this.checked) {
+                quantiteInputs[index].focus();
+            }
+            calculerTotal();
+        });
+    });
+
+    quantiteInputs.forEach((input, index) => {
+        input.addEventListener('input', calculerTotal);
+    });
+
+    // Ajouter la confirmation avant la soumission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Vérifier si des plats sont sélectionnés
+        const selectedPlats = document.querySelectorAll('.plat-checkbox:checked');
+        if (selectedPlats.length === 0) {
+            alert('Veuillez sélectionner au moins un plat.');
+            return;
+        }
+
+        // Récupérer les informations pour la confirmation
+        const tableSelect = document.getElementById('table');
+        const selectedTable = tableSelect.options[tableSelect.selectedIndex].text;
+        const total = totalElement.textContent;
+
+        // Message de confirmation
+        const confirmMessage = `Confirmer la commande ?\n\n` +
+            `Table : ${selectedTable}\n` +
+            `Nombre de plats : ${selectedPlats.length}\n` +
+            `Total : ${total}\n\n` +
+            `Êtes-vous sûr de vouloir créer cette commande ?`;
+
+        if (confirm(confirmMessage)) {
+            form.submit();
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

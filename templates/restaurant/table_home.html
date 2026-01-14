@@ -1,0 +1,562 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Table {{ table.numero_table }} - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-blue-600 text-white">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold">Table {{ table.numero_table }}</h1>
+                    <p class="text-blue-100">{{ table.nombre_places }} places</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Panier -->
+                    <div class="relative">
+                        <button id="panier-btn" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span>Panier</span>
+                            <span id="panier-count" class="bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                        </button>
+                    </div>
+                    <!-- Commandes -->
+                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
+                        Mes Commandes
+                    </a>
+                    <!-- État Commandes Cuisine -->
+                    <button id="etat-commandes-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <span>État Cuisine</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-wrap gap-4 items-center">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                    <select id="categorie-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        <option value="">Toutes les catégories</option>
+                        {% for categorie in categories %}
+                        <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select id="type-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        <option value="">Tous les types</option>
+                        <option value="ENTREE">Entrées</option>
+                        <option value="PRINCIPAL">Plats principaux</option>
+                        <option value="SPECIAL">Spéciaux</option>
+                        <option value="DESSERT">Desserts</option>
+                        <option value="BOISSON">Boissons</option>
+                        <option value="ACCOMPAGNEMENT">Accompagnements</option>
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Recherche</label>
+                    <input type="text" id="search-input" placeholder="Rechercher un plat..." 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des plats -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="plats-container">
+            {% for plat in plats %}
+            <div class="plat-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition" 
+                 data-categorie="{{ plat.categorie.id|default:'' }}" 
+                 data-type="{{ plat.type_plat }}" 
+                 data-nom="{{ plat.nom|lower }}">
+                <div class="relative">
+                    {% if plat.image %}
+                        <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <div class="absolute top-2 right-2">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                            {{ plat.get_type_plat_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-lg text-gray-900 mb-2">{{ plat.nom }}</h3>
+                    {% if plat.categorie %}
+                        <p class="text-sm text-gray-600 mb-2">{{ plat.categorie.nom }}</p>
+                    {% endif %}
+                    {% if plat.description %}
+                        <p class="text-sm text-gray-700 mb-3">{{ plat.description|truncatewords:15 }}</p>
+                    {% endif %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-blue-600">{{ plat.prix_unitaire }} GNF</span>
+                        <button type="button" class="ajouter-panier bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" 
+                                data-plat-id="{{ plat.id }}" data-plat-nom="{{ plat.nom }}" data-prix="{{ plat.prix_unitaire }}">
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500 text-lg">Aucun plat disponible.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Panier Modal -->
+    <div id="panier-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg max-w-2xl w-full" style="max-height: 90vh; display: flex; flex-direction: column;">
+                <div class="bg-blue-600 text-white p-6 flex-shrink-0">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold">Mon Panier</h2>
+                        <button id="close-panier" class="text-white hover:text-gray-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 flex-grow" style="display: flex; flex-direction: column;">
+                    <div id="panier-content" class="space-y-4" style="flex-grow: 1; max-height: 50vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
+                        <!-- Le contenu du panier sera chargé ici -->
+                    </div>
+                    <div class="mt-6 pt-6 border-t flex-shrink-0">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xl font-bold">Total:</span>
+                            <span id="panier-total" class="text-xl font-bold text-blue-600">0 GNF</span>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button id="vider-panier" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">
+                                Vider le panier
+                            </button>
+                            <a href="{% url 'restaurant:table_valider_commande' %}" id="valider-commande" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-center">
+                                Valider la commande
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gestion du panier
+let panier = {};
+
+// Charger le panier au démarrage
+document.addEventListener('DOMContentLoaded', function() {
+    chargerPanier();
+    setupFilters();
+});
+
+function chargerPanier() {
+    fetch('/restaurant/table/panier/')
+        .then(response => response.json())
+        .then(data => {
+            panier = data.panier || {};
+            updatePanierUI();
+        });
+}
+
+function updatePanierUI() {
+    const panierCount = Object.values(panier).reduce((total, item) => total + item.quantite, 0);
+    document.getElementById('panier-count').textContent = panierCount;
+    
+    const panierContent = document.getElementById('panier-content');
+    if (Object.keys(panier).length === 0) {
+        panierContent.innerHTML = '<p class="text-gray-500 text-center">Votre panier est vide</p>';
+        document.getElementById('valider-commande').classList.add('opacity-50', 'cursor-not-allowed');
+        document.getElementById('valider-commande').href = '#';
+    } else {
+        let html = '';
+        let total = 0;
+        
+        for (const [platId, item] of Object.entries(panier)) {
+            const sousTotal = item.prix * item.quantite;
+            total += sousTotal;
+            
+            html += `
+                <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                    <div class="flex-1">
+                        <h4 class="font-semibold">${item.nom}</h4>
+                        <p class="text-sm text-gray-600">${item.prix} GNF × ${item.quantite} = ${sousTotal} GNF</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="modifier-quantite bg-gray-300 text-gray-700 w-8 h-8 rounded hover:bg-gray-400" data-plat-id="${platId}" data-action="-1">-</button>
+                        <span class="w-8 text-center">${item.quantite}</span>
+                        <button class="modifier-quantite bg-gray-300 text-gray-700 w-8 h-8 rounded hover:bg-gray-400" data-plat-id="${platId}" data-action="+1">+</button>
+                        <button class="supprimer-plat text-red-600 hover:text-red-800 ml-2" data-plat-id="${platId}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        panierContent.innerHTML = html;
+        document.getElementById('panier-total').textContent = total + ' GNF';
+        document.getElementById('valider-commande').classList.remove('opacity-50', 'cursor-not-allowed');
+        document.getElementById('valider-commande').href = '/restaurant/table/valider-commande/';
+    }
+}
+
+// Ajouter un plat au panier
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('ajouter-panier')) {
+        e.preventDefault(); // Empêcher la redirection
+        const platId = e.target.dataset.platId;
+        
+        fetch('/restaurant/table/panier/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `action=ajouter&plat_id=${platId}&quantite=1`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                panier = data.panier;
+                updatePanierUI();
+                showMessage('Plat ajouté au panier', 'success');
+            } else {
+                showMessage(data.error || 'Erreur lors de l\'ajout', 'error');
+            }
+        });
+    }
+});
+
+// Modifier la quantité
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modifier-quantite')) {
+        const platId = e.target.dataset.platId;
+        const action = e.target.dataset.action;
+        const currentQuantity = panier[platId].quantite;
+        const newQuantity = action === '+1' ? currentQuantity + 1 : currentQuantity - 1;
+        
+        if (newQuantity >= 1 && newQuantity <= 10) {
+            fetch('/restaurant/table/panier/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: `action=modifier&plat_id=${platId}&quantite=${newQuantity}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    panier = data.panier;
+                    updatePanierUI();
+                } else {
+                    showMessage(data.error || 'Erreur lors de la modification', 'error');
+                }
+            });
+        }
+    }
+});
+
+// Supprimer un plat
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.supprimer-plat')) {
+        const platId = e.target.closest('.supprimer-plat').dataset.platId;
+        
+        if (confirm('Voulez-vous supprimer ce plat du panier ?')) {
+            fetch('/restaurant/table/panier/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: `action=supprimer&plat_id=${platId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    panier = data.panier;
+                    updatePanierUI();
+                    showMessage('Plat supprimé du panier', 'success');
+                } else {
+                    showMessage(data.error || 'Erreur lors de la suppression', 'error');
+                }
+            });
+        }
+    }
+});
+
+// Vider le panier
+document.getElementById('vider-panier').addEventListener('click', function() {
+    if (confirm('Voulez-vous vider votre panier ?')) {
+        fetch('/restaurant/table/panier/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: 'action=vider'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                panier = {};
+                updatePanierUI();
+                showMessage('Panier vidé', 'success');
+            }
+        });
+    }
+});
+
+// Modal panier
+document.getElementById('panier-btn').addEventListener('click', function() {
+    document.getElementById('panier-modal').classList.remove('hidden');
+});
+
+document.getElementById('close-panier').addEventListener('click', function() {
+    document.getElementById('panier-modal').classList.add('hidden');
+});
+
+// Filtres
+function setupFilters() {
+    const categorieFilter = document.getElementById('categorie-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const searchInput = document.getElementById('search-input');
+    
+    function filterPlats() {
+        const categorieValue = categorieFilter.value.toLowerCase();
+        const typeValue = typeFilter.value.toLowerCase();
+        const searchValue = searchInput.value.toLowerCase();
+        
+        document.querySelectorAll('.plat-card').forEach(card => {
+            const matchesCategorie = !categorieValue || card.dataset.categorie === categorieValue;
+            const matchesType = !typeValue || card.dataset.type === typeValue;
+            const matchesSearch = !searchValue || card.dataset.nom.includes(searchValue);
+            
+            if (matchesCategorie && matchesType && matchesSearch) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    categorieFilter.addEventListener('change', filterPlats);
+    typeFilter.addEventListener('change', filterPlats);
+    searchInput.addEventListener('input', filterPlats);
+}
+
+// Utilitaires
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function showMessage(message, type) {
+    // Créer un message toast
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 ${
+        type === 'success' ? 'bg-green-600' : 'bg-red-600'
+    }`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
+
+<!-- Modal État Commandes Cuisine -->
+<div id="etat-commandes-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+            <!-- Header -->
+            <div class="bg-green-600 text-white p-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">État des Commandes en Cuisine</h2>
+                    <button id="close-etat-modal" class="text-white hover:bg-green-700 rounded-lg p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <div id="etat-commandes-content">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                        <p class="text-gray-600">Chargement de l'état des commandes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Modal État Commandes
+document.getElementById('etat-commandes-btn').addEventListener('click', function() {
+    document.getElementById('etat-commandes-modal').classList.remove('hidden');
+    chargerEtatCommandes();
+});
+
+document.getElementById('close-etat-modal').addEventListener('click', function() {
+    document.getElementById('etat-commandes-modal').classList.add('hidden');
+});
+
+// Fermer le modal en cliquant à l'extérieur
+document.getElementById('etat-commandes-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.add('hidden');
+    }
+});
+
+function chargerEtatCommandes() {
+    fetch('/restaurant/api/etat-commandes-cuisine/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                afficherEtatCommandes(data.commandes);
+            } else {
+                throw new Error(data.error || 'Erreur inconnue');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur API:', error);
+            document.getElementById('etat-commandes-content').innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-red-600">Erreur lors du chargement des commandes</p>
+                    <p class="text-sm text-gray-500 mt-2">Veuillez réessayer ultérieurement</p>
+                </div>
+            `;
+        });
+}
+
+function afficherEtatCommandes(commandes) {
+    let html = '';
+    
+    if (commandes.length === 0) {
+        html = `
+            <div class="text-center py-8">
+                <p class="text-gray-600">Aucune commande en cours en cuisine</p>
+            </div>
+        `;
+    } else {
+        html = '<div class="space-y-6">';
+        
+        commandes.forEach(commande => {
+            const couleurEtat = {
+                'EN_ATTENTE': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                'EN_PREPARATION': 'bg-blue-100 text-blue-800 border-blue-200',
+                'EN_COURS': 'bg-orange-100 text-orange-800 border-orange-200',
+                'TERMINEE': 'bg-green-100 text-green-800 border-green-200'
+            }[commande.etat] || 'bg-gray-100 text-gray-800 border-gray-200';
+            
+            html += `
+                <div class="border rounded-lg overflow-hidden ${couleurEtat}">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold">Commande #${commande.id}</h3>
+                                <p class="text-sm opacity-75">Table ${commande.table_numero}</p>
+                                <p class="text-sm opacity-75">${commande.heure}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium">
+                                ${commande.etat_display}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h4 class="font-medium mb-2">Plats :</h4>
+                            <div class="space-y-1">
+                                ${commande.plats.map(plat => `
+                                    <div class="flex justify-between items-center bg-white bg-opacity-50 p-2 rounded">
+                                        <span class="text-sm">${plat.nom} (×${plat.quantite})</span>
+                                        <span class="text-sm font-medium">${plat.sous_total} GNF</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="text-lg font-bold">
+                                Total : ${commande.total} GNF
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                ${commande.temps_estime ? `⏱️ ${commande.temps_estime} min` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+    }
+    
+    document.getElementById('etat-commandes-content').innerHTML = html;
+}
+
+// Auto-rafraîchissement toutes les 30 secondes
+let refreshInterval;
+document.getElementById('etat-commandes-btn').addEventListener('click', function() {
+    refreshInterval = setInterval(chargerEtatCommandes, 30000);
+});
+
+document.getElementById('close-etat-modal').addEventListener('click', function() {
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
+    }
+});
+
+</script>
+
+<style>
+/* Masquer la barre de défilement tout en gardant la fonctionnalité */
+#panier-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* Pour Firefox et Edge */
+#panier-content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+</style>
+{% endblock %}

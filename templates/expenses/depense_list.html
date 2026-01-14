@@ -1,0 +1,158 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Dépenses - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Liste des Dépenses</h1>
+            <p class="text-gray-600">Gestion des dépenses</p>
+        </div>
+
+        <!-- Filtres -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <form method="get" class="flex flex-wrap gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                    <select name="categorie" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        <option value="">Toutes</option>
+                        {% for categorie in categories %}
+                        <option value="{{ categorie.id }}" {% if categorie_filter == categorie.id|stringformat:"s" %}selected{% endif %}>
+                            {{ categorie.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <input type="date" name="date" value="{{ date_filter }}" 
+                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Cartes de statistiques -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Total entrées</p>
+                        <p class="text-2xl font-semibold text-green-600">{{ total_entrees }} GNF</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-red-100 rounded-full">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Total sorties</p>
+                        <p class="text-2xl font-semibold text-red-600">{{ total_depenses }} GNF</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 {% if solde_actuel >= 0 %}bg-blue-100{% else %}bg-orange-100{% endif %} rounded-full">
+                        <svg class="w-6 h-6 {% if solde_actuel >= 0 %}text-blue-600{% else %}text-orange-600{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Solde actuel</p>
+                        <p class="text-2xl font-semibold {% if solde_actuel >= 0 %}text-blue-600{% else %}text-orange-600{% endif %}">{{ solde_actuel }} GNF</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="mb-6">
+            <a href="{% url 'expenses:nouvelle_depense' %}" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                Nouvelle dépense
+            </a>
+            <a href="{% url 'expenses:statistiques_depenses' %}" class="ml-2 bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition">
+                Statistiques
+            </a>
+            <a href="{% url 'expenses:rapport_depenses' %}" class="ml-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition">
+                Rapport
+            </a>
+        </div>
+
+        <!-- Tableau des dépenses -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for depense in depenses %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ depense.id }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ depense.description }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    {{ depense.categorie.nom }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">{{ depense.montant }} GNF</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ depense.date_depense|date:"d/m/Y" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ depense.utilisateur.login }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <a href="{% url 'expenses:depense_detail' depense.id %}" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    Voir
+                                </a>
+                                {% if user.role == 'Radmin' %}
+                                <a href="{% url 'expenses:modifier_depense' depense.id %}" class="text-yellow-600 hover:text-yellow-900 mr-3">
+                                    Modifier
+                                </a>
+                                <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-600 hover:text-red-900" 
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
+                                        Supprimer
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                Aucune dépense trouvée.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

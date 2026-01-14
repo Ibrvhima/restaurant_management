@@ -1,0 +1,192 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load restaurant_tags %}
+
+{% block title %}Interface Cuisinier - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Interface Cuisinier</h1>
+            <p class="text-gray-600">Gestion des commandes et préparation</p>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-yellow-100 rounded-full">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">En attente</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ commandes_en_attente|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-orange-100 rounded-full">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">En préparation</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ commandes_en_preparation|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7m9 11l-1-1h-6a2 2 0 01-2-2V5a2 2 0 012-2h4a2 2 0 012 2v1"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Total actif</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ commandes_en_attente|length|add:commandes_en_preparation|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commandes en attente -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Commandes en attente</h2>
+            </div>
+            <div class="p-6">
+                {% if commandes_en_attente %}
+                <div class="space-y-4">
+                    {% for commande in commandes_en_attente %}
+                    <div class="border rounded-lg overflow-hidden hover:shadow-lg transition">
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Commande #{{ commande.id }}</h3>
+                                    <p class="text-sm text-gray-600">Table {{ commande.table.numero_table }}</p>
+                                    <p class="text-sm text-gray-600">{{ commande.date_commande|date:"H:i" }}</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                    En attente
+                                </span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h4 class="font-medium text-gray-900 mb-2">Plats à préparer :</h4>
+                                {% for cp in commande.commandeplat_set.all %}
+                                <div class="flex justify-between items-center bg-gray-50 p-2 rounded mb-1">
+                                    <span class="text-sm">{{ cp.plat.nom }} (×{{ cp.quantite }})</span>
+                                    <span class="text-sm font-medium">{{ cp.prix_unitaire|multiply:cp.quantite }} GNF</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <div class="text-lg font-bold text-blue-600">
+                                    Total : {{ commande.total }} GNF
+                                </div>
+                                <a href="{% url 'restaurant:cuisinier_prendre_commande' commande.id %}" 
+                                   class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition">
+                                    Prendre en charge
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune commande en attente</h3>
+                    <p class="text-gray-600">Toutes les commandes ont été prises en charge.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Commandes en préparation -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Commandes en préparation</h2>
+            </div>
+            <div class="p-6">
+                {% if commandes_en_preparation %}
+                <div class="space-y-4">
+                    {% for commande in commandes_en_preparation %}
+                    <div class="border rounded-lg overflow-hidden hover:shadow-lg transition">
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Commande #{{ commande.id }}</h3>
+                                    <p class="text-sm text-gray-600">Table {{ commande.table.numero_table }}</p>
+                                    <p class="text-sm text-gray-600">{{ commande.date_commande|date:"H:i" }}</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-medium rounded-full 
+                                    {% if commande.etat == 'EN_PREPARATION' %}bg-orange-100 text-orange-800
+                                    {% elif commande.etat == 'EN_COURS' %}bg-blue-100 text-blue-800
+                                    {% endif %}">
+                                    {{ commande.get_etat_display }}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h4 class="font-medium text-gray-900 mb-2">Plats en préparation :</h4>
+                                {% for cp in commande.commandeplat_set.all %}
+                                <div class="flex justify-between items-center bg-gray-50 p-2 rounded mb-1">
+                                    <span class="text-sm">{{ cp.plat.nom }} (×{{ cp.quantite }})</span>
+                                    <span class="text-sm font-medium">{{ cp.prix_unitaire|multiply:cp.quantite }} GNF</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <div class="text-lg font-bold text-blue-600">
+                                    Total : {{ commande.total }} GNF
+                                </div>
+                                <div class="flex space-x-2">
+                                    {% if commande.etat == 'EN_PREPARATION' %}
+                                    <a href="{% url 'restaurant:cuisinier_changer_etat' commande.id %}" 
+                                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                                        Commencer cuisson
+                                    </a>
+                                    {% elif commande.etat == 'EN_COURS' %}
+                                    <a href="{% url 'restaurant:cuisinier_marquer_prete' commande.id %}" 
+                                       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                                        Marquer prête
+                                    </a>
+                                    <a href="{% url 'restaurant:cuisinier_changer_etat' commande.id %}" 
+                                       class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition">
+                                        Retour en préparation
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune commande en préparation</h3>
+                    <p class="text-gray-600">Aucune commande n'est actuellement en préparation.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
