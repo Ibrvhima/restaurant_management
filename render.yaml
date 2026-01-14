@@ -15,18 +15,15 @@ services:
         generateValue: true
       - key: DEBUG
         value: false
+      # Variables MySQL à configurer manuellement sur Render
       - key: DB_NAME
         value: restaurant_management
       - key: DB_USER
-        value: postgres
+        value: votre_mysql_user
+      - key: DB_PASSWORD
+        value: votre_mysql_password
       - key: DB_HOST
-        value: localhost
+        value: votre_mysql_host
       - key: DB_PORT
-        value: 5432
+        value: 3306
     autoDeploy: true
-
-databases:
-  - name: restaurant-db
-    databaseName: restaurant_management
-    user: postgres
-    plan: free

@@ -12,15 +12,20 @@ from .settings import *
 DEBUG = False
 ALLOWED_HOSTS = ['*']  # Render gère automatiquement les domaines
 
-# DATABASE - PostgreSQL pour Render
-import dj_database_url
-
+# DATABASE - MySQL pour Render
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='3306'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+        },
+    }
 }
 
 # STATIC FILES

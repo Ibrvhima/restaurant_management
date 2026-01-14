@@ -41,18 +41,39 @@ Le projet est déjà configuré pour Render avec :
    DEBUG: False
    ```
 
-### Étape 4: Créer la Base de Données
+### Étape 4: Configurer la Base de Données MySQL
 
-1. **Ajouter une base de données PostgreSQL** :
+**Important** : Render n'offre pas de base de données MySQL native. Vous avez deux options :
+
+#### Option 1: Base de données MySQL externe (recommandée)
+
+1. **Utiliser votre base MySQL existante** :
+   - Votre serveur MySQL local ou hébergé
+   - Services comme PlanetScale, Railway, ou AWS RDS
+
+2. **Configurer les variables d'environnement sur Render** :
+   ```
+   DB_NAME: restaurant_management
+   DB_USER: votre_mysql_user
+   DB_PASSWORD: votre_mysql_password
+   DB_HOST: votre_mysql_host (ex: mysql.votredomaine.com)
+   DB_PORT: 3306
+   ```
+
+3. **Autoriser l'accès depuis Render** :
+   - Ajouter l'IP de Render dans votre firewall MySQL
+   - Ou utiliser 0.0.0.0/0 pour accès global (moins sécurisé)
+
+#### Option 2: Migrer vers PostgreSQL (plus simple sur Render)
+
+1. **Créer une base PostgreSQL sur Render** :
    - Cliquez sur "New +" → "PostgreSQL"
    - Name: `restaurant-db`
    - Database Name: `restaurant_management`
-   - User: `postgres`
-   - Plan: Free
 
-2. **Connecter la base de données** :
-   - Une fois créée, Render générera un `DATABASE_URL`
-   - Ajoutez cette URL aux variables d'environnement du service web
+2. **Mettre à jour les settings** :
+   - Changer `settings_production.py` pour PostgreSQL
+   - Ajouter `dj-database-url` dans requirements.txt
 
 ### Étape 5: Déployer
 
@@ -85,8 +106,12 @@ DJANGO_SETTINGS_MODULE=core.settings_production
 SECRET_KEY=votre-clé-secrète
 DEBUG=False
 
-# Base de données (généré automatiquement par Render)
-DATABASE_URL=postgresql://user:password@host:port/dbname
+# Base de données MySQL externe
+DB_NAME=restaurant_management
+DB_USER=votre_mysql_user
+DB_PASSWORD=votre_mysql_password
+DB_HOST=votre_mysql_host
+DB_PORT=3306
 
 # Email (optionnel)
 EMAIL_HOST=smtp.gmail.com
@@ -159,10 +184,11 @@ Chaque `git push` sur la branche `main` déclenche :
    - Confirmez les variables d'environnement
    - Regardez les logs de build
 
-2. **Erreur de base de données** :
-   - Vérifiez `DATABASE_URL`
-   - Confirmez que la DB est connectée
-   - Testez la connexion manuellement
+2. **Erreur de base de données MySQL** :
+   - Vérifiez les identifiants MySQL
+   - Confirmez que l'hôte MySQL est accessible depuis Render
+   - Testez la connexion avec un client MySQL
+   - Vérifiez le firewall MySQL autorise l'IP de Render
 
 3. **Erreur 500** :
    - Vérifiez les logs du service
@@ -174,7 +200,10 @@ Chaque `git push` sur la branche `main` déclenche :
 ```bash
 # Débugger localement avec les settings production
 export DJANGO_SETTINGS_MODULE=core.settings_production
-export DATABASE_URL=postgresql://user:pass@host:port/db
+export DB_NAME=restaurant_management
+export DB_USER=votre_mysql_user
+export DB_PASSWORD=votre_mysql_password
+export DB_HOST=votre_mysql_host
 python manage.py migrate
 python manage.py runserver
 ```
@@ -183,9 +212,10 @@ python manage.py runserver
 
 ### Optimisations
 
-1. **Base de données** :
-   - Indexation automatique avec PostgreSQL
-   - Connection pooling inclus
+1. **Base de données MySQL** :
+   - Indexation optimisée pour les requêtes fréquentes
+   - Connection pooling via votre service MySQL
+   - Requêtes optimisées avec select_related/prefetch_related
 
 2. **Static files** :
    - Servis par CDN Render
@@ -200,7 +230,7 @@ python manage.py runserver
 ### Plan Free
 - 750 heures/mois
 - 100GB de bande passante
-- Base de données PostgreSQL gratuite
+- **Base de données MySQL externe** (non incluse)
 - Custom domain
 
 ### Plan Pro (recommandé pour production)
@@ -208,14 +238,15 @@ python manage.py runserver
 - Plus de bande passante
 - Support prioritaire
 - ~$7/mois
+- **Coût base de données MySQL externe** séparément
 
 ## 🎯 Conclusion
 
 Render offre une solution de déploiement simple et robuste pour Django avec :
 - **CI/CD intégré**
-- **Base de données PostgreSQL**
+- **Base de données MySQL externe** (votre infrastructure)
 - **SSL automatique**
 - **Monitoring inclus**
 - **Scaling facile**
 
-Votre Restaurant Management System est prêt pour la production sur Render ! 🚀
+Votre Restaurant Management System est prêt pour la production sur Render avec votre base MySQL existante ! 🚀
