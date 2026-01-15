@@ -5,37 +5,372 @@
 
 {% block extra_css %}
 <style>
-.search-container {
+/* Design System - Couleurs Douces et Professionnelles */
+:root {
+    --primary-slate: #475569;
+    --primary-slate-light: #64748b;
+    --primary-slate-lighter: #94a3b8;
+    --accent-slate: #334155;
+    --bg-slate-soft: #f8fafc;
+    --border-slate: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --success-soft: #10b981;
+    --success-bg: #ecfdf5;
+    --warning-soft: #f59e0b;
+    --warning-bg: #fffbeb;
+    --danger-soft: #ef4444;
+    --danger-bg: #fef2f2;
+}
+
+/* Container Principal */
+.menu-container {
+    background: linear-gradient(135deg, var(--bg-slate-soft) 0%, #ffffff 100%);
+    min-height: 100vh;
     position: relative;
 }
 
+.menu-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-slate), transparent);
+}
+
+/* Header Section */
+.menu-header {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-slate);
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 0 0 1rem 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.menu-title {
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-slate) 0%, var(--accent-slate) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.menu-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+/* Section Filtres */
+.filters-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-slate);
+}
+
+.search-container {
+    position: relative;
+    flex: 1;
+    min-width: 320px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 2px solid var(--border-slate);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--bg-slate-soft);
+    color: var(--text-primary);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-slate);
+    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
+    background: white;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.filter-select {
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border-slate);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    background: var(--bg-slate-soft);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-slate);
+    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
+    background: white;
+}
+
+.reset-btn {
+    background: var(--primary-slate);
+    color: white;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reset-btn:hover {
+    background: var(--accent-slate);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(51, 65, 85, 0.2);
+}
+
+/* Filtres Rapides */
+.quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.quick-filter-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid var(--border-slate);
+    background: white;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quick-filter-btn:hover {
+    background: var(--primary-slate);
+    color: white;
+    border-color: var(--primary-slate);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
+}
+
+.quick-filter-btn.active {
+    background: var(--primary-slate);
+    color: white;
+    border-color: var(--primary-slate);
+}
+
+/* Grille des Plats */
+.plats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Carte Plat */
+.plat-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-slate);
+    position: relative;
+}
+
+.plat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-slate);
+}
+
+.plat-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: var(--bg-slate-soft);
+}
+
+.plat-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.plat-card:hover .plat-image {
+    transform: scale(1.05);
+}
+
+.plat-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.plat-badge.available {
+    background: var(--success-bg);
+    color: var(--success-soft);
+    border: 1px solid var(--success-soft);
+}
+
+.plat-badge.unavailable {
+    background: var(--danger-bg);
+    color: var(--danger-soft);
+    border: 1px solid var(--danger-soft);
+}
+
+.plat-content {
+    padding: 1.5rem;
+}
+
+.plat-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.plat-meta {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.plat-type {
+    background: var(--bg-slate-soft);
+    color: var(--primary-slate-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid var(--border-slate);
+}
+
+.plat-category {
+    background: var(--bg-slate-soft);
+    color: var(--text-muted);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid var(--border-slate);
+}
+
+.plat-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.plat-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.plat-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-slate);
+}
+
+.plat-actions {
+    margin-top: 1rem;
+}
+
+.plat-detail-btn {
+    width: 100%;
+    background: var(--primary-slate);
+    color: white;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block;
+    border: none;
+    cursor: pointer;
+}
+
+.plat-detail-btn:hover {
+    background: var(--accent-slate);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(51, 65, 85, 0.2);
+}
+
+/* Suggestions de Recherche */
 .search-suggestions {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    max-height: 300px;
+    border: 1px solid var(--border-slate);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-height: 320px;
     overflow-y: auto;
     z-index: 50;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
+    backdrop-filter: blur(10px);
 }
 
 .suggestion-item {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #f3f4f6;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-slate);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .suggestion-item:hover {
-    background-color: #f9fafb;
+    background: var(--bg-slate-soft);
 }
 
 .suggestion-item:last-child {
@@ -43,11 +378,10 @@
 }
 
 .suggestion-image {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     object-fit: cover;
-    border-radius: 0.375rem;
-    margin-right: 0.75rem;
+    border-radius: 0.5rem;
 }
 
 .suggestion-details {
@@ -56,62 +390,113 @@
 
 .suggestion-name {
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
 .suggestion-meta {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-muted);
 }
 
 .suggestion-price {
     font-weight: 700;
-    color: #2563eb;
-    margin-left: auto;
+    color: var(--primary-slate);
+    font-size: 0.875rem;
 }
 
-.search-loading {
-    padding: 1rem;
+.search-loading, .no-suggestions {
+    padding: 1.5rem;
     text-align: center;
-    color: #6b7280;
-}
-
-.no-suggestions {
-    padding: 1rem;
-    text-align: center;
-    color: #6b7280;
+    color: var(--text-muted);
     font-style: italic;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 1rem;
+    border: 2px dashed var(--border-slate);
+    margin: 2rem 0;
+}
+
+.empty-state-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1rem;
+    color: var(--text-muted);
+}
+
+.empty-state-text {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-title {
+        font-size: 2rem;
+    }
+    
+    .filters-section {
+        padding: 1rem;
+    }
+    
+    .plats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .quick-filters {
+        gap: 0.5rem;
+    }
+    
+    .quick-filter-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .search-container {
+        min-width: 100%;
+    }
+    
+    .filter-select {
+        min-width: 100%;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Menu du Restaurant</h1>
-            <p class="text-gray-600">Découvrez nos plats délicieux</p>
+<div class="menu-container">
+    <div class="container mx-auto px-4">
+        <!-- Header Section -->
+        <div class="menu-header">
+            <h1 class="menu-title">Menu du Restaurant</h1>
+            <p class="menu-subtitle">Découvrez nos plats délicieux et créatifs</p>
         </div>
 
-        <!-- Filtres de recherche -->
-        <div class="mb-6">
-            <div class="flex flex-wrap gap-4">
+        <!-- Filtres Section -->
+        <div class="filters-section">
+            <div class="flex flex-wrap gap-4 items-end">
                 <!-- Recherche textuelle avec suggestions -->
-                <div class="flex-1 min-w-64 search-container">
+                <div class="search-container">
                     <div class="relative">
+                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
                         <input type="text" 
                                name="search" 
                                id="searchInput"
                                value="{{ search_query }}" 
                                placeholder="Rechercher un plat en temps réel..." 
                                autocomplete="off"
-                               class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
+                               class="search-input">
                         <!-- Suggestions dropdown -->
                         <div id="searchSuggestions" class="search-suggestions hidden">
                             <!-- Les suggestions seront insérées ici par JavaScript -->
@@ -121,7 +506,7 @@
                 
                 <!-- Filtre par type de plat -->
                 <div>
-                    <select name="type_plat" id="typePlatFilter" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                    <select name="type_plat" id="typePlatFilter" class="filter-select">
                         <option value="">Tous les types</option>
                         {% for type_value, type_label in type_plat_choices %}
                         <option value="{{ type_value }}" {% if type_plat_filter == type_value %}selected{% endif %}>
@@ -133,7 +518,7 @@
                 
                 <!-- Filtre par catégorie -->
                 <div>
-                    <select name="categorie" id="categorieFilter" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                    <select name="categorie" id="categorieFilter" class="filter-select">
                         <option value="">Toutes les catégories</option>
                         {% for categorie in categories %}
                         <option value="{{ categorie.id }}" {% if categorie_filter == categorie.id|stringformat:"s" %}selected{% endif %}>
@@ -145,7 +530,10 @@
                 
                 <!-- Bouton de réinitialisation -->
                 <div>
-                    <a href="{% url 'restaurant:menu_list' %}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition focus:ring-2 focus:ring-gray-200">
+                    <a href="{% url 'restaurant:menu_list' %}" class="reset-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
                         Réinitialiser tout
                     </a>
                 </div>
@@ -153,70 +541,77 @@
         </div>
 
         <!-- Filtres rapides par catégorie -->
-        <div class="mb-6">
-            <div class="flex flex-wrap gap-2">
-                <a href="{% url 'restaurant:menu_list' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Tous
-                </a>
-                {% for categorie in categories %}
-                <a href="?categorie={{ categorie.id }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                    {{ categorie.nom }}
-                </a>
-                {% endfor %}
-            </div>
+        <div class="quick-filters">
+            <a href="{% url 'restaurant:menu_list' %}" class="quick-filter-btn {% if not categorie_filter %}active{% endif %}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                Tous
+            </a>
+            {% for categorie in categories %}
+            <a href="?categorie={{ categorie.id }}" class="quick-filter-btn {% if categorie_filter == categorie.id|stringformat:"s" %}active{% endif %}">
+                {{ categorie.nom }}
+            </a>
+            {% endfor %}
         </div>
 
         <!-- Grille des plats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="plats-grid">
             {% for plat in plats %}
-            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="plat-card">
                 <!-- Image du plat -->
-                {% if plat.image %}
-                <div class="h-48 bg-gray-200">
-                    <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="w-full h-full object-cover">
-                </div>
-                {% else %}
-                <div class="h-48 bg-gray-200 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                </div>
-                {% endif %}
-                
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plat.nom }}</h3>
-                    {% if plat.type_plat %}
-                    <p class="text-sm text-purple-600 font-medium mb-2">{{ plat.get_type_plat_display }}</p>
-                    {% endif %}
-                    {% if plat.categorie %}
-                    <p class="text-sm text-gray-500 mb-2">{{ plat.categorie.nom }}</p>
-                    {% endif %}
-                    <p class="text-gray-600 text-sm mb-4">{{ plat.description|truncatewords:20 }}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-2xl font-bold text-blue-600">{{ plat.prix_unitaire }} GNF</span>
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full
-                            {% if plat.disponible %}
-                                bg-green-100 text-green-800
-                            {% else %}
-                                bg-red-100 text-red-800
-                            {% endif %}">
-                            {% if plat.disponible %}
-                                Disponible
-                            {% else %}
-                                Indisponible
-                            {% endif %}
-                        </span>
+                <div class="plat-image-container">
+                    {% if plat.image %}
+                    <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="plat-image">
+                    {% else %}
+                    <div class="plat-image-container flex items-center justify-center">
+                        <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
                     </div>
-                    <div class="mt-4">
-                        <a href="{% url 'restaurant:plat_detail' plat.id %}" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-center block">
+                    {% endif %}
+                    
+                    <!-- Badge de disponibilité -->
+                    <div class="plat-badge {% if plat.disponible %}available{% else %}unavailable{% endif %}">
+                        {% if plat.disponible %}
+                            Disponible
+                        {% else %}
+                            Indisponible
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="plat-content">
+                    <h3 class="plat-name">{{ plat.nom }}</h3>
+                    
+                    <div class="plat-meta">
+                        {% if plat.type_plat %}
+                        <span class="plat-type">{{ plat.get_type_plat_display }}</span>
+                        {% endif %}
+                        {% if plat.categorie %}
+                        <span class="plat-category">{{ plat.categorie.nom }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <p class="plat-description">{{ plat.description|truncatewords:20 }}</p>
+                    
+                    <div class="plat-footer">
+                        <span class="plat-price">{{ plat.prix_unitaire }} GNF</span>
+                    </div>
+                    
+                    <div class="plat-actions">
+                        <a href="{% url 'restaurant:plat_detail' plat.id %}" class="plat-detail-btn">
                             Voir détails
                         </a>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="col-span-full text-center py-12">
-                <p class="text-gray-500 text-lg">Aucun plat disponible pour le moment.</p>
+            <div class="empty-state">
+                <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <p class="empty-state-text">Aucun plat disponible pour le moment.</p>
             </div>
             {% endfor %}
         </div>
