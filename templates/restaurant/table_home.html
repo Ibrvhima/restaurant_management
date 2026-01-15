@@ -4,34 +4,34 @@
 {% block title %}Table {{ table.numero_table }} - Restaurant Management{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-slate-50">
     <!-- Header responsive -->
-    <div class="bg-blue-600 text-white">
+    <div class="bg-slate-600 text-white">
         <div class="container mx-auto px-4 py-4 sm:py-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold">Table {{ table.numero_table }}</h1>
-                    <p class="text-blue-100 text-sm sm:text-base">{{ table.nombre_places }} places</p>
+                    <p class="text-slate-200 text-sm sm:text-base">{{ table.nombre_places }} places</p>
                 </div>
                 <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                     <!-- Panier -->
                     <div class="relative">
-                        <button id="panier-btn" class="bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-50 transition flex items-center space-x-2 text-sm sm:text-base">
+                        <button id="panier-btn" class="bg-white text-slate-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-slate-50 transition flex items-center space-x-2 text-sm sm:text-base">
                             <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                             <span class="hidden sm:inline">Panier</span>
                             <span class="sm:hidden">🛒</span>
-                            <span id="panier-count" class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-2">0</span>
+                            <span id="panier-count" class="bg-red-400 text-white text-xs rounded-full px-2 py-1 ml-2">0</span>
                         </button>
                     </div>
                     <!-- Commandes -->
-                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-50 transition text-sm sm:text-base">
+                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white text-slate-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-slate-50 transition text-sm sm:text-base">
                         <span class="hidden sm:inline">Mes Commandes</span>
                         <span class="sm:hidden">📋</span>
                     </a>
                     <!-- État Commandes Cuisine -->
-                    <button id="etat-commandes-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center space-x-2">
+                    <button id="etat-commandes-btn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
@@ -43,12 +43,12 @@
     </div>
 
     <!-- Filtres -->
-    <div class="bg-white shadow-sm border-b">
+    <div class="bg-white shadow-sm border-b border-slate-200">
         <div class="container mx-auto px-4 py-4">
             <div class="flex flex-wrap gap-4 items-center">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-                    <select id="categorie-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Catégorie</label>
+                    <select id="categorie-filter" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500">
                         <option value="">Toutes les catégories</option>
                         {% for categorie in categories %}
                         <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
@@ -56,8 +56,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                    <select id="type-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Type</label>
+                    <select id="type-filter" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500">
                         <option value="">Tous les types</option>
                         <option value="ENTREE">Entrées</option>
                         <option value="PRINCIPAL">Plats principaux</option>
@@ -68,9 +68,9 @@
                     </select>
                 </div>
                 <div class="flex-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Recherche</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Recherche</label>
                     <input type="text" id="search-input" placeholder="Rechercher un plat..." 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500">
                 </div>
             </div>
         </div>
@@ -95,22 +95,22 @@
                         </div>
                     {% endif %}
                     <div class="absolute top-2 right-2">
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">
                             {{ plat.get_type_plat_display }}
                         </span>
                     </div>
                 </div>
                 <div class="p-4">
-                    <h3 class="font-semibold text-lg text-gray-900 mb-2">{{ plat.nom }}</h3>
+                    <h3 class="font-semibold text-lg text-slate-900 mb-2">{{ plat.nom }}</h3>
                     {% if plat.categorie %}
-                        <p class="text-sm text-gray-600 mb-2">{{ plat.categorie.nom }}</p>
+                        <p class="text-sm text-slate-600 mb-2">{{ plat.categorie.nom }}</p>
                     {% endif %}
                     {% if plat.description %}
-                        <p class="text-sm text-gray-700 mb-3">{{ plat.description|truncatewords:15 }}</p>
+                        <p class="text-sm text-slate-700 mb-3">{{ plat.description|truncatewords:15 }}</p>
                     {% endif %}
                     <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold text-blue-600">{{ plat.prix_unitaire }} GNF</span>
-                        <button type="button" class="ajouter-panier bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" 
+                        <span class="text-xl font-bold text-slate-600">{{ plat.prix_unitaire }} GNF</span>
+                        <button type="button" class="ajouter-panier bg-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition" 
                                 data-plat-id="{{ plat.id }}" data-plat-nom="{{ plat.nom }}" data-prix="{{ plat.prix_unitaire }}">
                             Ajouter
                         </button>
@@ -119,7 +119,7 @@
             </div>
             {% empty %}
             <div class="col-span-full text-center py-12">
-                <p class="text-gray-500 text-lg">Aucun plat disponible.</p>
+                <p class="text-slate-500 text-lg">Aucun plat disponible.</p>
             </div>
             {% endfor %}
         </div>
@@ -129,10 +129,10 @@
     <div id="panier-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
         <div class="flex items-center justify-center min-h-screen px-4">
             <div class="bg-white rounded-lg max-w-2xl w-full" style="max-height: 90vh; display: flex; flex-direction: column;">
-                <div class="bg-blue-600 text-white p-6 flex-shrink-0">
+                <div class="bg-slate-600 text-white p-6 flex-shrink-0">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xl font-bold">Mon Panier</h2>
-                        <button id="close-panier" class="text-white hover:text-gray-200">
+                        <button id="close-panier" class="text-white hover:text-slate-200">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
@@ -146,13 +146,13 @@
                     <div class="mt-6 pt-6 border-t flex-shrink-0">
                         <div class="flex justify-between items-center mb-4">
                             <span class="text-xl font-bold">Total:</span>
-                            <span id="panier-total" class="text-xl font-bold text-blue-600">0 GNF</span>
+                            <span id="panier-total" class="text-xl font-bold text-slate-600">0 GNF</span>
                         </div>
                         <div class="flex space-x-4">
-                            <button id="vider-panier" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">
+                            <button id="vider-panier" class="flex-1 bg-slate-500 text-white px-4 py-2 rounded-lg hover:bg-slate-600 transition">
                                 Vider le panier
                             </button>
-                            <a href="{% url 'restaurant:table_valider_commande' %}" id="valider-commande" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-center">
+                            <a href="{% url 'restaurant:table_valider_commande' %}" id="valider-commande" class="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition text-center">
                                 Valider la commande
                             </a>
                         </div>
@@ -188,7 +188,7 @@ function updatePanierUI() {
     
     const panierContent = document.getElementById('panier-content');
     if (Object.keys(panier).length === 0) {
-        panierContent.innerHTML = '<p class="text-gray-500 text-center">Votre panier est vide</p>';
+        panierContent.innerHTML = '<p class="text-slate-500 text-center">Votre panier est vide</p>';
         document.getElementById('valider-commande').classList.add('opacity-50', 'cursor-not-allowed');
         document.getElementById('valider-commande').href = '#';
     } else {
@@ -407,10 +407,10 @@ function showMessage(message, type) {
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
             <!-- Header -->
-            <div class="bg-green-600 text-white p-6">
+            <div class="bg-emerald-600 text-white p-6">
                 <div class="flex justify-between items-center">
                     <h2 class="text-2xl font-bold">État des Commandes en Cuisine</h2>
-                    <button id="close-etat-modal" class="text-white hover:bg-green-700 rounded-lg p-2">
+                    <button id="close-etat-modal" class="text-white hover:bg-emerald-700 rounded-lg p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -422,8 +422,8 @@ function showMessage(message, type) {
             <div class="p-6 overflow-y-auto max-h-[60vh]">
                 <div id="etat-commandes-content">
                     <div class="text-center py-8">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-                        <p class="text-gray-600">Chargement de l'état des commandes...</p>
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                        <p class="text-slate-600">Chargement de l'état des commandes...</p>
                     </div>
                 </div>
             </div>
@@ -464,7 +464,7 @@ function chargerEtatCommandes() {
             document.getElementById('etat-commandes-content').innerHTML = `
                 <div class="text-center py-8">
                     <p class="text-red-600">Erreur lors du chargement des commandes</p>
-                    <p class="text-sm text-gray-500 mt-2">Veuillez réessayer ultérieurement</p>
+                    <p class="text-sm text-slate-500 mt-2">Veuillez réessayer ultérieurement</p>
                 </div>
             `;
         });
@@ -476,7 +476,7 @@ function afficherEtatCommandes(commandes) {
     if (commandes.length === 0) {
         html = `
             <div class="text-center py-8">
-                <p class="text-gray-600">Aucune commande en cours en cuisine</p>
+                <p class="text-slate-600">Aucune commande en cours en cuisine</p>
             </div>
         `;
     } else {
@@ -484,11 +484,11 @@ function afficherEtatCommandes(commandes) {
         
         commandes.forEach(commande => {
             const couleurEtat = {
-                'EN_ATTENTE': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                'EN_PREPARATION': 'bg-blue-100 text-blue-800 border-blue-200',
+                'EN_ATTENTE': 'bg-amber-100 text-amber-800 border-amber-200',
+                'EN_PREPARATION': 'bg-slate-100 text-slate-800 border-slate-200',
                 'EN_COURS': 'bg-orange-100 text-orange-800 border-orange-200',
-                'TERMINEE': 'bg-green-100 text-green-800 border-green-200'
-            }[commande.etat] || 'bg-gray-100 text-gray-800 border-gray-200';
+                'TERMINEE': 'bg-emerald-100 text-emerald-800 border-emerald-200'
+            }[commande.etat] || 'bg-slate-100 text-slate-800 border-slate-200';
             
             html += `
                 <div class="border rounded-lg overflow-hidden ${couleurEtat}">
