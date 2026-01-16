@@ -65,7 +65,7 @@ package-lock.json
 static/css/output.css
 
 # MySQL
-*.sql
+# *.sql
 my.cnf
 
 # Backup files
