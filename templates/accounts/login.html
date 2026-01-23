@@ -3,81 +3,265 @@
 
 {% block title %}Connexion - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mobile-first.css' %}">
+<style>
+/* Optimisations spécifiques pour le login */
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: var(--space-xl);
+    border: 1px solid var(--gray-200);
+}
+
+@media (min-width: 640px) {
+    .login-card {
+        padding: var(--space-2xl);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.logo-section {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.logo-icon {
+    width: 3rem;
+    height: 3rem;
+    background: var(--primary);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-lg);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+    .logo-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1rem;
+    }
+}
+
+.login-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+    .login-title {
+        font-size: var(--text-3xl);
+    }
+}
+
+.login-subtitle {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+.form-section {
+    margin-bottom: var(--space-lg);
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: var(--space-lg);
+}
+
+.input-icon {
+    position: absolute;
+    left: var(--space-md);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.login-input {
+    width: 100%;
+    padding: var(--space-md) var(--space-md) var(--space-md) 2.5rem;
+    font-size: var(--text-base);
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    background: white;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-input::placeholder {
+    color: var(--gray-400);
+}
+
+.submit-btn {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: var(--space-md);
+    font-size: var(--text-base);
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit-btn:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.back-link {
+    text-align: center;
+    margin-top: var(--space-lg);
+}
+
+.back-link a {
+    color: var(--gray-600);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: color 0.2s ease-in-out;
+}
+
+.back-link a:hover {
+    color: var(--primary);
+}
+
+.alert {
+    padding: var(--space-md);
+    border-radius: 0.5rem;
+    margin-bottom: var(--space-lg);
+    font-size: var(--text-sm);
+}
+
+.alert-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+
+/* Animation d'entrée */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-card {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Focus visible pour accessibilité */
+.login-input:focus-visible,
+.submit-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-    <div class="w-full max-w-md">
+<div class="login-container">
+    <div class="login-card">
         <!-- Logo et titre -->
-        <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        <div class="logo-section">
+            <div class="logo-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
             </div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                Restaurant Management
-            </h1>
-            <p class="text-gray-600">
-                Connectez-vous à votre compte
-            </p>
+            <h1 class="login-title">Restaurant Management</h1>
+            <p class="login-subtitle">Connectez-vous à votre compte</p>
         </div>
 
         <!-- Formulaire de connexion -->
-        <div class="bg-white rounded-lg border border-gray-200 p-8">
+        <div class="form-section">
             {% if messages %}
-            <div class="mb-6 space-y-2">
                 {% for message in messages %}
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div class="alert alert-error">
                     {{ message }}
                 </div>
                 {% endfor %}
-            </div>
             {% endif %}
 
-            <form method="post" action="{% url 'accounts:login' %}" class="space-y-6">
+            <form method="post" action="{% url 'accounts:login' %}">
                 {% csrf_token %}
                 
-                <div class="space-y-2">
-                    <label for="login" class="block text-sm font-medium text-gray-700">
-                        Identifiant
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                        </div>
-                        <input type="text" id="login" name="login" required
-                               class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800"
-                               placeholder="Entrez votre identifiant">
+                <div class="input-group">
+                    <div class="input-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
                     </div>
+                    <input type="text" 
+                           id="login" 
+                           name="login" 
+                           required
+                           class="login-input"
+                           placeholder="Entrez votre identifiant"
+                           autocomplete="username">
                 </div>
 
-                <div class="space-y-2">
-                    <label for="password" class="block text-sm font-medium text-gray-700">
-                        Mot de passe
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                        </div>
-                        <input type="password" id="password" name="password" required
-                               class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800"
-                               placeholder="Entrez votre mot de passe">
+                <div class="input-group">
+                    <div class="input-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
                     </div>
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           required
+                           class="login-input"
+                           placeholder="Entrez votre mot de passe"
+                           autocomplete="current-password">
                 </div>
 
-                <button type="submit" 
-                        class="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition font-medium">
+                <button type="submit" class="submit-btn">
                     Se connecter
                 </button>
             </form>
 
-            <div class="mt-6 text-center">
-                <a href="{% url 'accounts:home' %}" class="text-sm text-gray-600 hover:text-gray-900 transition">
-                    Retour à l'accueil
-                </a>
+            <div class="back-link">
+                <a href="{% url 'accounts:home' %}">Retour à l'accueil</a>
             </div>
         </div>
     </div>

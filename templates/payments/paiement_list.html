@@ -3,31 +3,416 @@
 
 {% block title %}Paiements - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mobile-first.css' %}">
+<style>
+/* Optimisations spécifiques pour la liste des paiements */
+.paiements-container {
+    min-height: 100vh;
+    background: var(--gray-50);
+}
+
+.header-section {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-lg) 0;
+    margin-bottom: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+    .header-section {
+        padding: var(--space-xl) 0;
+        margin-bottom: var(--space-xl);
+    }
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+@media (min-width: 768px) {
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-lg);
+    }
+}
+
+.header-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+    .header-title {
+        font-size: var(--text-3xl);
+    }
+}
+
+.header-subtitle {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+}
+
+.back-btn:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+}
+
+/* Filtres */
+.filters-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+@media (min-width: 640px) {
+    .filters-section {
+        padding: var(--space-lg);
+    }
+}
+
+.filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+    .filters-form {
+        flex-direction: row;
+        align-items: flex-end;
+        gap: var(--space-lg);
+    }
+}
+
+.filter-group {
+    flex: 1;
+}
+
+.filter-label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: var(--space-xs);
+}
+
+.filter-input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-base);
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    background: white;
+    min-height: 44px;
+    transition: all 0.2s ease-in-out;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filter-btn {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Table responsive */
+.paiements-table {
+    width: 100%;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.table-header {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-md);
+}
+
+@media (min-width: 640px) {
+    .table-header {
+        padding: var(--space-lg);
+    }
+}
+
+.table-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+/* Table desktop */
+@media (min-width: 640px) {
+    .table-desktop {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table-desktop th {
+        background: var(--gray-50);
+        padding: var(--space-md);
+        text-align: left;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--gray-700);
+        border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .table-desktop td {
+        padding: var(--space-md);
+        border-bottom: 1px solid var(--gray-100);
+        font-size: var(--text-sm);
+    }
+    
+    .table-desktop tr:hover {
+        background: var(--gray-50);
+    }
+}
+
+/* Cards mobile */
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+    .cards-container {
+        display: none;
+    }
+}
+
+.paiement-card {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--space-md);
+    border: 1px solid var(--gray-200);
+    transition: all 0.2s ease-in-out;
+}
+
+.paiement-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+}
+
+.card-id {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--gray-500);
+}
+
+.card-montant {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.card-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-label {
+    font-size: var(--text-sm);
+    color: var(--gray-600);
+}
+
+.card-value {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--gray-900);
+}
+
+.card-actions {
+    display: flex;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--gray-100);
+}
+
+.action-btn {
+    flex: 1;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: 0.375rem;
+    border: 1px solid;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-view {
+    background: white;
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.action-view:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.action-edit {
+    background: white;
+    color: var(--warning-soft);
+    border-color: var(--warning-soft);
+}
+
+.action-edit:hover {
+    background: var(--warning-soft);
+    color: white;
+}
+
+.action-delete {
+    background: white;
+    color: var(--danger-soft);
+    border-color: var(--danger-soft);
+}
+
+.action-delete:hover {
+    background: var(--danger-soft);
+    color: white;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    border-radius: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success {
+    background: var(--success-bg);
+    color: var(--success-soft);
+}
+
+.badge-pending {
+    background: var(--warning-bg);
+    color: var(--warning-soft);
+}
+
+.badge-failed {
+    background: var(--danger-bg);
+    color: var(--danger-soft);
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--gray-500);
+}
+
+.empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto var(--space-lg);
+    color: var(--gray-300);
+}
+
+.empty-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+.empty-text {
+    font-size: var(--text-sm);
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="mb-8">
-            <div class="flex justify-between items-center">
+<div class="paiements-container">
+    <div class="container-mobile">
+        <!-- Header -->
+        <header class="header-section">
+            <div class="header-content">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Liste des Paiements</h1>
-                    <p class="text-gray-600">Gestion des paiements</p>
+                    <h1 class="header-title">Liste des Paiements</h1>
+                    <p class="header-subtitle">Gestion des paiements</p>
                 </div>
-                <a href="{% url 'accounts:dashboard' %}" 
-                   class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                <a href="{% url 'accounts:dashboard' %}" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Retour Dashboard
                 </a>
             </div>
-        </div>
+        </header>
 
         <!-- Filtres -->
-        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
-            <form method="get" class="flex flex-col sm:flex-row gap-4">
-                <div class="w-full sm:w-auto">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Méthode</label>
-                    <select name="methode" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+        <section class="filters-section">
+            <form method="get" class="filters-form">
+                <div class="filter-group">
+                    <label class="filter-label">Méthode</label>
+                    <select name="methode" class="filter-input">
                         <option value="">Toutes</option>
                         {% for methode_value, methode_label in methodes %}
                         <option value="{{ methode_value }}" {% if methode_filter == methode_value %}selected{% endif %}>
@@ -36,18 +421,129 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <input type="date" name="date" value="{{ date_filter }}" 
-                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <div class="filter-group">
+                    <label class="filter-label">Date</label>
+                    <input type="date" name="date" value="{{ date_filter }}" class="filter-input">
                 </div>
-                <div class="flex items-end">
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                        Filtrer
-                    </button>
-                </div>
+                <button type="submit" class="filter-btn">
+                    Filtrer
+                </button>
             </form>
-        </div>
+        </section>
+
+        <!-- Table/Cards -->
+        <main>
+            {% if paiements %}
+                <!-- Version Mobile: Cards -->
+                <div class="cards-container">
+                    {% for paiement in paiements %}
+                    <div class="paiement-card interactive">
+                        <div class="card-header">
+                            <span class="card-id">#{{ paiement.id }}</span>
+                            <span class="card-montant">{{ paiement.montant }}€</span>
+                        </div>
+                        
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <span class="card-label">Date</span>
+                                <span class="card-value">{{ paiement.date_paiement|date:"d/m/Y H:i" }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="card-label">Méthode</span>
+                                <span class="card-value">{{ paiement.get_methode_paiement_display }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="card-label">Statut</span>
+                                <span class="card-value">
+                                    {% if paiement.statut == 'complété' %}
+                                        <span class="badge badge-success">Complété</span>
+                                    {% elif paiement.statut == 'en_attente' %}
+                                        <span class="badge badge-pending">En attente</span>
+                                    {% else %}
+                                        <span class="badge badge-failed">Échoué</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
+                            <a href="{% url 'payments:paiement_detail' paiement.id %}" class="action-btn action-view">
+                                Voir
+                            </a>
+                            <a href="{% url 'payments:modifier_paiement' paiement.id %}" class="action-btn action-edit">
+                                Modifier
+                            </a>
+                            <a href="{% url 'payments:supprimer_paiement' paiement.id %}" class="action-btn action-delete">
+                                Supprimer
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Version Desktop: Table -->
+                <div class="table-desktop">
+                    <table class="table-desktop">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for paiement in paiements %}
+                            <tr>
+                                <td>#{{ paiement.id }}</td>
+                                <td>{{ paiement.date_paiement|date:"d/m/Y H:i" }}</td>
+                                <td>{{ paiement.montant }}€</td>
+                                <td>{{ paiement.get_methode_paiement_display }}</td>
+                                <td>
+                                    {% if paiement.statut == 'complété' %}
+                                        <span class="badge badge-success">Complété</span>
+                                    {% elif paiement.statut == 'en_attente' %}
+                                        <span class="badge badge-pending">En attente</span>
+                                    {% else %}
+                                        <span class="badge badge-failed">Échoué</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="{% url 'payments:paiement_detail' paiement.id %}" 
+                                           class="action-btn action-view" style="width: auto;">
+                                            Voir
+                                        </a>
+                                        <a href="{% url 'payments:modifier_paiement' paiement.id %}" 
+                                           class="action-btn action-edit" style="width: auto;">
+                                            Modifier
+                                        </a>
+                                        <a href="{% url 'payments:supprimer_paiement' paiement.id %}" 
+                                           class="action-btn action-delete" style="width: auto;">
+                                            Supprimer
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <h3 class="empty-title">Aucun paiement trouvé</h3>
+                    <p class="empty-text">Essayez de modifier les filtres ou ajoutez un nouveau paiement.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}
 
         <!-- Actions rapides -->
         <div class="mb-6">
