@@ -337,9 +337,9 @@
                     <li>
                         <form method="post" action="{% url 'accounts:logout' %}">
                             {% csrf_token %}
-                            <button type="submit" class="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-red-900 text-red-400 hover:text-red-300 transition-all duration-200 group">
-                                <span class="icon-logout"></span>
-                                <span class="font-medium">Déconnexion</span>
+                            <button type="submit" class="w-full flex items-center space-x-2 p-1.5 rounded-lg hover:bg-red-900 text-red-400 hover:text-red-300 transition-all duration-200 group">
+                                <span class="icon-logout" style="font-size: 0.875rem;"></span>
+                                <span class="font-medium text-sm">Déconnexion</span>
                             </button>
                         </form>
                     </li>
