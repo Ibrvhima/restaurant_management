@@ -682,51 +682,42 @@
 <!-- Mobile Menu JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script chargé');
+    console.log('Script mobile menu chargé');
     
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('mobileSidebarOverlay');
     
     console.log('Elements trouvés:', {
-        btn: mobileMenuBtn,
-        sidebar: sidebar,
-        overlay: overlay
+        btn: mobileMenuBtn ? 'OK' : 'MANQUANT',
+        sidebar: sidebar ? 'OK' : 'MANQUANT', 
+        overlay: overlay ? 'OK' : 'MANQUANT'
     });
     
-    if (mobileMenuBtn) {
+    if (mobileMenuBtn && sidebar) {
         mobileMenuBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Clic sur le bouton menu');
+            console.log('Clic sur le bouton menu détecté!');
             
-            if (sidebar) {
-                console.log('Classes avant:', sidebar.className);
-                
-                // Forcer l'affichage avec des styles inline
-                if (sidebar.style.transform === 'translateX(0px)') {
-                    sidebar.style.transform = 'translateX(-100%)';
-                    if (overlay) overlay.style.display = 'none';
-                    document.body.style.overflow = '';
-                } else {
-                    sidebar.style.transform = 'translateX(0px)';
-                    if (overlay) overlay.style.display = 'block';
-                    document.body.style.overflow = 'hidden';
-                }
-                
-                console.log('Classes après:', sidebar.className);
-                console.log('Style transform:', sidebar.style.transform);
+            // Toggle avec classes CSS plus simples
+            sidebar.classList.toggle('-translate-x-full');
+            sidebar.classList.toggle('translate-x-0');
+            
+            if (overlay) {
+                overlay.classList.toggle('hidden');
             }
+            
+            console.log('Classes sidebar après clic:', sidebar.className);
         });
     }
     
     // Fermeture overlay
     if (overlay) {
         overlay.addEventListener('click', function() {
-            if (sidebar) {
-                sidebar.style.transform = 'translateX(-100%)';
-                overlay.style.display = 'none';
-                document.body.style.overflow = '';
-            }
+            console.log('Clic sur overlay');
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
         });
     }
 });
