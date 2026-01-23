@@ -68,4 +68,4 @@ class Depense(models.Model):
         ordering = ['-date_depense']
     
     def __str__(self):
-        return f"{self.description} - {self.montant} FCFA ({self.date_depense.strftime('%d/%m/%Y')})"
+        return f"{self.description} - {self.montant} GNF ({self.date_depense.strftime('%d/%m/%Y')})"

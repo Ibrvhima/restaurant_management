@@ -51,7 +51,7 @@ class Paiement(models.Model):
         ordering = ['-date_paiement']
     
     def __str__(self):
-        return f"Paiement #{self.id} - Commande #{self.commande.id} - {self.montant} FCFA"
+        return f"Paiement #{self.id} - Commande #{self.commande.id} - {self.montant} GNF"
 
 
 class Caisse(models.Model):
@@ -73,7 +73,7 @@ class Caisse(models.Model):
         verbose_name_plural = 'Caisse'
     
     def __str__(self):
-        return f"Caisse - Solde: {self.solde_actuel} FCFA"
+        return f"Caisse - Solde: {self.solde_actuel} GNF"
     
     def save(self, *args, **kwargs):
         """Assure qu'il n'y a qu'une seule instance de Caisse"""

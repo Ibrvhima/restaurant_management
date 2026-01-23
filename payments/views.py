@@ -189,7 +189,7 @@ def ajouter_montant_caisse(request):
     caisse = Caisse.get_instance()
     caisse.ajouter_montant(montant)
     
-    messages.success(request, f'{montant} FCFA ajoutés à la caisse.')
+    messages.success(request, f'{montant} GNF ajoutés à la caisse.')
     return redirect('payments:caisse_dashboard')
 
 @require_POST
@@ -213,7 +213,7 @@ def retirer_montant_caisse(request):
     caisse = Caisse.get_instance()
     if caisse.solde_actuel >= montant:
         caisse.retirer_montant(montant)
-        messages.success(request, f'{montant} FCFA retirés de la caisse.')
+        messages.success(request, f'{montant} GNF retirés de la caisse.')
     else:
         messages.error(request, 'Solde insuffisant dans la caisse.')
     

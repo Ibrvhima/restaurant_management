@@ -440,7 +440,7 @@
                     <div class="paiement-card interactive">
                         <div class="card-header">
                             <span class="card-id">#{{ paiement.id }}</span>
-                            <span class="card-montant">{{ paiement.montant }}€</span>
+                            <span class="card-montant">{{ paiement.montant }} GNF</span>
                         </div>
                         
                         <div class="card-details">
@@ -499,7 +499,7 @@
                             <tr>
                                 <td>#{{ paiement.id }}</td>
                                 <td>{{ paiement.date_paiement|date:"d/m/Y H:i" }}</td>
-                                <td>{{ paiement.montant }}€</td>
+                                <td>{{ paiement.montant }} GNF</td>
                                 <td>{{ paiement.get_methode_paiement_display }}</td>
                                 <td>
                                     {% if paiement.statut == 'complété' %}

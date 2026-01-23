@@ -62,7 +62,7 @@ class Commande(models.Model):
         ordering = ['-date_commande']
     
     def __str__(self):
-        return f"Commande #{self.id} - Table {self.table.numero_table} - {self.total} FCFA"
+        return f"Commande #{self.id} - Table {self.table.numero_table} - {self.total} GNF"
     
     def calculer_total(self):
         """Calcule le total de la commande à partir des items"""
