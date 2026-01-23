@@ -6,9 +6,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views_init import init_database
+from .views_debug import debug_info
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('debug/', debug_info, name='debug_info'),
     path('init-db/', init_database, name='init_database'),
     path('', include('accounts.urls', namespace='accounts')),
     path('restaurant/', include('restaurant.urls', namespace='restaurant')),
