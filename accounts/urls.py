@@ -15,6 +15,8 @@ urlpatterns = [
     # URLs admin (préfixe 'system' pour éviter conflit avec /admin/)
     path('system/users/', views.admin_user_list, name='admin_user_list'),
     path('system/users/create/', views.admin_create_user, name='admin_create_user'),
+    path('system/users/<int:user_id>/edit/', views.admin_edit_user, name='admin_edit_user'),
+    path('system/users/<int:user_id>/delete/', views.admin_delete_user, name='admin_delete_user'),
     path('system/users/<int:user_id>/toggle/', views.admin_toggle_user, name='admin_toggle_user'),
     path('system/data/', views.admin_data_management, name='admin_data_management'),
     path('system/data/clear/commandes/', views.admin_clear_commandes, name='admin_clear_commandes'),

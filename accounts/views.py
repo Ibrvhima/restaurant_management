@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
-from .models import User
+from .models import User, Utilisateur
+from .forms import UserCreationForm
 from .utils import export_dashboard_excel
 from .pdf_utils import export_dashboard_pdf
 from orders.models import Commande, EtatCommande
@@ -282,3 +283,54 @@ def export_pdf_dashboard(request):
         return redirect('accounts:dashboard')
     
     return export_dashboard_pdf(request)
+
+@login_required
+def admin_edit_user(request, user_id):
+    """Modifier un utilisateur (admin seulement)"""
+    if request.user.role != 'Radmin':
+        messages.error(request, "Accès non autorisé.")
+        return redirect('accounts:dashboard')
+    
+    user_to_edit = get_object_or_404(Utilisateur, id=user_id)
+    
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST, instance=user_to_edit)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Utilisateur {user_to_edit.login} modifié avec succès!")
+            return redirect('accounts:admin_user_list')
+    else:
+        form = UserCreationForm(instance=user_to_edit)
+    
+    context = {
+        'form': form,
+        'user_to_edit': user_to_edit,
+        'title': 'Modifier un utilisateur'
+    }
+    return render(request, 'accounts/admin_create_user.html', context)
+
+@login_required
+def admin_delete_user(request, user_id):
+    """Supprimer un utilisateur (admin seulement)"""
+    if request.user.role != 'Radmin':
+        messages.error(request, "Accès non autorisé.")
+        return redirect('accounts:dashboard')
+    
+    user_to_delete = get_object_or_404(Utilisateur, id=user_id)
+    
+    # Empêcher la suppression du dernier admin
+    if user_to_delete.role == 'Radmin':
+        messages.error(request, "Impossible de supprimer un administrateur.")
+        return redirect('accounts:admin_user_list')
+    
+    if request.method == 'POST':
+        username = user_to_delete.login
+        user_to_delete.delete()
+        messages.success(request, f"Utilisateur {username} supprimé avec succès!")
+        return redirect('accounts:admin_user_list')
+    
+    context = {
+        'user_to_delete': user_to_delete,
+        'title': 'Supprimer un utilisateur'
+    }
+    return render(request, 'accounts/admin_delete_user.html', context)
