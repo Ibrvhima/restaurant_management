@@ -213,40 +213,13 @@
         background-position: center;
     }
     
-    /* Forcer la sidebar mobile à être visible */
+    /* Sidebar mobile - simplifié pour éviter les conflits */
     #sidebar {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        bottom: 0 !important;
-        width: 16rem !important;
-        z-index: 999 !important; /* Augmenté pour passer au-dessus du header */
-        transform: translateX(-100%) !important;
-        transition: transform 0.3s ease-in-out !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    
-    #sidebar.show {
-        transform: translateX(0) !important;
+        z-index: 999 !important;
     }
     
     #mobileSidebarOverlay {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        background: rgba(0, 0, 0, 0.5) !important;
-        z-index: 998 !important; /* Juste en dessous de la sidebar */
-    }
-    
-    @media (min-width: 1024px) {
-        #sidebar {
-            position: static !important;
-            transform: translateX(0) !important;
-            z-index: 30 !important;
-        }
+        z-index: 998 !important;
     }
 </style>
 <div class="flex h-screen bg-gray-100">
@@ -414,11 +387,11 @@
         </header>
 
         <!-- Mobile Header -->
-        <header class="lg:hidden bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <header class="lg:hidden bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
             <div class="px-4 py-3">
                 <div class="flex items-center justify-between">
                     <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                    <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-gray-100 transition relative z-50">
                         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -488,7 +461,7 @@
                             </div>
                         </div>
                         <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-gray-500">+12% cette semaine</span>
+                            <span class="text-xs text-gray-500">Commandes en cours</span>
                             <a href="{% url 'orders:commande_list' %}" class="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium group-hover:text-blue-700 transition-colors">
                                 Voir →
                             </a>
@@ -534,7 +507,7 @@
                                 </div>
                                 <div class="ml-2 sm:ml-3 lg:ml-3">
                                     <p class="text-xs sm:text-sm text-gray-600 font-medium">Paiements</p>
-                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ paiements_aujourdhui }}</p>
+                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ total_paiements }}</p>
                                 </div>
                             </div>
                             <div class="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -544,7 +517,7 @@
                             </div>
                         </div>
                         <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-gray-500">+5% cette semaine</span>
+                            <span class="text-xs text-gray-500">Total des paiements</span>
                             <a href="{% url 'payments:paiement_list' %}" class="text-amber-600 hover:text-amber-800 text-xs sm:text-sm font-medium group-hover:text-amber-700 transition-colors">
                                 Voir →
                             </a>
@@ -572,7 +545,7 @@
                             </div>
                         </div>
                         <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-green-600 font-medium">+8% cette semaine</span>
+                            <span class="text-xs text-green-600 font-medium">Total des revenus</span>
                             <a href="{% url 'payments:paiement_list' %}" class="text-green-600 hover:text-green-800 text-xs sm:text-sm font-medium group-hover:text-green-700 transition-colors">
                                 Voir →
                             </a>
@@ -708,80 +681,53 @@
 
 <!-- Mobile Menu JavaScript -->
 <script>
-// Test direct pour voir si le JavaScript fonctionne
-console.log('=== SCRIPT LOADED ===');
-
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('=== DOM CONTENT LOADED ===');
+    console.log('Script chargé');
     
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('mobileSidebarOverlay');
     
-    console.log('=== ELEMENTS CHECK ===');
-    console.log('mobileMenuBtn:', mobileMenuBtn);
-    console.log('sidebar:', sidebar);
-    console.log('overlay:', overlay);
+    console.log('Elements trouvés:', {
+        btn: mobileMenuBtn,
+        sidebar: sidebar,
+        overlay: overlay
+    });
     
-    // Test simple : ajouter un événement de clic direct
     if (mobileMenuBtn) {
-        console.log('=== ADDING CLICK LISTENER ===');
-        
-        mobileMenuBtn.onclick = function() {
-            console.log('=== BUTTON CLICKED! ===');
-            console.log('Current sidebar classes:', sidebar.className);
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Clic sur le bouton menu');
             
-            // Toggle la sidebar
-            if (sidebar.classList.contains('show')) {
-                console.log('=== CLOSING SIDEBAR ===');
-                sidebar.classList.remove('show');
-                overlay.classList.add('hidden');
-                document.body.style.overflow = '';
-            } else {
-                console.log('=== OPENING SIDEBAR ===');
-                sidebar.classList.add('show');
-                overlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+            if (sidebar) {
+                console.log('Classes avant:', sidebar.className);
+                
+                // Forcer l'affichage avec des styles inline
+                if (sidebar.style.transform === 'translateX(0px)') {
+                    sidebar.style.transform = 'translateX(-100%)';
+                    if (overlay) overlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.style.transform = 'translateX(0px)';
+                    if (overlay) overlay.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                console.log('Classes après:', sidebar.className);
+                console.log('Style transform:', sidebar.style.transform);
             }
-        };
-        
-        // Test visuel : changer la couleur du bouton au survol
-        mobileMenuBtn.addEventListener('mouseenter', function() {
-            console.log('Mouse enter button');
-            this.style.backgroundColor = '#e5e7eb';
         });
-        
-        mobileMenuBtn.addEventListener('mouseleave', function() {
-            console.log('Mouse leave button');
-            this.style.backgroundColor = '';
-        });
-    } else {
-        console.error('=== MOBILE MENU BUTTON NOT FOUND ===');
     }
     
     // Fermeture overlay
     if (overlay) {
-        overlay.onclick = function() {
-            console.log('=== OVERLAY CLICKED ===');
-            sidebar.classList.remove('show');
-            overlay.classList.add('hidden');
-            document.body.style.overflow = '';
-        };
-    }
-    
-    // Fermeture liens
-    const sidebarLinks = sidebar.querySelectorAll('a');
-    sidebarLinks.forEach(link => {
-        link.onclick = function() {
-            if (window.innerWidth < 1024) {
-                console.log('=== LINK CLICKED - CLOSING SIDEBAR ===');
-                sidebar.classList.remove('show');
-                overlay.classList.add('hidden');
+        overlay.addEventListener('click', function() {
+            if (sidebar) {
+                sidebar.style.transform = 'translateX(-100%)';
+                overlay.style.display = 'none';
                 document.body.style.overflow = '';
             }
-        };
-    });
-    
-    console.log('=== SETUP COMPLETE ===');
+        });
+    }
 });
 </script>

@@ -78,6 +78,14 @@ def dashboard(request):
         total=models.Sum('montant')
     )['total'] or 0
     
+    # Total des revenus (tous les paiements)
+    total_revenus = Paiement.objects.aggregate(
+        total=models.Sum('montant')
+    )['total'] or 0
+    
+    # Nombre total de paiements
+    total_paiements = Paiement.objects.count()
+    
     # Statistiques des dépenses (total)
     from expenses.models import Depense
     total_depenses = Depense.objects.count()
@@ -99,6 +107,8 @@ def dashboard(request):
         'plats_disponibles': plats_disponibles,
         'paiements_aujourdhui': paiements_aujourdhui,
         'total_ventes_aujourdhui': total_ventes_aujourdhui,
+        'total_revenus': total_revenus,
+        'total_paiements': total_paiements,
         'depenses_aujourdhui': total_depenses,
         'total_depenses_aujourdhui': total_depenses_aujourdhui,
         'depenses_recentes': depenses_recentes,
