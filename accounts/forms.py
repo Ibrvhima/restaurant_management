@@ -1,12 +1,12 @@
 from django import forms
-from .models import Utilisateur
+from .models import User
 
 class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
     
     class Meta:
-        model = Utilisateur
+        model = User
         fields = ['login', 'role', 'actif']
     
     def __init__(self, *args, **kwargs):
@@ -35,7 +35,7 @@ class UserCreationForm(forms.ModelForm):
 
 class UserEditForm(forms.ModelForm):
     class Meta:
-        model = Utilisateur
+        model = User
         fields = ['login', 'role', 'actif']
     
     def __init__(self, *args, **kwargs):

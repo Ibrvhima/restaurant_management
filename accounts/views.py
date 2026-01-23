@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
-from .models import User, Utilisateur
+from .models import User
 from .forms import UserCreationForm, UserEditForm
 from .utils import export_dashboard_excel
 from .pdf_utils import export_dashboard_pdf
@@ -128,9 +128,9 @@ def admin_user_list(request):
         messages.error(request, "Accès non autorisé.")
         return redirect('accounts:dashboard')
     
-    users = Utilisateur.objects.all().order_by('-date_creation')
+    users = User.objects.all().order_by('-date_creation')
     context = {'users': users}
-    return render(request, 'accounts/admin_user_list.html', context)
+    return render(request, 'accounts/admin_user_list_simple.html', context)
 
 @login_required
 def admin_create_user(request):
@@ -161,7 +161,7 @@ def admin_toggle_user(request, user_id):
         messages.error(request, "Accès non autorisé.")
         return redirect('accounts:dashboard')
     
-    user = get_object_or_404(Utilisateur, id=user_id)
+    user = get_object_or_404(User, id=user_id)
     if user.role == 'Radmin':
         messages.error(request, "Impossible de désactiver un administrateur.")
     else:
@@ -282,7 +282,7 @@ def admin_edit_user(request, user_id):
         messages.error(request, "Accès non autorisé.")
         return redirect('accounts:dashboard')
     
-    user_to_edit = get_object_or_404(Utilisateur, id=user_id)
+    user_to_edit = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST':
         form = UserEditForm(request.POST, instance=user_to_edit)
@@ -307,7 +307,7 @@ def admin_delete_user(request, user_id):
         messages.error(request, "Accès non autorisé.")
         return redirect('accounts:dashboard')
     
-    user_to_delete = get_object_or_404(Utilisateur, id=user_id)
+    user_to_delete = get_object_or_404(User, id=user_id)
     
     # Empêcher la suppression du dernier admin
     if user_to_delete.role == 'Radmin':
