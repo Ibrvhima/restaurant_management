@@ -4,199 +4,679 @@
 {% block title %}Menu - Restaurant Management{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mobile-first.css' %}">
 <style>
-/* Design System - Couleurs Douces et Professionnelles */
-:root {
-    --primary-slate: #475569;
-    --primary-slate-light: #64748b;
-    --primary-slate-lighter: #94a3b8;
-    --accent-slate: #334155;
-    --bg-slate-soft: #f8fafc;
-    --border-slate: #e2e8f0;
-    --text-primary: #1e293b;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
-    --success-soft: #10b981;
-    --success-bg: #ecfdf5;
-    --warning-soft: #f59e0b;
-    --warning-bg: #fffbeb;
-    --danger-soft: #ef4444;
-    --danger-bg: #fef2f2;
-}
-
-/* Container Principal */
+/* Optimisations spécifiques pour la page menu mobile-first */
 .menu-container {
-    background: linear-gradient(135deg, var(--bg-slate-soft) 0%, #ffffff 100%);
     min-height: 100vh;
-    position: relative;
-}
-
-.menu-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-slate), transparent);
+    background: var(--gray-50);
 }
 
 /* Header Section */
 .menu-header {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-slate);
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    border-radius: 0 0 1rem 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-lg) 0;
+    margin-bottom: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+    .menu-header {
+        padding: var(--space-xl) 0;
+        margin-bottom: var(--space-xl);
+    }
 }
 
 .menu-title {
-    color: var(--text-primary);
-    font-size: 2.5rem;
+    font-size: var(--text-2xl);
     font-weight: 700;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, var(--primary-slate) 0%, var(--accent-slate) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--gray-900);
+    margin-bottom: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+    .menu-title {
+        font-size: var(--text-3xl);
+    }
 }
 
 .menu-subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    font-weight: 400;
+    color: var(--gray-600);
+    font-size: var(--text-sm);
 }
 
 /* Section Filtres */
 .filters-section {
     background: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border-slate);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    border: 1px solid var(--gray-200);
 }
 
+@media (min-width: 640px) {
+    .filters-section {
+        padding: var(--space-lg);
+    }
+}
+
+.filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+    .filters-form {
+        flex-direction: row;
+        align-items: flex-end;
+        gap: var(--space-lg);
+    }
+}
+
+/* Recherche */
 .search-container {
     position: relative;
     flex: 1;
-    min-width: 320px;
 }
 
 .search-input {
     width: 100%;
-    padding: 0.875rem 1rem 0.875rem 3rem;
-    border: 2px solid var(--border-slate);
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: var(--bg-slate-soft);
-    color: var(--text-primary);
+    padding: var(--space-sm) var(--space-md) var(--space-sm) 2.5rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    font-size: var(--text-base);
+    background: white;
+    color: var(--gray-900);
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
 }
 
 .search-input:focus {
     outline: none;
-    border-color: var(--primary-slate);
-    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
-    background: white;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--gray-400);
 }
 
 .search-icon {
     position: absolute;
-    left: 1rem;
+    left: var(--space-md);
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-muted);
+    color: var(--gray-400);
     pointer-events: none;
+    z-index: 1;
+}
+
+/* Suggestions dropdown */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: var(--space-xs);
+}
+
+.suggestion-item {
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: var(--gray-50);
+}
+
+.suggestion-name {
+    font-weight: 500;
+    color: var(--gray-900);
+}
+
+.suggestion-price {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: var(--text-sm);
+}
+
+/* Filtres selects */
+.filter-group {
+    min-width: 0;
+    flex: 1;
+}
+
+@media (min-width: 640px) {
+    .filter-group {
+        min-width: 150px;
+    }
 }
 
 .filter-select {
-    padding: 0.875rem 1rem;
-    border: 2px solid var(--border-slate);
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    background: var(--bg-slate-soft);
-    color: var(--text-primary);
-    transition: all 0.3s ease;
-    min-width: 180px;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    font-size: var(--text-base);
+    background: white;
+    color: var(--gray-900);
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    cursor: pointer;
 }
 
 .filter-select:focus {
     outline: none;
-    border-color: var(--primary-slate);
-    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
-    background: white;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Bouton reset */
 .reset-btn {
-    background: var(--primary-slate);
-    color: white;
-    padding: 0.875rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    white-space: nowrap;
 }
 
 .reset-btn:hover {
-    background: var(--accent-slate);
+    background: var(--primary-light);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(51, 65, 85, 0.2);
 }
 
-/* Filtres Rapides */
+/* Filtres rapides */
 .quick-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
 }
 
 .quick-filter-btn {
-    padding: 0.625rem 1.25rem;
-    border-radius: 2rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: 2px solid var(--border-slate);
-    background: white;
-    color: var(--text-secondary);
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--gray-300);
+    border-radius: 0.375rem;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    background: white;
+    color: var(--gray-600);
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    min-height: 32px;
 }
 
 .quick-filter-btn:hover {
-    background: var(--primary-slate);
+    background: var(--primary);
     color: white;
-    border-color: var(--primary-slate);
+    border-color: var(--primary);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
 }
 
 .quick-filter-btn.active {
-    background: var(--primary-slate);
+    background: var(--primary);
     color: white;
-    border-color: var(--primary-slate);
+    border-color: var(--primary);
 }
 
-/* Grille des Plats */
+/* Grille des plats */
 .plats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
 }
 
-/* Carte Plat */
+@media (min-width: 640px) {
+    .plats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+}
+
+@media (min-width: 1024px) {
+    .plats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Carte plat */
 .plat-card {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid var(--gray-200);
+}
+
+.plat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.plat-image-container {
+    position: relative;
+    height: 160px;
+    background: var(--gray-100);
+    overflow: hidden;
+}
+
+.plat-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.plat-badge {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 0.25rem;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.plat-badge.available {
+    background: var(--success-bg);
+    color: var(--success-soft);
+}
+
+.plat-badge.unavailable {
+    background: var(--danger-bg);
+    color: var(--danger-soft);
+}
+
+.plat-content {
+    padding: var(--space-md);
+}
+
+.plat-name {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: var(--space-xs);
+    line-height: 1.3;
+}
+
+.plat-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-sm);
+}
+
+.plat-type,
+.plat-category {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--gray-100);
+    color: var(--gray-600);
+    border-radius: 0.25rem;
+    font-size: var(--text-xs);
+    font-weight: 500;
+}
+
+.plat-description {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+.plat-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--gray-100);
+}
+
+.plat-price {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.plat-actions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.action-btn {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: 0.25rem;
+    border: 1px solid;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-view {
+    background: white;
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.action-view:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.action-edit {
+    background: white;
+    color: var(--warning-soft);
+    border-color: var(--warning-soft);
+}
+
+.action-edit:hover {
+    background: var(--warning-soft);
+    color: white;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: white;
+    border-radius: 0.5rem;
+    border: 2px dashed var(--gray-300);
+    margin: var(--space-lg) 0;
+}
+
+.empty-state-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto var(--space-lg);
+    color: var(--gray-300);
+}
+
+.empty-state-text {
+    color: var(--gray-600);
+    font-size: var(--text-lg);
+    font-weight: 500;
+}
+
+/* Loading et no suggestions */
+.search-loading,
+.no-suggestions {
+    padding: var(--space-md);
+    text-align: center;
+    color: var(--gray-500);
+    font-style: italic;
+    font-size: var(--text-sm);
+}
+
+/* Animation d'entrée */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.plat-card {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Focus visible pour accessibilité */
+.search-input:focus-visible,
+.filter-select:focus-visible,
+.reset-btn:focus-visible,
+.quick-filter-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="menu-container">
+    <div class="container-mobile">
+        <!-- Header Section -->
+        <header class="menu-header">
+            <h1 class="menu-title">Menu du Restaurant</h1>
+            <p class="menu-subtitle">Découvrez nos plats délicieux et créatifs</p>
+        </header>
+
+        <!-- Filtres Section -->
+        <section class="filters-section">
+            <form method="get" class="filters-form">
+                <!-- Recherche textuelle avec suggestions -->
+                <div class="search-container">
+                    <div class="relative">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" 
+                               name="search" 
+                               id="searchInput"
+                               value="{{ search_query }}" 
+                               placeholder="Rechercher un plat..." 
+                               autocomplete="off"
+                               class="search-input">
+                        <!-- Suggestions dropdown -->
+                        <div id="searchSuggestions" class="search-suggestions hidden">
+                            <!-- Les suggestions seront insérées ici par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtre par type de plat -->
+                <div class="filter-group">
+                    <select name="type_plat" id="typePlatFilter" class="filter-select">
+                        <option value="">Tous les types</option>
+                        {% for type_value, type_label in type_plat_choices %}
+                        <option value="{{ type_value }}" {% if type_plat_filter == type_value %}selected{% endif %}>
+                            {{ type_label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Filtre par catégorie -->
+                <div class="filter-group">
+                    <select name="categorie" id="categorieFilter" class="filter-select">
+                        <option value="">Toutes les catégories</option>
+                        {% for categorie in categories %}
+                        <option value="{{ categorie.id }}" {% if categorie_filter == categorie.id|stringformat:"s" %}selected{% endif %}>
+                            {{ categorie.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Bouton de réinitialisation -->
+                <div>
+                    <a href="{% url 'restaurant:menu_list' %}" class="reset-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Réinitialiser
+                    </a>
+                </div>
+            </form>
+        </section>
+
+        <!-- Filtres rapides par catégorie -->
+        <div class="quick-filters">
+            <a href="{% url 'restaurant:menu_list' %}" class="quick-filter-btn {% if not categorie_filter %}active{% endif %}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                Tous
+            </a>
+            {% for categorie in categories %}
+            <a href="?categorie={{ categorie.id }}" class="quick-filter-btn {% if categorie_filter == categorie.id|stringformat:"s" %}active{% endif %}">
+                {{ categorie.nom }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Grille des plats -->
+        <main>
+            {% if plats %}
+                <div class="plats-grid">
+                    {% for plat in plats %}
+                    <div class="plat-card interactive">
+                        <!-- Image du plat -->
+                        <div class="plat-image-container">
+                            {% if plat.image %}
+                            <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="plat-image">
+                            {% else %}
+                            <div class="plat-image-container flex items-center justify-center">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Badge de disponibilité -->
+                            <div class="plat-badge {% if plat.disponible %}available{% else %}unavailable{% endif %}">
+                                {% if plat.disponible %}
+                                    Disponible
+                                {% else %}
+                                    Indisponible
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="plat-content">
+                            <h3 class="plat-name">{{ plat.nom }}</h3>
+                            
+                            <div class="plat-meta">
+                                {% if plat.type_plat %}
+                                <span class="plat-type">{{ plat.get_type_plat_display }}</span>
+                                {% endif %}
+                                {% if plat.categorie %}
+                                <span class="plat-category">{{ plat.categorie.nom }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <p class="plat-description">{{ plat.description|truncatewords:20 }}</p>
+                            
+                            <div class="plat-footer">
+                                <span class="plat-price">{{ plat.prix_unitaire }} GNF</span>
+                                <div class="plat-actions">
+                                    <a href="{% url 'restaurant:plat_detail' plat.id %}" class="action-btn action-view">
+                                        Voir
+                                    </a>
+                                    <a href="{% url 'restaurant:modifier_plat' plat.id %}" class="action-btn action-edit">
+                                        Modifier
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <h3 class="empty-state-text">Aucun plat trouvé</h3>
+                    <p class="empty-state-text">Essayez de modifier les filtres ou ajoutez un nouveau plat.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+<script>
+// Gestion des suggestions de recherche
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    let debounceTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const query = this.value.trim();
+        
+        if (query.length < 2) {
+            suggestionsContainer.classList.add('hidden');
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            fetchSuggestions(query);
+        }, 300);
+    });
+
+    // Fermer les suggestions quand on clique ailleurs
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+            suggestionsContainer.classList.add('hidden');
+        }
+    });
+
+    function fetchSuggestions(query) {
+        // Simulation de suggestions (remplacer par un appel AJAX réel)
+        const mockSuggestions = [
+            { name: 'Thieboudienne', price: 15000 },
+            { name: 'Yassa Poulet', price: 12000 },
+            { name: 'Mafé', price: 10000 }
+        ].filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
+
+        displaySuggestions(mockSuggestions);
+    }
+
+    function displaySuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            suggestionsContainer.innerHTML = '<div class="no-suggestions">Aucune suggestion</div>';
+        } else {
+            suggestionsContainer.innerHTML = suggestions.map(item => `
+                <div class="suggestion-item">
+                    <div class="suggestion-name">${item.name}</div>
+                    <div class="suggestion-price">${item.price} GNF</div>
+                </div>
+            `).join('');
+        }
+
+        suggestionsContainer.classList.remove('hidden');
+    }
+});
+</script>
+{% endblock %}
     background: white;
     border-radius: 1rem;
     overflow: hidden;
