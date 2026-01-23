@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import views_init
 
 app_name = 'accounts'
 
@@ -9,6 +10,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/', views.profile, name='profile'),
+    path('init-db/', views_init.init_database, name='init_database'),
     
     # URLs admin (préfixe 'system' pour éviter conflit avec /admin/)
     path('system/users/', views.admin_user_list, name='admin_user_list'),
