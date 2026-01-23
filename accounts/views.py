@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
 from .models import User, Utilisateur
-from .forms import UserCreationForm
+from .forms import UserCreationForm, UserEditForm
 from .utils import export_dashboard_excel
 from .pdf_utils import export_dashboard_pdf
 from orders.models import Commande, EtatCommande
@@ -128,7 +128,7 @@ def admin_user_list(request):
         messages.error(request, "Accès non autorisé.")
         return redirect('accounts:dashboard')
     
-    users = User.objects.all().order_by('-date_creation')
+    users = Utilisateur.objects.all().order_by('-date_creation')
     context = {'users': users}
     return render(request, 'accounts/admin_user_list.html', context)
 
@@ -140,28 +140,19 @@ def admin_create_user(request):
         return redirect('accounts:dashboard')
     
     if request.method == 'POST':
-        login = request.POST.get('login')
-        password = request.POST.get('password')
-        role = request.POST.get('role')
-        actif = request.POST.get('actif') == 'on'
-        
-        if not login or not password or not role:
-            messages.error(request, "Tous les champs sont obligatoires.")
-            return redirect('accounts:admin_create_user')
-        
-        try:
-            user = User.objects.create_user(
-                login=login,
-                password=password,
-                role=role,
-                actif=actif
-            )
-            messages.success(request, f"Utilisateur {login} créé avec succès!")
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Utilisateur {form.cleaned_data['login']} créé avec succès!")
             return redirect('accounts:admin_user_list')
-        except Exception as e:
-            messages.error(request, f"Erreur: {str(e)}")
+    else:
+        form = UserCreationForm()
     
-    return render(request, 'accounts/admin_create_user.html')
+    context = {
+        'form': form,
+        'title': 'Créer un utilisateur'
+    }
+    return render(request, 'accounts/admin_create_user_simple.html', context)
 
 @login_required
 def admin_toggle_user(request, user_id):
@@ -170,7 +161,7 @@ def admin_toggle_user(request, user_id):
         messages.error(request, "Accès non autorisé.")
         return redirect('accounts:dashboard')
     
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(Utilisateur, id=user_id)
     if user.role == 'Radmin':
         messages.error(request, "Impossible de désactiver un administrateur.")
     else:
@@ -294,20 +285,20 @@ def admin_edit_user(request, user_id):
     user_to_edit = get_object_or_404(Utilisateur, id=user_id)
     
     if request.method == 'POST':
-        form = UserCreationForm(request.POST, instance=user_to_edit)
+        form = UserEditForm(request.POST, instance=user_to_edit)
         if form.is_valid():
             form.save()
             messages.success(request, f"Utilisateur {user_to_edit.login} modifié avec succès!")
             return redirect('accounts:admin_user_list')
     else:
-        form = UserCreationForm(instance=user_to_edit)
+        form = UserEditForm(instance=user_to_edit)
     
     context = {
         'form': form,
         'user_to_edit': user_to_edit,
         'title': 'Modifier un utilisateur'
     }
-    return render(request, 'accounts/admin_create_user.html', context)
+    return render(request, 'accounts/admin_create_user_simple.html', context)
 
 @login_required
 def admin_delete_user(request, user_id):
