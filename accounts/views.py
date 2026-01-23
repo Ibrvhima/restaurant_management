@@ -152,7 +152,7 @@ def admin_create_user(request):
         'form': form,
         'title': 'Créer un utilisateur'
     }
-    return render(request, 'accounts/admin_create_user_simple.html', context)
+    return render(request, 'accounts/admin_user_form_mobile.html', context)
 
 @login_required
 def admin_toggle_user(request, user_id):
@@ -298,7 +298,7 @@ def admin_edit_user(request, user_id):
         'user_to_edit': user_to_edit,
         'title': 'Modifier un utilisateur'
     }
-    return render(request, 'accounts/admin_create_user_simple.html', context)
+    return render(request, 'accounts/admin_user_form_mobile.html', context)
 
 @login_required
 def admin_delete_user(request, user_id):

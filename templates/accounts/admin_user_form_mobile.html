@@ -1,0 +1,844 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: #374151;
+    --primary-light: #4b5563;
+    --secondary: #6b7280;
+    --success: #059669;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --dark: #111827;
+    --light: #f9fafb;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+    color: var(--dark);
+}
+
+/* ===== MOBILE-FIRST APPROACH ===== */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== MOBILE HEADER ===== */
+.mobile-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.mobile-back-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.mobile-back-btn:hover {
+    background: var(--light);
+}
+
+.mobile-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.mobile-header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--secondary);
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: var(--light);
+    color: var(--primary);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    flex: 1;
+    padding: 1rem;
+    max-width: 100%;
+}
+
+/* ===== MESSAGES ===== */
+.alert {
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.alert-success {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #6ee7b7;
+}
+
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fca5a5;
+}
+
+.alert-info {
+    background: #dbeafe;
+    color: #1e40af;
+    border-color: #93c5fd;
+}
+
+/* ===== FORM CONTAINER ===== */
+.form-container {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.form-header {
+    background: var(--primary);
+    color: var(--white);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.form-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.form-body {
+    padding: 1.5rem;
+}
+
+/* ===== FORM GROUPS ===== */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.form-label .required {
+    color: var(--danger);
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    background: var(--white);
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+}
+
+.form-input::placeholder {
+    color: var(--secondary);
+}
+
+/* ===== PASSWORD GROUP ===== */
+.password-group {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+    background: var(--light);
+}
+
+/* ===== CHECKBOX GROUP ===== */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--light);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.checkbox-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--primary);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.checkbox-label {
+    font-weight: 500;
+    color: var(--dark);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* ===== FORM ACTIONS ===== */
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.btn {
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px; /* Touch-friendly */
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--primary);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ===== ERROR MESSAGES ===== */
+.error-message {
+    color: var(--danger);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.error-message i {
+    font-size: 0.625rem;
+}
+
+/* ===== FORM SECTIONS ===== */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+/* ===== ROLE CARDS (Mobile-friendly) ===== */
+.role-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.role-card {
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--white);
+}
+
+.role-card:hover {
+    border-color: var(--primary);
+    background: var(--light);
+}
+
+.role-card.selected {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--white);
+}
+
+.role-card i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.role-card span {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ===== TABLET STYLES ===== */
+@media (min-width: 768px) {
+    .app-container {
+        flex-direction: row;
+    }
+    
+    .mobile-header {
+        display: none;
+    }
+    
+    .sidebar {
+        width: 280px;
+        background: var(--white);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .main-content {
+        flex: 1;
+        padding: 2rem;
+        margin-left: 0;
+    }
+    
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-actions {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .role-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ===== DESKTOP STYLES ===== */
+@media (min-width: 1024px) {
+    .main-content {
+        padding: 3rem;
+    }
+    
+    .form-container {
+        max-width: 700px;
+    }
+    
+    .role-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== FOCUS STATES ===== */
+.btn:focus,
+.form-input:focus,
+.form-select:focus,
+.checkbox-input:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ===== LOADING STATES ===== */
+.btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn.loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-container">
+    <!-- ===== MOBILE HEADER ===== -->
+    <header class="mobile-header">
+        <button class="mobile-back-btn" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+            <span>Retour</span>
+        </button>
+        
+        <h1 class="mobile-title">{{ title }}</h1>
+        
+        <div class="mobile-header-actions">
+            <button class="icon-btn" onclick="toggleHelp()">
+                <i class="fas fa-question-circle"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+        <!-- ===== MESSAGES ===== -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {% if message.tags == 'success' %}
+                        <i class="fas fa-check-circle"></i>
+                    {% elif message.tags == 'error' %}
+                        <i class="fas fa-exclamation-circle"></i>
+                    {% else %}
+                        <i class="fas fa-info-circle"></i>
+                    {% endif %}
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- ===== FORM CONTAINER ===== -->
+        <div class="form-container">
+            <div class="form-header">
+                <h1>
+                    {% if user_to_edit %}
+                        <i class="fas fa-user-edit"></i>
+                        Modifier l'utilisateur
+                    {% else %}
+                        <i class="fas fa-user-plus"></i>
+                        Créer un utilisateur
+                    {% endif %}
+                </h1>
+                <p>
+                    {% if user_to_edit %}
+                        Modifiez les informations de l'utilisateur
+                    {% else %}
+                        Remplissez ce formulaire pour créer un nouveau compte
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="form-body">
+                <form method="post" id="userForm">
+                    {% csrf_token %}
+                    
+                    <!-- ===== USER INFORMATION ===== -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-user"></i>
+                            Informations utilisateur
+                        </h2>
+                        
+                        <div class="form-group">
+                            <label for="id_login" class="form-label">
+                                Nom d'utilisateur <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="login" 
+                                   id="id_login" 
+                                   class="form-input" 
+                                   value="{{ form.login.value|default:'' }}" 
+                                   placeholder="Ex: john_doe"
+                                   required
+                                   pattern="[a-zA-Z0-9_]{3,20}"
+                                   title="3-20 caractères, lettres, chiffres et underscore uniquement">
+                            {% if form.login.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    {{ form.login.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if not user_to_edit %}
+                        <div class="form-group">
+                            <label for="id_password" class="form-label">
+                                Mot de passe <span class="required">*</span>
+                            </label>
+                            <div class="password-group">
+                                <input type="password" 
+                                       name="password" 
+                                       id="id_password" 
+                                       class="form-input" 
+                                       placeholder="Minimum 6 caractères"
+                                       required
+                                       minlength="6">
+                                <button type="button" class="password-toggle" onclick="togglePassword('id_password')">
+                                    <i class="fas fa-eye" id="password-icon"></i>
+                                </button>
+                            </div>
+                            {% if form.password.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    {{ form.password.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_confirm_password" class="form-label">
+                                Confirmer le mot de passe <span class="required">*</span>
+                            </label>
+                            <div class="password-group">
+                                <input type="password" 
+                                       name="confirm_password" 
+                                       id="id_confirm_password" 
+                                       class="form-input" 
+                                       placeholder="Resaissez le mot de passe"
+                                       required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('id_confirm_password')">
+                                    <i class="fas fa-eye" id="confirm-password-icon"></i>
+                                </button>
+                            </div>
+                            {% if form.confirm_password.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    {{ form.confirm_password.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- ===== ROLE AND STATUS ===== -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-user-tag"></i>
+                            Rôle et statut
+                        </h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                Rôle <span class="required">*</span>
+                            </label>
+                            <div class="role-cards">
+                                <div class="role-card" onclick="selectRole('Rtable')" data-role="Rtable">
+                                    <i class="fas fa-chair"></i>
+                                    <span>Table</span>
+                                </div>
+                                <div class="role-card" onclick="selectRole('Rserveur')" data-role="Rserveur">
+                                    <i class="fas fa-concierge-bell"></i>
+                                    <span>Serveur</span>
+                                </div>
+                                <div class="role-card" onclick="selectRole('Rcuisinier')" data-role="Rcuisinier">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Cuisinier</span>
+                                </div>
+                                <div class="role-card" onclick="selectRole('Rcaissier')" data-role="Rcaissier">
+                                    <i class="fas fa-cash-register"></i>
+                                    <span>Caissier</span>
+                                </div>
+                                <div class="role-card" onclick="selectRole('Rcomptable')" data-role="Rcomptable">
+                                    <i class="fas fa-calculator"></i>
+                                    <span>Comptable</span>
+                                </div>
+                                {% if user.role == 'Radmin' %}
+                                <div class="role-card" onclick="selectRole('Radmin')" data-role="Radmin">
+                                    <i class="fas fa-crown"></i>
+                                    <span>Admin</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <input type="hidden" name="role" id="id_role" value="{{ form.role.value|default:'' }}" required>
+                            {% if form.role.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    {{ form.role.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" 
+                                       name="actif" 
+                                       id="id_actif" 
+                                       class="checkbox-input" 
+                                       {% if form.actif.value %}checked{% endif %}>
+                                <label for="id_actif" class="checkbox-label">
+                                    Compte actif
+                                </label>
+                            </div>
+                            <small style="color: var(--secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+                                Un compte inactif ne pourra pas se connecter
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- ===== FORM ACTIONS ===== -->
+                    <div class="form-actions">
+                        <a href="{% url 'accounts:admin_user_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save"></i>
+                            {% if user_to_edit %}
+                                Modifier
+                            {% else %}
+                                Créer
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+// Mobile-first JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize role selection
+    const selectedRole = document.getElementById('id_role').value;
+    if (selectedRole) {
+        selectRole(selectedRole);
+    }
+    
+    // Form validation
+    const form = document.getElementById('userForm');
+    form.addEventListener('submit', function(e) {
+        if (!validateForm()) {
+            e.preventDefault();
+        }
+    });
+    
+    // Real-time password confirmation
+    const password = document.getElementById('id_password');
+    const confirmPassword = document.getElementById('id_confirm_password');
+    
+    if (password && confirmPassword) {
+        confirmPassword.addEventListener('input', function() {
+            if (password.value && this.value !== password.value) {
+                this.setCustomValidity('Les mots de passe ne correspondent pas');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
+});
+
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(inputId.replace('id_', '') + '-icon');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+function selectRole(role) {
+    // Remove previous selection
+    document.querySelectorAll('.role-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selection to clicked card
+    const selectedCard = document.querySelector(`[data-role="${role}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
+        document.getElementById('id_role').value = role;
+    }
+}
+
+function validateForm() {
+    const login = document.getElementById('id_login').value;
+    const password = document.getElementById('id_password');
+    const confirmPassword = document.getElementById('id_confirm_password');
+    const role = document.getElementById('id_role').value;
+    
+    // Validate login
+    if (!login || login.length < 3) {
+        showError('Le nom d\'utilisateur doit contenir au moins 3 caractères');
+        return false;
+    }
+    
+    // Validate password for new users
+    if (password && !password.value) {
+        showError('Le mot de passe est requis');
+        return false;
+    }
+    
+    if (password && password.value.length < 6) {
+        showError('Le mot de passe doit contenir au moins 6 caractères');
+        return false;
+    }
+    
+    // Validate password confirmation
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+        showError('Les mots de passe ne correspondent pas');
+        return false;
+    }
+    
+    // Validate role
+    if (!role) {
+        showError('Veuillez sélectionner un rôle');
+        return false;
+    }
+    
+    return true;
+}
+
+function showError(message) {
+    // Remove existing errors
+    document.querySelectorAll('.error-message').forEach(err => err.remove());
+    
+    // Create new error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.innerHTML = `
+        <i class="fas fa-exclamation-triangle"></i>
+        ${message}
+    `;
+    
+    // Insert at the top of the form
+    const form = document.getElementById('userForm');
+    form.insertBefore(errorDiv, form.firstChild);
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}
+
+function toggleHelp() {
+    // Simple help modal or redirect to help page
+    alert('Pour obtenir de l\'aide, contactez l\'administrateur système.');
+}
+
+// Touch-friendly interactions
+if ('ontouchstart' in window) {
+    document.querySelectorAll('.role-card, .btn').forEach(element => {
+        element.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        element.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+}
+</script>
+{% endblock %}
