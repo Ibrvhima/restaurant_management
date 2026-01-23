@@ -4,26 +4,17 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python health_check.py && gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.0
       - key: DJANGO_SETTINGS_MODULE
-        value: core.settings_production
+        value: core.settings_postgresql
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: false
-      # Variables MySQL à configurer manuellement sur Render
-      - key: DB_NAME
-        value: restaurant_management
-      - key: DB_USER
-        value: votre_mysql_user
-      - key: DB_PASSWORD
-        value: votre_mysql_password
-      - key: DB_HOST
-        value: votre_mysql_host
-      - key: DB_PORT
-        value: 3306
+      - key: DATABASE_URL
+        generateValue: true
     autoDeploy: true
