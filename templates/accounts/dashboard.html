@@ -1,724 +1,160 @@
-{% extends 'base/base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Tableau de bord - Restaurant Management{% endblock %}
-
 {% block content %}
-<!-- Désactiver le header/footer de base pour le dashboard -->
-<style>
-    main.pt-16 { padding-top: 0 !important; }
-    footer { display: none !important; }
-    .navbar { display: none !important; }
-    
-    /* Cacher complètement le navbar de base.html */
-    nav { display: none !important; }
-    
-    /* Cacher les messages flash de base.html */
-    .fixed.top-4.right-4.z-50 { display: none !important; }
-    
-    /* Forcer l'affichage des éléments de la sidebar */
-    #sidebar {
-        background: linear-gradient(to bottom, #1e293b, #0f172a) !important; /* Fond sombre normal */
-    }
-    
-    #sidebar * {
-        visibility: visible !important;
-        opacity: 1 !important;
-        color: inherit !important;
-        display: block !important;
-    }
-    
-    #sidebar .text-white {
-        color: #ffffff !important;
-    }
-    
-    #sidebar .text-slate-300 {
-        color: #cbd5e1 !important;
-    }
-    
-    #sidebar .text-slate-400 {
-        color: #94a3b8 !important;
-    }
-    
-    #sidebar .text-slate-500 {
-        color: #64748b !important;
-    }
-    
-    #sidebar .text-slate-600 {
-        color: #475569 !important;
-    }
-    
-    #sidebar .text-slate-700 {
-        color: #334155 !important;
-    }
-    
-    #sidebar .text-slate-800 {
-        color: #1e293b !important;
-    }
-    
-    #sidebar .text-slate-900 {
-        color: #0f172a !important;
-    }
-    
-    #sidebar svg {
-        fill: currentColor !important;
-        stroke: currentColor !important;
-    }
-    
-    #sidebar a {
-        display: flex !important;
-        align-items: center !important;
-        padding: 0.375rem !important; /* Encore plus réduit */
-        margin: 0.0625rem 0 !important; /* Espacement minimal */
-        border-radius: 0.5rem !important;
-        transition: all 0.2s ease !important;
-    }
-    
-    #sidebar a:hover {
-        background-color: #334155 !important;
-    }
-    
-    #sidebar span {
-        font-size: 0.875rem !important;
-        font-weight: 500 !important;
-    }
-    
-    #sidebar .font-bold {
-        font-weight: 700 !important;
-    }
-    
-    #sidebar .text-xl {
-        font-size: 1.25rem !important;
-    }
-    
-    #sidebar .text-xs {
-        font-size: 0.75rem !important;
-    }
-    
-    #sidebar .mb-2 {
-        margin-bottom: 0.375rem !important; /* Encore plus réduit */
-    }
-    
-    #sidebar .mb-4 {
-        margin-bottom: 0.75rem !important; /* Plus compact */
-    }
-    
-    #sidebar .space-y-1 > * + * {
-        margin-top: 0.125rem !important; /* Espacement minimal */
-    }
-    
-    #sidebar .p-3 {
-        padding: 0.5rem !important; /* Plus compact */
-    }
-    
-    #sidebar .p-6 {
-        padding: 0.75rem !important; /* Plus réduit */
-    }
-    
-    /* Icônes modernes comme sur le dashboard */
-    
-    #sidebar .icon-menu::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-tables::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-payments::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-dish::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-expenses::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-users::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-settings::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'%3E%3C/path%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    #sidebar .icon-logout::before {
-        content: "";
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.75rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    /* Sidebar mobile - simplifié pour éviter les conflits */
-    #sidebar {
-        z-index: 999 !important;
-    }
-    
-    #mobileSidebarOverlay {
-        z-index: 998 !important;
-    }
-</style>
 <div class="flex h-screen bg-gray-100">
+    <!-- Mobile sidebar overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+    
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 lg:z-30 w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:w-64 shadow-2xl">
-        <!-- Logo Desktop -->
-        <div class="hidden lg:block p-6 border-b border-slate-700">
-            <div class="flex items-center justify-center">
-                <div>
-                    <h1 class="text-xl font-bold text-white">Restaurant</h1>
-                    <p class="text-xs text-slate-400">Management Pro</p>
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50 lg:translate-x-0 lg:static lg:z-0">
+        <div class="p-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">Tableau de bord</h2>
+            
+            <nav class="space-y-2">
+                <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-lg">
+                    <i class="fas fa-home mr-3"></i> Accueil
+                </a>
+                <a href="{% url 'admin_user_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-users mr-3"></i> Utilisateurs
+                </a>
+                <a href="{% url 'commande_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-utensils mr-3"></i> Commandes
+                </a>
+                <a href="{% url 'paiement_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-credit-card mr-3"></i> Paiements
+                </a>
+                <a href="{% url 'depense_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-receipt mr-3"></i> Dépenses
+                </a>
+            </nav>
+        </div>
+    </aside>
+    
+    <!-- Main content -->
+    <main class="flex-1 lg:ml-0 overflow-y-auto">
+        <!-- Mobile header -->
+        <header class="lg:hidden bg-white shadow-sm p-4 flex items-center justify-between">
+            <button id="sidebar-toggle" class="p-2 rounded-lg hover:bg-gray-100">
+                <i class="fas fa-bars text-gray-600"></i>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-800">Dashboard</h1>
+        </header>
+        
+        <div class="p-4 lg:p-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Bienvenue sur le tableau de bord</h1>
+            
+            <!-- Stats grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Commandes</p>
+                            <p class="text-2xl font-bold text-gray-800">24</p>
+                        </div>
+                        <i class="fas fa-shopping-cart text-blue-500 text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Revenus</p>
+                            <p class="text-2xl font-bold text-gray-800">1,250€</p>
+                        </div>
+                        <i class="fas fa-euro-sign text-green-500 text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Utilisateurs</p>
+                            <p class="text-2xl font-bold text-gray-800">8</p>
+                        </div>
+                        <i class="fas fa-users text-purple-500 text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Tables</p>
+                            <p class="text-2xl font-bold text-gray-800">12</p>
+                        </div>
+                        <i class="fas fa-table text-orange-500 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick actions -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Actions rapides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <a href="{% url 'nouvelle_commande' %}" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                        <i class="fas fa-plus-circle text-blue-600 mr-3"></i>
+                        <span class="text-gray-700">Nouvelle commande</span>
+                    </a>
+                    
+                    <a href="{% url 'nouveau_paiement' %}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                        <i class="fas fa-plus-circle text-green-600 mr-3"></i>
+                        <span class="text-gray-700">Nouveau paiement</span>
+                    </a>
+                    
+                    <a href="{% url 'nouvelle_depense' %}" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">
+                        <i class="fas fa-plus-circle text-red-600 mr-3"></i>
+                        <span class="text-gray-700">Nouvelle dépense</span>
+                    </a>
                 </div>
             </div>
         </div>
-
-        <!-- Navigation -->
-        <nav class="flex-1 p-2 overflow-y-auto">
-            <div class="mb-3">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Principal</p>
-                <ul class="space-y-0.5">
-                    <!-- Dashboard -->
-                    <li>
-                        <a href="{% url 'restaurant:table_home' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="font-medium text-sm">Tableau de bord</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="mb-3">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Restaurant</p>
-                <ul class="space-y-0.5">
-                    <!-- Menu -->
-                    <li>
-                        <a href="{% url 'restaurant:menu_list' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-menu" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Menu</span>
-                        </a>
-                    </li>
-
-                    <!-- Tables -->
-                    <li>
-                        <a href="{% url 'restaurant:table_list' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-tables" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Tables</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="mb-3">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Finances</p>
-                <ul class="space-y-0.5">
-                    <!-- Paiements -->
-                    <li>
-                        <a href="{% url 'payments:paiement_list' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-payments" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Paiements</span>
-                        </a>
-                    </li>
-
-                    <!-- Caisse -->
-                    <li>
-                        <a href="{% url 'payments:caisse_dashboard' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-dish" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Caisse</span>
-                        </a>
-                    </li>
-
-                    <!-- Dépenses -->
-                    <li>
-                        <a href="{% url 'expenses:depense_list' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-expenses" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Dépenses</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            {% if user.role == 'Radmin' %}
-            <div class="mb-3">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Administration</p>
-                <ul class="space-y-0.5">
-                    <!-- Gestion des utilisateurs -->
-                    <li>
-                        <a href="{% url 'accounts:admin_user_list' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-users" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Utilisateurs</span>
-                        </a>
-                    </li>
-
-                    <!-- Gestion des données -->
-                    <li>
-                        <a href="{% url 'accounts:admin_data_management' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-settings" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Gestion des données</span>
-                        </a>
-                    </li>
-
-                    <!-- Catégories -->
-                    <li>
-                        <a href="{% url 'restaurant:liste_categories' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition-all duration-200 group">
-                            <span class="icon-menu" style="font-size: 0.875rem;"></span>
-                            <span class="font-medium text-sm">Catégories</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            {% endif %}
-            
-            <!-- Déconnexion -->
-            <div class="mb-3">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Système</p>
-                <ul class="space-y-0.5">
-                    <li>
-                        <form method="post" action="{% url 'accounts:logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="w-full flex items-center space-x-2 p-1.5 rounded-lg hover:bg-red-900 text-red-400 hover:text-red-300 transition-all duration-200 group">
-                                <span class="icon-logout" style="font-size: 0.875rem;"></span>
-                                <span class="font-medium text-sm">Déconnexion</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-    </aside>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-        <!-- Header Desktop -->
-        <header class="hidden lg:flex bg-white shadow-sm border-b border-gray-200">
-            <div class="flex-1 flex items-center justify-between px-4 py-2">
-                <!-- Left Section - Page Title -->
-                <div class="flex-1">
-                    <h1 class="text-lg font-bold text-gray-900">Tableau de bord</h1>
-                    <p class="text-xs text-gray-600">Bienvenue {{ user.login }} - {{ role_display }}</p>
-                </div>
-                
-                <!-- Right Section - Actions & Profile -->
-                <div class="flex items-center space-x-3">
-                    <!-- Django Admin Button -->
-                    <a href="/admin/" target="_blank" class="bg-slate-600 text-white px-3 py-1.5 rounded-lg hover:bg-slate-700 transition-all duration-200 flex items-center text-xs font-medium shadow-sm hover:shadow-md">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'%3E%3C/path%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'%3E%3C/path%3E%3C/svg%3E">
-                        </svg>
-                        Django Admin
-                    </a>
-                    
-                    <!-- User Profile -->
-                    <div class="flex items-center space-x-2 pl-3 border-l border-gray-200">
-                        <div class="w-8 h-8 bg-gradient-to-br from-slate-500 to-slate-600 rounded-full flex items-center justify-center shadow-sm">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                        </div>
-                        <div class="hidden sm:block">
-                            <p class="text-xs font-medium text-gray-900">{{ user.login }}</p>
-                            <p class="text-xs text-gray-500">{{ role_display }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Mobile Header -->
-        <header class="lg:hidden bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-4 py-3">
-                <div class="flex items-center justify-between">
-                    <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-gray-100 transition relative z-50">
-                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                    
-                    <!-- Logo -->
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-lg font-bold text-gray-900">Restaurant</h1>
-                            <p class="text-xs text-gray-500">Management Pro</p>
-                        </div>
-                    </div>
-                    
-                    <!-- User Profile Mobile -->
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Mobile Sidebar Overlay -->
-        <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
-
-        <!-- Main Content Area -->
-        <main class="flex-1 overflow-y-auto bg-gray-50">
-            <div class="p-4 lg:p-6">
-                {% if messages %}
-                <div class="mb-6 space-y-2">
-                    {% for message in messages %}
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <!-- Stats Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
-                    <!-- Carte Commandes -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="p-2 sm:p-3 lg:p-3 bg-blue-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                    </svg>
-                                </div>
-                                <div class="ml-2 sm:ml-3 lg:ml-3">
-                                    <p class="text-xs sm:text-sm text-gray-600 font-medium">Commandes</p>
-                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ commandes_en_cours }}</p>
-                                </div>
-                            </div>
-                            <div class="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-gray-500">Commandes en cours</span>
-                            <a href="{% url 'orders:commande_list' %}" class="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium group-hover:text-blue-700 transition-colors">
-                                Voir →
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Carte Menu -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="p-2 sm:p-3 lg:p-3 bg-emerald-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                                    </svg>
-                                </div>
-                                <div class="ml-2 sm:ml-3 lg:ml-3">
-                                    <p class="text-xs sm:text-sm text-gray-600 font-medium">Plats</p>
-                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ plats_disponibles }}</p>
-                                </div>
-                            </div>
-                            <div class="text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-gray-500">Menu complet</span>
-                            <a href="{% url 'restaurant:menu_list' %}" class="text-emerald-600 hover:text-emerald-800 text-xs sm:text-sm font-medium group-hover:text-emerald-700 transition-colors">
-                                Voir →
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Carte Paiements -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="p-2 sm:p-3 lg:p-3 bg-amber-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                    </svg>
-                                </div>
-                                <div class="ml-2 sm:ml-3 lg:ml-3">
-                                    <p class="text-xs sm:text-sm text-gray-600 font-medium">Paiements</p>
-                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ total_paiements }}</p>
-                                </div>
-                            </div>
-                            <div class="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-gray-500">Total des paiements</span>
-                            <a href="{% url 'payments:paiement_list' %}" class="text-amber-600 hover:text-amber-800 text-xs sm:text-sm font-medium group-hover:text-amber-700 transition-colors">
-                                Voir →
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Carte Revenus -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="p-2 sm:p-3 lg:p-3 bg-green-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div class="ml-2 sm:ml-3 lg:ml-3">
-                                    <p class="text-xs sm:text-sm text-gray-600 font-medium">Revenus</p>
-                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ total_revenus }} GNF</p>
-                                </div>
-                            </div>
-                            <div class="text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-green-600 font-medium">Total des revenus</span>
-                            <a href="{% url 'payments:paiement_list' %}" class="text-green-600 hover:text-green-800 text-xs sm:text-sm font-medium group-hover:text-green-700 transition-colors">
-                                Voir →
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Carte Dépenses -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-4 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="p-2 sm:p-3 lg:p-3 bg-red-50 rounded-lg group-hover:scale-105 transition-transform duration-300">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div class="ml-2 sm:ml-3 lg:ml-3">
-                                    <p class="text-xs sm:text-sm text-gray-600 font-medium">Dépenses</p>
-                                    <p class="text-lg sm:text-xl lg:text-xl font-bold text-gray-900">{{ depenses_aujourdhui }}</p>
-                                </div>
-                            </div>
-                            <div class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="mt-2 sm:mt-3 lg:mt-3 flex items-center justify-between">
-                            <span class="text-xs text-red-600 font-medium">-3% cette semaine</span>
-                            <a href="{% url 'expenses:depense_list' %}" class="text-red-600 hover:text-red-800 text-xs sm:text-sm font-medium group-hover:text-red-700 transition-colors">
-                                Voir →
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions rapides -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:p-5 hover:shadow-md transition-all duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <h2 class="text-lg lg:text-xl font-bold text-gray-900">Actions rapides</h2>
-                            <p class="text-xs text-gray-600 mt-1">Accédez rapidement aux fonctionnalités</p>
-                        </div>
-                        {% if user.role == 'Radmin' %}
-                        <div class="flex space-x-2">
-                            <a href="{% url 'accounts:export_excel_dashboard' %}" 
-                               class="bg-green-50 text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-all duration-300 flex items-center text-xs font-medium">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                Excel
-                            </a>
-                            <a href="{% url 'accounts:export_pdf_dashboard' %}" 
-                               class="bg-red-50 text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-all duration-300 flex items-center text-xs font-medium">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                PDF
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-3">
-                        {% if user.role == 'Rserveur' or user.role == 'Radmin' %}
-                        <a href="{% url 'orders:nouvelle_commande' %}" class="group bg-blue-50 text-blue-700 p-2 sm:p-3 lg:p-3 rounded-lg hover:bg-blue-100 transition-all duration-300 text-center font-medium">
-                            <div class="flex flex-col items-center space-y-1 sm:space-y-2">
-                                <div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-8 lg:h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-300">
-                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-xs sm:text-xs lg:text-xs font-medium">Nouvelle commande</span>
-                            </div>
-                        </a>
-                        {% endif %}
-                        {% if user.role == 'Rcaissier' or user.role == 'Radmin' %}
-                        <a href="{% url 'payments:nouveau_paiement' %}" class="group bg-green-50 text-green-700 p-2 sm:p-3 lg:p-3 rounded-lg hover:bg-green-100 transition-all duration-300 text-center font-medium">
-                            <div class="flex flex-col items-center space-y-1 sm:space-y-2">
-                                <div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-8 lg:h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors duration-300">
-                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-xs sm:text-xs lg:text-xs font-medium">Nouveau paiement</span>
-                            </div>
-                        </a>
-                        {% endif %}
-                        {% if user.role == 'Rcuisinier' or user.role == 'Radmin' %}
-                        <a href="{% url 'restaurant:nouveau_plat' %}" class="group bg-orange-50 text-orange-700 p-2 sm:p-3 lg:p-3 rounded-lg hover:bg-orange-100 transition-all duration-300 text-center font-medium">
-                            <div class="flex flex-col items-center space-y-1 sm:space-y-2">
-                                <div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-8 lg:h-8 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors duration-300">
-                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-xs sm:text-xs lg:text-xs font-medium">Nouveau plat</span>
-                            </div>
-                        </a>
-                        {% endif %}
-                        {% if user.role == 'Radmin' %}
-                        <a href="{% url 'expenses:nouvelle_depense' %}" class="group bg-red-50 text-red-700 p-2 sm:p-3 lg:p-3 rounded-lg hover:bg-red-100 transition-all duration-300 text-center font-medium">
-                            <div class="flex flex-col items-center space-y-1 sm:space-y-2">
-                                <div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-8 lg:h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors duration-300">
-                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-xs sm:text-xs lg:text-xs font-medium">Nouvelle dépense</span>
-                            </div>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-white border-t border-gray-200 px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-600">
-                    © 2024 Restaurant Management Pro. Tous droits réservés.
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition">Aide</a>
-                    <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition">Documentation</a>
-                    <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition">Support</a>
-                </div>
-            </div>
-        </footer>
-    </div>
+    </main>
 </div>
 
-{% endblock %}
-
-<!-- Mobile Menu JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script mobile menu chargé');
-    
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('mobileSidebarOverlay');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
     
-    console.log('Elements trouvés:', {
-        btn: mobileMenuBtn ? 'OK' : 'MANQUANT',
-        sidebar: sidebar ? 'OK' : 'MANQUANT', 
-        overlay: overlay ? 'OK' : 'MANQUANT'
-    });
-    
-    if (mobileMenuBtn && sidebar) {
-        mobileMenuBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Clic sur le bouton menu détecté!');
-            
-            // Toggle avec classes CSS plus simples
-            sidebar.classList.toggle('-translate-x-full');
-            sidebar.classList.toggle('translate-x-0');
-            
-            if (overlay) {
-                overlay.classList.toggle('hidden');
-            }
-            
-            console.log('Classes sidebar après clic:', sidebar.className);
-        });
+    function toggleSidebar() {
+        sidebar.classList.toggle('-translate-x-full');
+        sidebarOverlay.classList.toggle('hidden');
     }
     
-    // Fermeture overlay
-    if (overlay) {
-        overlay.addEventListener('click', function() {
-            console.log('Clic sur overlay');
-            sidebar.classList.add('-translate-x-full');
-            sidebar.classList.remove('translate-x-0');
-            overlay.classList.add('hidden');
-        });
-    }
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
 });
 </script>
+
+<style>
+/* Hide base template elements on dashboard */
+.base-header, .base-footer, .base-navbar {
+    display: none !important;
+}
+
+/* Ensure full height layout */
+html, body {
+    height: 100%;
+}
+
+/* Mobile-first responsive */
+@media (max-width: 1024px) {
+    .lg\:ml-0 {
+        margin-left: 0;
+    }
+    
+    .lg\:hidden {
+        display: none;
+    }
+    
+    .lg\:static {
+        position: fixed;
+    }
+    
+    .lg\:z-0 {
+        z-index: 50;
+    }
+}
+</style>
+{% endblock %}
