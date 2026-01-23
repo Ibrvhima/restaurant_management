@@ -3,184 +3,439 @@
 
 {% block title %}Interface Comptable - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ===== MOBILE-FIRST COMPTABLE ===== */
+* { box-sizing: border-box; }
+
+.comptable-container {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 1rem;
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .header-title { font-size: 2rem; }
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Solde Section */
+.solde-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    background: #f9fafb;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.section-content {
+    padding: 1.5rem;
+}
+
+.solde-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .solde-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.solde-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #f9fafb;
+    transition: all 0.2s;
+}
+
+.solde-item:hover {
+    background: #f3f4f6;
+}
+
+.solde-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.solde-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.solde-value-green {
+    color: #059669;
+}
+
+.solde-value-red {
+    color: #dc2626;
+}
+
+.solde-value-blue {
+    color: #2563eb;
+}
+
+.solde-change {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+/* Actions Grid */
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .actions-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .actions-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.action-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.action-icon-blue {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.action-icon-green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.action-icon-orange {
+    background: #fed7aa;
+    color: #f97316;
+}
+
+.action-icon-purple {
+    background: #ede9fe;
+    color: #8b5cf6;
+}
+
+.action-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.action-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Recent Activity */
+.activity-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.activity-content {
+    padding: 1.5rem;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: background 0.2s;
+}
+
+.activity-item:hover {
+    background: #f9fafb;
+}
+
+.activity-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activity-icon-green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.activity-icon-red {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.activity-icon-blue {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.activity-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    white-space: nowrap;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.solde-item, .action-card, .activity-item {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Focus visible */
+.action-card:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Interface Comptable</h1>
-            <p class="text-gray-600">Gestion financière et caisse</p>
-        </div>
+<div class="comptable-container">
+    <!-- Header -->
+    <header class="header-section">
+        <h1 class="header-title">Interface Comptable</h1>
+        <p class="header-subtitle">Gestion financière et caisse</p>
+    </header>
 
-        <!-- Solde de la caisse -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-            <div class="px-4 sm:px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg sm:text-xl font-semibold text-gray-900">Solde de la caisse</h2>
-            </div>
-            <div class="p-4 sm:p-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                    <div class="text-center">
-                        <p class="text-sm text-gray-600 mb-2">Total entrées</p>
-                        <p class="text-2xl font-bold text-green-600">{{ total_entrées }} GNF</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-sm text-gray-600 mb-2">Total sorties</p>
-                        <p class="text-2xl font-bold text-red-600">{{ total_sorties }} GNF</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-sm text-gray-600 mb-2">Solde actuel</p>
-                        <p class="text-3xl font-bold {% if solde_caisse >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
-                            {{ solde_caisse }} GNF
-                        </p>
-                    </div>
+    <!-- Solde de la caisse -->
+    <section class="solde-section">
+        <div class="section-header">
+            <h2 class="section-title">Solde de la caisse</h2>
+        </div>
+        <div class="section-content">
+            <div class="solde-grid">
+                <div class="solde-item">
+                    <p class="solde-label">Total entrées</p>
+                    <p class="solde-value solde-value-green">{{ total_entrées }} GNF</p>
+                    <p class="solde-change">+12% ce mois</p>
+                </div>
+                <div class="solde-item">
+                    <p class="solde-label">Total sorties</p>
+                    <p class="solde-value solde-value-red">{{ total_sorties }} GNF</p>
+                    <p class="solde-change">+8% ce mois</p>
+                </div>
+                <div class="solde-item">
+                    <p class="solde-label">Solde actuel</p>
+                    <p class="solde-value {% if solde_caisse >= 0 %}solde-value-blue{% else %}solde-value-red{% endif %}">
+                        {{ solde_caisse }} GNF
+                    </p>
+                    <p class="solde-change">
+                        {% if solde_caisse >= 0 %}Positif{% else %}Négatif{% endif %}
+                    </p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Actions rapides -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <a href="{% url 'restaurant:comptable_commandes' %}" 
-               class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <div class="flex items-center">
-                    <div class="p-3 bg-blue-100 rounded-full">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="font-semibold text-gray-900">Commandes</p>
-                        <p class="text-sm text-gray-600">Voir toutes</p>
-                    </div>
-                </div>
-            </a>
+    <!-- Actions rapides -->
+    <section class="actions-grid">
+        <a href="{% url 'restaurant:comptable_commandes' %}" class="action-card">
+            <div class="action-icon action-icon-blue">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+            </div>
+            <h3 class="action-title">Commandes</h3>
+            <p class="action-description">Voir toutes</p>
+        </a>
 
-            <a href="{% url 'payments:caisse_dashboard' %}" 
-               class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <div class="flex items-center">
-                    <div class="p-3 bg-green-100 rounded-full">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a href="{% url 'payments:caisse_dashboard' %}" class="action-card">
+            <div class="action-icon action-icon-green">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+            <h3 class="action-title">Caisse</h3>
+            <p class="action-description">Dashboard</p>
+        </a>
+
+        <a href="{% url 'payments:paiement_list' %}" class="action-card">
+            <div class="action-icon action-icon-orange">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+            <h3 class="action-title">Paiements</h3>
+            <p class="action-description">Voir tous</p>
+        </a>
+
+        <a href="{% url 'expenses:depense_list' %}" class="action-card">
+            <div class="action-icon action-icon-purple">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <h3 class="action-title">Dépenses</h3>
+            <p class="action-description">Liste complète</p>
+        </a>
+    </section>
+
+    <!-- Activité récente -->
+    <section class="activity-section">
+        <div class="section-header">
+            <h2 class="section-title">Activité récente</h2>
+        </div>
+        <div class="activity-content">
+            <div class="activity-list">
+                <!-- Activité exemple 1 -->
+                <div class="activity-item">
+                    <div class="activity-icon activity-icon-green">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
-                    <div class="ml-4">
-                        <p class="font-semibold text-gray-900">Caisse</p>
-                        <p class="text-sm text-gray-600">Dashboard</p>
+                    <div class="activity-content">
+                        <h4 class="activity-title">Paiement reçu</h4>
+                        <p class="activity-description">Table 5 - 25 000 GNF</p>
                     </div>
+                    <span class="activity-time">Il y a 5 min</span>
                 </div>
-            </a>
 
-            <a href="{% url 'payments:paiement_list' %}" 
-               class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <div class="flex items-center">
-                    <div class="p-3 bg-green-100 rounded-full">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="font-semibold text-gray-900">Paiements</p>
-                        <p class="text-sm text-gray-600">Voir tous</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="{% url 'expenses:depense_list' %}" 
-               class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <div class="flex items-center">
-                    <div class="p-3 bg-orange-100 rounded-full">
-                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Activité exemple 2 -->
+                <div class="activity-item">
+                    <div class="activity-icon activity-icon-red">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                     </div>
-                    <div class="ml-4">
-                        <p class="font-semibold text-gray-900">Dépenses</p>
-                        <p class="text-sm text-gray-600">Liste complète</p>
+                    <div class="activity-content">
+                        <h4 class="activity-title">Dépense enregistrée</h4>
+                        <p class="activity-description">Fournitures de cuisine - 15 000 GNF</p>
                     </div>
+                    <span class="activity-time">Il y a 1 heure</span>
                 </div>
-            </a>
-        </div>
 
-        <!-- Activités récentes -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Commandes récentes -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Commandes récentes</h3>
-                </div>
-                <div class="p-6">
-                    {% if commandes_recentes %}
-                    <div class="space-y-3">
-                        {% for commande in commandes_recentes %}
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-medium">Commande #{{ commande.id }}</p>
-                                <p class="text-sm text-gray-600">{{ commande.date_commande|date:"H:i" }}</p>
-                            </div>
-                            <span class="px-2 py-1 text-xs font-medium rounded-full 
-                                {% if commande.etat == 'EN_ATTENTE' %}bg-yellow-100 text-yellow-800
-                                {% elif commande.etat == 'EN_PREPARATION' %}bg-orange-100 text-orange-800
-                                {% elif commande.etat == 'EN_COURS' %}bg-blue-100 text-blue-800
-                                {% elif commande.etat == 'TERMINEE' %}bg-green-100 text-green-800
-                                {% endif %}">
-                                {{ commande.get_etat_display }}
-                            </span>
-                        </div>
-                        {% endfor %}
+                <!-- Activité exemple 3 -->
+                <div class="activity-item">
+                    <div class="activity-icon activity-icon-blue">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
                     </div>
-                    {% else %}
-                    <p class="text-gray-500 text-center">Aucune commande récente</p>
-                    {% endif %}
+                    <div class="activity-content">
+                        <h4 class="activity-title">Nouvelle commande</h4>
+                        <p class="activity-description">Table 3 - 3 plats</p>
+                    </div>
+                    <span class="activity-time">Il y a 2 heures</span>
                 </div>
-            </div>
 
-            <!-- Paiements récents -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Paiements récents</h3>
-                </div>
-                <div class="p-6">
-                    {% if paiements_recents %}
-                    <div class="space-y-3">
-                        {% for paiement in paiements_recents %}
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-medium">Commande #{{ paiement.commande.id }}</p>
-                                <p class="text-sm text-gray-600">{{ paiement.date_paiement|date:"H:i" }}</p>
-                            </div>
-                            <p class="font-medium text-green-600">{{ paiement.montant }} GNF</p>
-                        </div>
-                        {% endfor %}
+                <!-- Activité exemple 4 -->
+                <div class="activity-item">
+                    <div class="activity-icon activity-icon-green">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
                     </div>
-                    {% else %}
-                    <p class="text-gray-500 text-center">Aucun paiement récent</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Dépenses récentes -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Dépenses récentes</h3>
-                </div>
-                <div class="p-6">
-                    {% if depenses_recentes %}
-                    <div class="space-y-3">
-                        {% for depense in depenses_recentes %}
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-medium">{{ depense.description }}</p>
-                                <p class="text-sm text-gray-600">{{ depense.date_depense|date:"d/m/Y" }}</p>
-                            </div>
-                            <p class="font-medium text-red-600">{{ depense.montant }} GNF</p>
-                        </div>
-                        {% endfor %}
+                    <div class="activity-content">
+                        <h4 class="activity-title">Paiement multiple</h4>
+                        <p class="activity-description">3 tables - 87 500 GNF</p>
                     </div>
-                    {% else %}
-                    <p class="text-gray-500 text-center">Aucune dépense récente</p>
-                    {% endif %}
+                    <span class="activity-time">Il y a 3 heures</span>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

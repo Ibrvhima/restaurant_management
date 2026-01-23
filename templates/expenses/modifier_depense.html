@@ -3,96 +3,334 @@
 
 {% block title %}Modifier Dépense #{{ depense.id }} - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ===== MOBILE-FIRST MODIFIER DEPENSE ===== */
+* { box-sizing: border-box; }
+
+.modifier-container {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 1rem;
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .header-title { font-size: 2rem; }
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Form Container */
+.form-container {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+    .form-container { padding: 2rem; }
+}
+
+/* Messages */
+.messages-section {
+    margin-bottom: 1.5rem;
+}
+
+.message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.message-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.message-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: white;
+    min-height: 48px;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-help {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Info Section */
+.info-section {
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.info-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.75rem;
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Actions */
+.actions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .actions-section {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 48px;
+}
+
+@media (min-width: 640px) {
+    .action-btn {
+        min-width: 140px;
+    }
+}
+
+.action-btn-cancel {
+    background: #6b7280;
+    color: white;
+}
+
+.action-btn-cancel:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+}
+
+.action-btn-submit {
+    background: #f59e0b;
+    color: white;
+}
+
+.action-btn-submit:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+
+/* Focus visible */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible,
+.action-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+    animation: slideUp 0.5s ease-out;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-6">Modifier la Dépense #{{ depense.id }}</h1>
+<div class="modifier-container">
+    <!-- Header -->
+    <header class="header-section">
+        <h1 class="header-title">Modifier la Dépense #{{ depense.id }}</h1>
+        <p class="header-subtitle">Mettre à jour les informations</p>
+    </header>
 
-                {% if messages %}
-                <div class="mb-6">
-                    {% for message in messages %}
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <!-- Description -->
-                    <div class="mb-6">
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                            Description *
-                        </label>
-                        <textarea name="description" id="description" required rows="3"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">{{ depense.description }}</textarea>
-                    </div>
-
-                    <!-- Montant -->
-                    <div class="mb-6">
-                        <label for="montant" class="block text-sm font-medium text-gray-700 mb-2">
-                            Montant *
-                        </label>
-                        <input type="number" name="montant" id="montant" 
-                               step="0.01" min="0" required
-                               value="{{ depense.montant }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                        <p class="mt-1 text-sm text-gray-600">Montant en FCFA</p>
-                    </div>
-
-                    <!-- Catégorie -->
-                    <div class="mb-6">
-                        <label for="categorie" class="block text-sm font-medium text-gray-700 mb-2">
-                            Catégorie *
-                        </label>
-                        <select name="categorie" id="categorie" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                            <option value="">Sélectionnez une catégorie</option>
-                            {% for categorie in categories %}
-                            <option value="{{ categorie.id }}" {% if depense.categorie.id == categorie.id %}selected{% endif %}>{{ categorie.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Date -->
-                    <div class="mb-6">
-                        <label for="date_depense" class="block text-sm font-medium text-gray-700 mb-2">
-                            Date de la dépense
-                        </label>
-                        <input type="date" name="date_depense" id="date_depense" 
-                               value="{{ depense.date_depense|date:'Y-m-d' }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                        <p class="mt-1 text-sm text-gray-600">Date à laquelle la dépense a été effectuée</p>
-                    </div>
-
-                    <!-- Informations actuelles -->
-                    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <h3 class="text-sm font-medium text-gray-900 mb-2">Informations actuelles</h3>
-                        <div class="text-sm text-gray-600 space-y-1">
-                            <p>Créée le: {{ depense.date_creation|date:"d/m/Y H:i" }}</p>
-                            <p>Par: {{ depense.utilisateur.login }}</p>
-                            <p>Dernière modification: {% if depense.date_modification %}{{ depense.date_modification|date:"d/m/Y H:i" }}{% else %}Jamais{% endif %}</p>
-                        </div>
-                    </div>
-
-                    <!-- Boutons -->
-                    <div class="flex justify-between">
-                        <a href="{% url 'expenses:depense_detail' depense.id %}" 
-                           class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">
-                            Annuler
-                        </a>
-                        <button type="submit" 
-                                class="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition">
-                            Mettre à jour la dépense
-                        </button>
-                    </div>
-                </form>
+    <!-- Form Container -->
+    <div class="form-container">
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages-section">
+            {% for message in messages %}
+            <div class="message message-{{ message.tags }}">
+                {{ message }}
             </div>
+            {% endfor %}
         </div>
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description" class="form-label">
+                    Description <span class="required">*</span>
+                </label>
+                <textarea name="description" id="description" required rows="3"
+                          class="form-textarea">{{ depense.description }}</textarea>
+            </div>
+
+            <!-- Montant -->
+            <div class="form-group">
+                <label for="montant" class="form-label">
+                    Montant <span class="required">*</span>
+                </label>
+                <input type="number" name="montant" id="montant" 
+                       step="0.01" min="0" required
+                       value="{{ depense.montant }}"
+                       class="form-input">
+                <p class="form-help">Montant en GNF</p>
+            </div>
+
+            <!-- Catégorie -->
+            <div class="form-group">
+                <label for="categorie" class="form-label">
+                    Catégorie <span class="required">*</span>
+                </label>
+                <select name="categorie" id="categorie" required class="form-select">
+                    <option value="">Sélectionnez une catégorie</option>
+                    {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {% if depense.categorie.id == categorie.id %}selected{% endif %}>{{ categorie.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+                <label for="date_depense" class="form-label">
+                    Date de la dépense
+                </label>
+                <input type="date" name="date_depense" id="date_depense" 
+                       value="{{ depense.date_depense|date:'Y-m-d' }}"
+                       class="form-input">
+                <p class="form-help">Date à laquelle la dépense a été effectuée</p>
+            </div>
+
+            <!-- Informations actuelles -->
+            <div class="info-section">
+                <h3 class="info-title">Informations actuelles</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">Créée le:</span> {{ depense.date_creation|date:"d/m/Y H:i" }}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Par:</span> {{ depense.utilisateur.login }}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Dernière modification:</span> 
+                        {% if depense.date_modification %}{{ depense.date_modification|date:"d/m/Y H:i" }}{% else %}Jamais{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-section">
+                <a href="{% url 'expenses:depense_detail' depense.id %}" class="action-btn action-btn-cancel">
+                    Annuler
+                </a>
+                <button type="submit" class="action-btn action-btn-submit">
+                    Mettre à jour la dépense
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

@@ -3,191 +3,516 @@
 
 {% block title %}Interface Serveur - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ===== MOBILE-FIRST SERVEUR ===== */
+* { box-sizing: border-box; }
+
+.serveur-container {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 1rem;
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+@media (min-width: 768px) {
+    .header-title { font-size: 2rem; }
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 40px;
+}
+
+.action-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.stat-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-icon-blue {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.stat-icon-green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.stat-icon-purple {
+    background: #ede9fe;
+    color: #8b5cf6;
+}
+
+.stat-icon-orange {
+    background: #fed7aa;
+    color: #f97316;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Tables Section */
+.tables-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.section-header {
+    background: #f9fafb;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-content {
+    padding: 1.5rem;
+}
+
+/* Tables Grid */
+.tables-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .tables-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .tables-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1280px) {
+    .tables-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.table-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.table-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.table-header {
+    padding: 1rem;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.table-info {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.table-body {
+    padding: 1rem;
+}
+
+.table-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.status-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-libre {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.status-occupee {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.status-en-attente {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.table-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.detail-label {
+    color: #6b7280;
+}
+
+.detail-value {
+    font-weight: 500;
+    color: #111827;
+}
+
+.table-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.action-link {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-link:hover {
+    background: #2563eb;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+}
+
+.empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.5rem;
+    color: #d1d5db;
+}
+
+.empty-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-text {
+    font-size: 0.875rem;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card, .table-card {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Focus visible */
+.action-btn:focus-visible,
+.action-link:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Interface Serveur</h1>
-                    <p class="text-gray-600">Gestion des tables et commandes</p>
+<div class="serveur-container">
+    <!-- Header -->
+    <header class="header-section">
+        <div class="header-content">
+            <div>
+                <h1 class="header-title">Interface Serveur</h1>
+                <p class="header-subtitle">Gestion des tables et commandes</p>
+            </div>
+            <a href="{% url 'restaurant:comptable_commandes' %}" class="action-btn">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 0.5rem;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                Liste des commandes
+            </a>
+        </div>
+    </header>
+
+    <!-- Statistiques -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon stat-icon-blue">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                 </div>
-                <div class="flex space-x-3">
-                    <a href="{% url 'restaurant:comptable_commandes' %}" 
-                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                        </svg>
-                        Liste des commandes
-                    </a>
+                <div class="stat-info">
+                    <p class="stat-label">Tables libres</p>
+                    <p class="stat-value">{{ tables_data|default:0|length }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Statistiques -->
-        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center">
-                    <div class="p-2 bg-blue-100 rounded-lg">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-xs text-blue-600 font-medium">Tables libres</p>
-                        <p class="text-xl font-bold text-gray-900">{{ tables_data|default:0|length }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center">
-                    <div class="p-2 bg-green-100 rounded-lg">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-xs text-green-600 font-medium">Total tables</p>
-                        <p class="text-xl font-bold text-gray-900">{{ tables_data|default:0|length }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center">
-                    <div class="p-2 bg-purple-100 rounded-lg">
-                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-xs text-purple-600 font-medium">Commandes</p>
-                        <p class="text-xl font-bold text-gray-900">{{ tables_data|default:0|length }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center">
-                    <div class="p-2 bg-orange-100 rounded-lg">
-                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-xs text-orange-600 font-medium">À payer</p>
-                        <p class="text-xl font-bold text-gray-900">{{ tables_data|default:0|length }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Liste des tables -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-            <div class="bg-gray-100 px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon stat-icon-green">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
-                    État des tables
-                </h2>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Total tables</p>
+                    <p class="stat-value">{{ tables_data|default:0|length }}</p>
+                </div>
             </div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon stat-icon-purple">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Commandes</p>
+                    <p class="stat-value">{{ tables_data|default:0|length }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon stat-icon-orange">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">À payer</p>
+                    <p class="stat-value">{{ tables_data|default:0|length }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des tables -->
+    <section class="tables-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                État des tables
+            </h2>
+        </div>
+        <div class="section-content">
+            {% if tables_data %}
+                <div class="tables-grid">
                     {% for item in tables_data %}
-                    <div class="border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="p-4 bg-gradient-to-br from-gray-50 to-white">
-                            <div class="flex justify-between items-center mb-3">
-                                <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                    <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                    </svg>
-                                    Table {{ item.table.numero_table }}
-                                </h3>
-                                <span class="px-2 py-1 text-xs font-medium rounded-full 
-                                    {% if item.etat_couleur == 'green' %}
-                                        bg-green-100 text-green-800
-                                    {% elif item.etat_couleur == 'yellow' %}
-                                        bg-yellow-100 text-yellow-800
-                                    {% elif item.etat_couleur == 'blue' %}
-                                        bg-blue-100 text-blue-800
-                                    {% elif item.etat_couleur == 'orange' %}
-                                        bg-orange-100 text-orange-800
-                                    {% elif item.etat_couleur == 'purple' %}
-                                        bg-purple-100 text-purple-800
-                                    {% else %}
-                                        bg-red-100 text-red-800
-                                    {% endif %}">
-                                    {{ item.etat }}
+                    <div class="table-card" onclick="window.location.href='{% url 'restaurant:table_detail' item.table.id %}'">
+                        <div class="table-header">
+                            <h3 class="table-number">Table {{ item.table.numero_table }}</h3>
+                            <p class="table-info">{{ item.table.nombre_places }} places</p>
+                        </div>
+                        
+                        <div class="table-body">
+                            <div class="table-status">
+                                <span class="status-label">Statut</span>
+                                <span class="status-badge {% if item.statut == 'libre' %}status-libre{% elif item.statut == 'occupee' %}status-occupee{% else %}status-en-attente{% endif %}">
+                                    {{ item.statut|title }}
                                 </span>
                             </div>
-                            <div class="text-sm text-gray-600 mb-3 space-y-1">
-                                <div class="flex items-center">
-                                    <svg class="w-3 h-3 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                    </svg>
-                                    {{ item.table.nombre_places }} places
+                            
+                            <div class="table-details">
+                                {% if item.commande_en_cours %}
+                                <div class="detail-item">
+                                    <span class="detail-label">Commande</span>
+                                    <span class="detail-value">#{{ item.commande_en_cours.id }}</span>
                                 </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Montant</span>
+                                    <span class="detail-value">{{ item.commande_en_cours.total }} GNF</span>
+                                </div>
+                                {% endif %}
+                                
                                 {% if item.derniere_commande %}
-                                <div class="flex items-center">
-                                    <svg class="w-3 h-3 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    {{ item.derniere_commande.date_commande|date:"H:i" }}
+                                <div class="detail-item">
+                                    <span class="detail-label">Dernière</span>
+                                    <span class="detail-value">{{ item.derniere_commande|date:"H:i" }}</span>
                                 </div>
                                 {% endif %}
                             </div>
-                            <div class="flex space-x-2">
-                                <a href="{% url 'restaurant:serveur_table_commandes' item.table.id %}" 
-                                   class="flex-1 bg-blue-100 text-blue-700 px-3 py-2 rounded-lg hover:bg-blue-200 transition-all duration-300 text-center text-xs font-medium border border-blue-300">
-                                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                    </svg>
-                                    Voir
+                            
+                            <div class="table-actions">
+                                <a href="{% url 'restaurant:table_detail' item.table.id %}" class="action-link">
+                                    Voir détails
                                 </a>
-                                {% if item.derniere_commande and item.derniere_commande.etat != 'TERMINEE' %}
-                                <a href="{% url 'restaurant:serveur_valider_service' item.derniere_commande.id %}" 
-                                   class="flex-1 bg-green-100 text-green-700 px-3 py-2 rounded-lg hover:bg-green-200 transition-all duration-300 text-center text-xs font-medium border border-green-300">
-                                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    Servir
-                                </a>
-                                {% endif %}
-                                {% if item.derniere_commande and item.derniere_commande.etat == 'TERMINEE' %}
-                                <a href="{% url 'restaurant:serveur_valider_paiement' item.derniere_commande.id %}" 
-                                   class="flex-1 bg-orange-100 text-orange-700 px-3 py-2 rounded-lg hover:bg-orange-200 transition-all duration-300 text-center text-xs font-medium border border-orange-300">
-                                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                    </svg>
-                                    Payer
-                                </a>
-                                {% endif %}
                             </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="col-span-full text-center py-16">
-                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-12 border-2 border-dashed border-gray-300">
-                            <svg class="w-20 h-20 text-gray-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                            </svg>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Aucune table configurée</h3>
-                            <p class="text-gray-600 mb-8 text-lg">Commencez par configurer les tables de votre restaurant</p>
-                            <a href="{% url 'restaurant:table_list' %}" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
-                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                Configurer les tables
-                            </a>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
+            {% else %}
+                <div class="empty-state">
+                    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    <h3 class="empty-title">Aucune table trouvée</h3>
+                    <p class="empty-text">Commencez par créer des tables dans le système.</p>
+                </div>
+            {% endif %}
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

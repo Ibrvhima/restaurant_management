@@ -3,50 +3,573 @@
 
 {% block title %}Commandes - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ===== MOBILE-FIRST COMMANDES ===== */
+* { box-sizing: border-box; }
+
+.commandes-container {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 1rem;
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .header-title { font-size: 2rem; }
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Filtres */
+.filters-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+@media (min-width: 640px) {
+    .filters-section { padding: 1.5rem; }
+}
+
+.filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .filters-form {
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 1.5rem;
+    }
+}
+
+.filter-group { flex: 1; }
+
+.filter-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.25rem;
+}
+
+.filter-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: white;
+    min-height: 44px;
+    transition: all 0.2s ease-in-out;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filter-btn {
+    padding: 0.5rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Actions rapides */
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .quick-actions {
+        flex-direction: row;
+        gap: 1rem;
+    }
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 40px;
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .action-btn {
+        width: auto;
+        min-width: 120px;
+    }
+}
+
+.action-btn-green {
+    background: #10b981;
+    color: white;
+}
+
+.action-btn-green:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.action-btn-yellow {
+    background: #f59e0b;
+    color: white;
+}
+
+.action-btn-yellow:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+
+/* Table responsive */
+.table-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+/* Version Desktop: Table */
+@media (min-width: 640px) {
+    .table-desktop {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table-desktop th {
+        background: #f9fafb;
+        padding: 1rem;
+        text-align: left;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .table-desktop td {
+        padding: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 0.875rem;
+    }
+    
+    .table-desktop tr:hover {
+        background: #f9fafb;
+    }
+}
+
+/* Version Mobile: Cards */
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .cards-container { display: none; }
+}
+
+.commande-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease-in-out;
+}
+
+.commande-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.card-id {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.card-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-en-attente {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-en-preparation {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-prete {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.status-livree {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.card-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.card-montant {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.card-action-btn {
+    flex: 1;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-action-view {
+    background: white;
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.card-action-view:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.card-action-edit {
+    background: white;
+    color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.card-action-edit:hover {
+    background: #f59e0b;
+    color: white;
+}
+
+.card-action-delete {
+    background: white;
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.card-action-delete:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+}
+
+.empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1.5rem;
+    color: #d1d5db;
+}
+
+.empty-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-text {
+    font-size: 0.875rem;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.commande-card { animation: slideUp 0.5s ease-out; }
+
+/* Focus visible */
+.filter-input:focus-visible,
+.filter-btn:focus-visible,
+.action-btn:focus-visible,
+.card-action-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Liste des Commandes</h1>
-            <p class="text-gray-600">Gestion des commandes</p>
-        </div>
+<div class="commandes-container">
+    <!-- Header -->
+    <header class="header-section">
+        <h1 class="header-title">Liste des Commandes</h1>
+        <p class="header-subtitle">Gestion des commandes</p>
+    </header>
 
-        <!-- Filtres -->
-        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
-            <form method="get" class="flex flex-col sm:flex-row gap-4">
-                <div class="w-full sm:w-auto">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">État</label>
-                    <select name="etat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                        <option value="">Tous</option>
-                        {% for etat_value, etat_label in etats %}
-                        <option value="{{ etat_value }}" {% if etat_filter == etat_value %}selected{% endif %}>
-                            {{ etat_label }}
-                        </option>
+    <!-- Filtres -->
+    <section class="filters-section">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <label class="filter-label">État</label>
+                <select name="etat" class="filter-input">
+                    <option value="">Tous</option>
+                    {% for etat_value, etat_label in etats %}
+                    <option value="{{ etat_value }}" {% if etat_filter == etat_value %}selected{% endif %}>
+                        {{ etat_label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Date</label>
+                <input type="date" name="date" value="{{ date_filter }}" 
+                       class="filter-input">
+            </div>
+            <div>
+                <button type="submit" class="filter-btn">
+                    Filtrer
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Actions rapides -->
+    <section class="quick-actions">
+        <a href="{% url 'orders:nouvelle_commande' %}" class="action-btn action-btn-green">
+            Nouvelle commande
+        </a>
+        <a href="{% url 'orders:commandes_en_cours' %}" class="action-btn action-btn-yellow">
+            Commandes en cours
+        </a>
+    </section>
+
+    <!-- Tableau/Cards des commandes -->
+    <main class="table-section">
+        {% if commandes %}
+            <!-- Version Mobile: Cards -->
+            <div class="cards-container">
+                {% for commande in commandes %}
+                <div class="commande-card">
+                    <div class="card-header">
+                        <span class="card-id">#{{ commande.id }}</span>
+                        <span class="card-status status-{{ commande.etat|slugify }}">
+                            {{ commande.get_etat_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="card-details">
+                        <div class="card-detail">
+                            <span class="card-label">Table</span>
+                            <span class="card-value">{{ commande.table.numero_table }}</span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="card-label">Serveur</span>
+                            <span class="card-value">{{ commande.serveur.login }}</span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="card-label">Date</span>
+                            <span class="card-value">{{ commande.date_commande|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="card-label">Montant</span>
+                            <span class="card-montant">{{ commande.total }} GNF</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <a href="{% url 'orders:commande_detail' commande.id %}" class="card-action-btn card-action-view">
+                            Voir
+                        </a>
+                        {% if user.is_serveur or user.is_admin %}
+                        <a href="{% url 'orders:modifier_commande' commande.id %}" class="card-action-btn card-action-edit">
+                            Modifier
+                        </a>
+                        {% endif %}
+                        {% if user.is_admin %}
+                        <form method="post" action="{% url 'orders:supprimer_commande' commande.id %}" class="card-action-btn card-action-delete">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font-size: inherit; padding: 0; width: 100%;"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?')">
+                                Supprimer
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Version Desktop: Table -->
+            <div class="table-desktop">
+                <table class="table-desktop">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Table</th>
+                            <th>Serveur</th>
+                            <th>État</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for commande in commandes %}
+                        <tr>
+                            <td>#{{ commande.id }}</td>
+                            <td>{{ commande.table.numero_table }}</td>
+                            <td>{{ commande.serveur.login }}</td>
+                            <td>
+                                <span class="card-status status-{{ commande.etat|slugify }}">
+                                    {{ commande.get_etat_display }}
+                                </span>
+                            </td>
+                            <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+                            <td class="card-montant">{{ commande.total }} GNF</td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a href="{% url 'orders:commande_detail' commande.id %}" 
+                                       class="card-action-btn card-action-view" style="width: auto;">
+                                        Voir
+                                    </a>
+                                    {% if user.is_serveur or user.is_admin %}
+                                    <a href="{% url 'orders:modifier_commande' commande.id %}" 
+                                       class="card-action-btn card-action-edit" style="width: auto;">
+                                        Modifier
+                                    </a>
+                                    {% endif %}
+                                    {% if user.is_admin %}
+                                    <form method="post" action="{% url 'orders:supprimer_commande' commande.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="card-action-btn card-action-delete" style="width: auto;"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?')">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
                         {% endfor %}
-                    </select>
-                </div>
-                <div class="w-full sm:w-auto">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <input type="date" name="date" value="{{ date_filter }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="w-full sm:w-auto">
-                    <button type="submit" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                        Filtrer
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Actions rapides -->
-        <div class="mb-6">
-            <a href="{% url 'orders:nouvelle_commande' %}" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
-                Nouvelle commande
-            </a>
-            <a href="{% url 'orders:commandes_en_cours' %}" class="ml-2 bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition">
-                Commandes en cours
-            </a>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <h3 class="empty-title">Aucune commande trouvée</h3>
+                <p class="empty-text">Essayez de modifier les filtres ou créez une nouvelle commande.</p>
+            </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}
 
         <!-- Tableau des commandes -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">

@@ -3,92 +3,308 @@
 
 {% block title %}Nouveau Paiement - Restaurant Management{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ===== MOBILE-FIRST NOUVEAU PAIEMENT ===== */
+* { box-sizing: border-box; }
+
+.paiement-container {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 1rem;
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .header-title { font-size: 2rem; }
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Form Container */
+.form-container {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+    .form-container { padding: 2rem; }
+}
+
+/* Messages */
+.messages-section {
+    margin-bottom: 1.5rem;
+}
+
+.message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.message-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.message-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: white;
+    min-height: 48px;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-help {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Commande Info */
+.commande-info {
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.commande-info-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.commande-details {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.commande-total {
+    font-weight: 600;
+    color: #2563eb;
+}
+
+/* Actions */
+.actions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .actions-section {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 48px;
+}
+
+@media (min-width: 640px) {
+    .action-btn {
+        min-width: 140px;
+    }
+}
+
+.action-btn-cancel {
+    background: #6b7280;
+    color: white;
+}
+
+.action-btn-cancel:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+}
+
+.action-btn-submit {
+    background: #10b981;
+    color: white;
+}
+
+.action-btn-submit:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+/* Focus visible */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.action-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+    animation: slideUp 0.5s ease-out;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-6">Nouveau Paiement</h1>
+<div class="paiement-container">
+    <!-- Header -->
+    <header class="header-section">
+        <h1 class="header-title">Nouveau Paiement</h1>
+        <p class="header-subtitle">Enregistrer un paiement</p>
+    </header>
 
-                {% if messages %}
-                <div class="mb-6">
-                    {% for message in messages %}
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <!-- Sélection de la commande -->
-                    <div class="mb-6">
-                        <label for="commande" class="block text-sm font-medium text-gray-700 mb-2">
-                            Commande *
-                        </label>
-                        <select name="commande" id="commande" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                            <option value="">Sélectionnez une commande</option>
-                            {% for commande in commandes %}
-                            <option value="{{ commande.id }}"
-                                    {% if request.GET.commande == commande.id|stringformat:"s" %}selected{% endif %}
-                                    data-total="{{ commande.total }}">
-                                Commande #{{ commande.id }} - Table {{ commande.table.numero_table }} ({{ commande.total }} GNF)
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Méthode de paiement -->
-                    <div class="mb-6">
-                        <label for="methode" class="block text-sm font-medium text-gray-700 mb-2">
-                            Méthode de paiement *
-                        </label>
-                        <select name="methode" id="methode" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                            <option value="">Sélectionnez une méthode</option>
-                            {% for methode_value, methode_label in methodes %}
-                            <option value="{{ methode_value }}">{{ methode_label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Montant -->
-                    <div class="mb-6">
-                        <label for="montant" class="block text-sm font-medium text-gray-700 mb-2">
-                            Montant *
-                        </label>
-                        <input type="number" name="montant" id="montant" 
-                               step="0.01" min="0" required
-                               placeholder="0.00"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                        <p class="mt-1 text-sm text-gray-600">Montant en GNF</p>
-                    </div>
-
-                    <!-- Informations de la commande sélectionnée -->
-                    <div id="commande-info" class="mb-6 p-4 bg-gray-50 rounded-lg hidden">
-                        <h3 class="text-sm font-medium text-gray-900 mb-2">Détails de la commande</h3>
-                        <div class="text-sm text-gray-600">
-                            <p>Total à payer: <span id="commande-total" class="font-bold text-blue-600">0</span> GNF</p>
-                        </div>
-                    </div>
-
-                    <!-- Boutons -->
-                    <div class="flex justify-between">
-                        <a href="{% url 'payments:paiement_list' %}" 
-                           class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">
-                            Annuler
-                        </a>
-                        <button type="submit" 
-                                class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
-                            Enregistrer le paiement
-                        </button>
-                    </div>
-                </form>
+    <!-- Form Container -->
+    <div class="form-container">
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages-section">
+            {% for message in messages %}
+            <div class="message message-{{ message.tags }}">
+                {{ message }}
             </div>
+            {% endfor %}
         </div>
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Sélection de la commande -->
+            <div class="form-group">
+                <label for="commande" class="form-label">
+                    Commande <span class="required">*</span>
+                </label>
+                <select name="commande" id="commande" required class="form-select">
+                    <option value="">Sélectionnez une commande</option>
+                    {% for commande in commandes %}
+                    <option value="{{ commande.id }}"
+                            {% if request.GET.commande == commande.id|stringformat:"s" %}selected{% endif %}
+                            data-total="{{ commande.total }}">
+                        Commande #{{ commande.id }} - Table {{ commande.table.numero_table }} ({{ commande.total }} GNF)
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Méthode de paiement -->
+            <div class="form-group">
+                <label for="methode" class="form-label">
+                    Méthode de paiement <span class="required">*</span>
+                </label>
+                <select name="methode" id="methode" required class="form-select">
+                    <option value="">Sélectionnez une méthode</option>
+                    {% for methode_value, methode_label in methodes %}
+                    <option value="{{ methode_value }}">{{ methode_label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Montant -->
+            <div class="form-group">
+                <label for="montant" class="form-label">
+                    Montant <span class="required">*</span>
+                </label>
+                <input type="number" name="montant" id="montant" 
+                       step="0.01" min="0" required
+                       placeholder="0.00"
+                       class="form-input">
+                <p class="form-help">Montant en GNF</p>
+            </div>
+
+            <!-- Informations de la commande sélectionnée -->
+            <div id="commande-info" class="commande-info hidden">
+                <h3 class="commande-info-title">Détails de la commande</h3>
+                <div class="commande-details">
+                    <p>Total à payer: <span id="commande-total" class="commande-total">0</span> GNF</p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-section">
+                <a href="{% url 'payments:paiement_list' %}" class="action-btn action-btn-cancel">
+                    Annuler
+                </a>
+                <button type="submit" class="action-btn action-btn-submit">
+                    Enregistrer le paiement
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -99,13 +315,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const montantInput = document.getElementById('montant');
     const commandeInfo = document.getElementById('commande-info');
     const commandeTotal = document.getElementById('commande-total');
+    const form = document.querySelector('form');
 
+    // Afficher les détails de la commande sélectionnée
     commandeSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption.value) {
-            const total = selectedOption.dataset.total || '0';
-            commandeTotal.textContent = total;
+        const total = selectedOption.getAttribute('data-total');
+        
+        if (total) {
             commandeInfo.classList.remove('hidden');
+            commandeTotal.textContent = parseFloat(total).toLocaleString();
             montantInput.value = total;
         } else {
             commandeInfo.classList.add('hidden');
@@ -113,13 +332,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Si une commande est pré-sélectionnée
+    // Initialiser si une commande est pré-sélectionnée
     if (commandeSelect.value) {
         const selectedOption = commandeSelect.options[commandeSelect.selectedIndex];
-        const total = selectedOption.dataset.total || '0';
-        commandeTotal.textContent = total;
-        commandeInfo.classList.remove('hidden');
+        const total = selectedOption.getAttribute('data-total');
+        if (total) {
+            commandeInfo.classList.remove('hidden');
+            commandeTotal.textContent = parseFloat(total).toLocaleString();
+        }
     }
+
+    // Validation du formulaire
+    form.addEventListener('submit', function(e) {
+        const commandeSelected = commandeSelect.value;
+        const methodeSelected = document.getElementById('methode').value;
+        const montant = parseFloat(montantInput.value);
+        
+        if (!commandeSelected) {
+            e.preventDefault();
+            alert('Veuillez sélectionner une commande.');
+            return;
+        }
+        
+        if (!methodeSelected) {
+            e.preventDefault();
+            alert('Veuillez sélectionner une méthode de paiement.');
+            return;
+        }
+        
+        if (!montant || montant <= 0) {
+            e.preventDefault();
+            alert('Veuillez entrer un montant valide.');
+            return;
+        }
+    });
 });
 </script>
 {% endblock %}
