@@ -30,12 +30,29 @@ class AutoMigrationMiddleware:
                             # Forcer toutes les migrations
                             call_command('migrate', verbosity=0, interactive=False)
                             
-                            # Créer un superutilisateur si nécessaire
+                            # Créer les utilisateurs par défaut
                             User = get_user_model()
+                            
+                            # Superutilisateur admin
                             if not User.objects.filter(login='admin').exists():
                                 User.objects.create_superuser(
                                     login='admin',
                                     password='admin123'
+                                )
+                            
+                            # Utilisateurs de test
+                            if not User.objects.filter(login='manager').exists():
+                                User.objects.create_user(
+                                    login='manager',
+                                    password='manager123',
+                                    role='Rmanager'
+                                )
+                            
+                            if not User.objects.filter(login='employe').exists():
+                                User.objects.create_user(
+                                    login='employe',
+                                    password='employe123',
+                                    role='Remploye'
                                 )
                         
                         migrations_applied = True
@@ -45,11 +62,28 @@ class AutoMigrationMiddleware:
                         try:
                             call_command('migrate', verbosity=0, interactive=False)
                             User = get_user_model()
+                            
+                            # Créer les utilisateurs par défaut même en cas d'erreur
                             if not User.objects.filter(login='admin').exists():
                                 User.objects.create_superuser(
                                     login='admin',
                                     password='admin123'
                                 )
+                            
+                            if not User.objects.filter(login='manager').exists():
+                                User.objects.create_user(
+                                    login='manager',
+                                    password='manager123',
+                                    role='Rmanager'
+                                )
+                            
+                            if not User.objects.filter(login='employe').exists():
+                                User.objects.create_user(
+                                    login='employe',
+                                    password='employe123',
+                                    role='Remploye'
+                                )
+                            
                             migrations_applied = True
                         except:
                             pass
