@@ -18,7 +18,6 @@ def init_database(request):
         if not User.objects.filter(login='admin').exists():
             User.objects.create_superuser(
                 login='admin',
-                email='admin@restaurant.com',
                 password='admin123'
             )
             return JsonResponse({
