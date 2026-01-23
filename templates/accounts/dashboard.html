@@ -12,19 +12,19 @@
             <h2 class="text-xl font-bold text-gray-800 mb-6">Tableau de bord</h2>
             
             <nav class="space-y-2">
-                <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-lg">
+                <a href="{% url 'accounts:dashboard' %}" class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-lg">
                     <i class="fas fa-home mr-3"></i> Accueil
                 </a>
-                <a href="{% url 'admin_user_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="{% url 'accounts:admin_user_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-users mr-3"></i> Utilisateurs
                 </a>
-                <a href="{% url 'commande_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="{% url 'orders:commande_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-utensils mr-3"></i> Commandes
                 </a>
-                <a href="{% url 'paiement_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="{% url 'payments:paiement_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-credit-card mr-3"></i> Paiements
                 </a>
-                <a href="{% url 'depense_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="{% url 'expenses:depense_list' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-receipt mr-3"></i> Dépenses
                 </a>
             </nav>
@@ -91,17 +91,17 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Actions rapides</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <a href="{% url 'nouvelle_commande' %}" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                    <a href="{% url 'orders:nouvelle_commande' %}" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                         <i class="fas fa-plus-circle text-blue-600 mr-3"></i>
                         <span class="text-gray-700">Nouvelle commande</span>
                     </a>
                     
-                    <a href="{% url 'nouveau_paiement' %}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                    <a href="{% url 'payments:nouveau_paiement' %}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
                         <i class="fas fa-plus-circle text-green-600 mr-3"></i>
                         <span class="text-gray-700">Nouveau paiement</span>
                     </a>
                     
-                    <a href="{% url 'nouvelle_depense' %}" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">
+                    <a href="{% url 'expenses:nouvelle_depense' %}" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">
                         <i class="fas fa-plus-circle text-red-600 mr-3"></i>
                         <span class="text-gray-700">Nouvelle dépense</span>
                     </a>
