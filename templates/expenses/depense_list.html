@@ -4,74 +4,76 @@
 {% block title %}Dépenses - Restaurant Management{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/mobile-first.css' %}">
 <style>
-/* Optimisations spécifiques pour la liste des dépenses mobile-first */
+/* ===== MOBILE-FIRST DIRECT STYLES ===== */
+
+/* Reset et base */
+* {
+    box-sizing: border-box;
+}
+
+/* Container principal */
 .depenses-container {
     min-height: 100vh;
-    background: var(--gray-50);
+    background: #f9fafb;
+    padding: 1rem;
 }
 
-/* Header Section */
+/* Header */
 .header-section {
     background: white;
-    border-bottom: 1px solid var(--gray-200);
-    padding: var(--space-lg) 0;
-    margin-bottom: var(--space-lg);
-}
-
-@media (min-width: 768px) {
-    .header-section {
-        padding: var(--space-xl) 0;
-        margin-bottom: var(--space-xl);
-    }
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
 }
 
 .header-title {
-    font-size: var(--text-2xl);
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--gray-900);
-    margin-bottom: var(--space-xs);
+    color: #111827;
+    margin-bottom: 0.25rem;
 }
 
 @media (min-width: 768px) {
     .header-title {
-        font-size: var(--text-3xl);
+        font-size: 2rem;
     }
 }
 
 .header-subtitle {
-    color: var(--gray-600);
-    font-size: var(--text-sm);
+    color: #6b7280;
+    font-size: 0.875rem;
 }
 
 /* Filtres */
 .filters-section {
     background: white;
     border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: var(--space-md);
-    margin-bottom: var(--space-lg);
-    border: 1px solid var(--gray-200);
+    border: 1px solid #e5e7eb;
 }
 
 @media (min-width: 640px) {
     .filters-section {
-        padding: var(--space-lg);
+        padding: 1.5rem;
     }
 }
 
 .filters-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: 1rem;
 }
 
 @media (min-width: 640px) {
     .filters-form {
         flex-direction: row;
         align-items: flex-end;
-        gap: var(--space-lg);
+        gap: 1.5rem;
     }
 }
 
@@ -81,17 +83,17 @@
 
 .filter-label {
     display: block;
-    font-size: var(--text-sm);
+    font-size: 0.875rem;
     font-weight: 500;
-    color: var(--gray-700);
-    margin-bottom: var(--space-xs);
+    color: #374151;
+    margin-bottom: 0.25rem;
 }
 
 .filter-input {
     width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-base);
-    border: 1px solid var(--gray-300);
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     background: white;
     min-height: 44px;
@@ -100,17 +102,17 @@
 
 .filter-input:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .filter-btn {
-    padding: var(--space-sm) var(--space-lg);
-    background: var(--accent);
+    padding: 0.5rem 1.5rem;
+    background: #3b82f6;
     color: white;
     border: none;
     border-radius: 0.5rem;
-    font-size: var(--text-sm);
+    font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -127,23 +129,23 @@
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 @media (min-width: 640px) {
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-lg);
+        gap: 1.5rem;
     }
 }
 
 .stat-card {
     background: white;
     border-radius: 0.5rem;
+    padding: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: var(--space-md);
-    border: 1px solid var(--gray-200);
+    border: 1px solid #e5e7eb;
     transition: all 0.2s ease-in-out;
 }
 
@@ -155,7 +157,7 @@
 .stat-content {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
+    gap: 1rem;
 }
 
 .stat-icon {
@@ -169,13 +171,13 @@
 }
 
 .stat-icon-green {
-    background: var(--success-bg);
-    color: var(--success-soft);
+    background: #ecfdf5;
+    color: #10b981;
 }
 
 .stat-icon-red {
-    background: var(--danger-bg);
-    color: var(--danger-soft);
+    background: #fef2f2;
+    color: #ef4444;
 }
 
 .stat-icon-blue {
@@ -193,23 +195,23 @@
 }
 
 .stat-label {
-    font-size: var(--text-sm);
-    color: var(--gray-600);
-    margin-bottom: var(--space-xs);
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
 }
 
 .stat-value {
-    font-size: var(--text-lg);
+    font-size: 1.125rem;
     font-weight: 700;
     line-height: 1.2;
 }
 
 .stat-value-green {
-    color: var(--success-soft);
+    color: #10b981;
 }
 
 .stat-value-red {
-    color: var(--danger-soft);
+    color: #ef4444;
 }
 
 .stat-value-blue {
@@ -224,14 +226,14 @@
 .quick-actions {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 @media (min-width: 640px) {
     .quick-actions {
         flex-direction: row;
-        gap: var(--space-md);
+        gap: 1rem;
     }
 }
 
@@ -239,8 +241,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-sm);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
     font-weight: 500;
     border-radius: 0.5rem;
     border: 1px solid transparent;
@@ -259,7 +261,7 @@
 }
 
 .action-btn-green {
-    background: var(--success-soft);
+    background: #10b981;
     color: white;
 }
 
@@ -269,7 +271,7 @@
 }
 
 .action-btn-yellow {
-    background: var(--warning-soft);
+    background: #f59e0b;
     color: white;
 }
 
@@ -294,7 +296,7 @@
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    border: 1px solid var(--gray-200);
+    border: 1px solid #e5e7eb;
 }
 
 /* Version Desktop: Table */
@@ -305,23 +307,23 @@
     }
     
     .table-desktop th {
-        background: var(--gray-50);
-        padding: var(--space-md);
+        background: #f9fafb;
+        padding: 1rem;
         text-align: left;
-        font-size: var(--text-sm);
+        font-size: 0.875rem;
         font-weight: 600;
-        color: var(--gray-700);
-        border-bottom: 1px solid var(--gray-200);
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
     }
     
     .table-desktop td {
-        padding: var(--space-md);
-        border-bottom: 1px solid var(--gray-100);
-        font-size: var(--text-sm);
+        padding: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 0.875rem;
     }
     
     .table-desktop tr:hover {
-        background: var(--gray-50);
+        background: #f9fafb;
     }
 }
 
@@ -329,7 +331,7 @@
 .cards-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -341,9 +343,9 @@
 .depense-card {
     background: white;
     border-radius: 0.5rem;
+    padding: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: var(--space-md);
-    border: 1px solid var(--gray-200);
+    border: 1px solid #e5e7eb;
     transition: all 0.2s ease-in-out;
 }
 
@@ -356,26 +358,26 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: var(--space-md);
+    margin-bottom: 1rem;
 }
 
 .card-id {
-    font-size: var(--text-sm);
+    font-size: 0.875rem;
     font-weight: 600;
-    color: var(--gray-500);
+    color: #6b7280;
 }
 
 .card-montant {
-    font-size: var(--text-lg);
+    font-size: 1.125rem;
     font-weight: 700;
-    color: var(--danger-soft);
+    color: #ef4444;
 }
 
 .card-details {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .card-detail {
@@ -385,37 +387,37 @@
 }
 
 .card-label {
-    font-size: var(--text-sm);
-    color: var(--gray-600);
+    font-size: 0.875rem;
+    color: #6b7280;
 }
 
 .card-value {
-    font-size: var(--text-sm);
+    font-size: 0.875rem;
     font-weight: 500;
-    color: var(--gray-900);
+    color: #111827;
 }
 
 .card-category {
     display: inline-block;
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--gray-100);
-    color: var(--gray-700);
+    padding: 0.25rem 0.5rem;
+    background: #f3f4f6;
+    color: #374151;
     border-radius: 0.25rem;
-    font-size: var(--text-xs);
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
 .card-actions {
     display: flex;
-    gap: var(--space-sm);
-    padding-top: var(--space-sm);
-    border-top: 1px solid var(--gray-100);
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6;
 }
 
 .card-action-btn {
     flex: 1;
-    padding: var(--space-xs) var(--space-sm);
-    font-size: var(--text-xs);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
     border-radius: 0.375rem;
     border: 1px solid;
     text-decoration: none;
@@ -429,59 +431,59 @@
 
 .card-action-view {
     background: white;
-    color: var(--accent);
-    border-color: var(--accent);
+    color: #3b82f6;
+    border-color: #3b82f6;
 }
 
 .card-action-view:hover {
-    background: var(--accent);
+    background: #3b82f6;
     color: white;
 }
 
 .card-action-edit {
     background: white;
-    color: var(--warning-soft);
-    border-color: var(--warning-soft);
+    color: #f59e0b;
+    border-color: #f59e0b;
 }
 
 .card-action-edit:hover {
-    background: var(--warning-soft);
+    background: #f59e0b;
     color: white;
 }
 
 .card-action-delete {
     background: white;
-    color: var(--danger-soft);
-    border-color: var(--danger-soft);
+    color: #ef4444;
+    border-color: #ef4444;
 }
 
 .card-action-delete:hover {
-    background: var(--danger-soft);
+    background: #ef4444;
     color: white;
 }
 
 /* Empty state */
 .empty-state {
     text-align: center;
-    padding: var(--space-2xl);
-    color: var(--gray-500);
+    padding: 3rem 1rem;
+    color: #6b7280;
 }
 
 .empty-icon {
     width: 3rem;
     height: 3rem;
-    margin: 0 auto var(--space-lg);
-    color: var(--gray-300);
+    margin: 0 auto 1.5rem;
+    color: #d1d5db;
 }
 
 .empty-title {
-    font-size: var(--text-lg);
+    font-size: 1.125rem;
     font-weight: 600;
-    margin-bottom: var(--space-sm);
+    margin-bottom: 0.5rem;
 }
 
 .empty-text {
-    font-size: var(--text-sm);
+    font-size: 0.875rem;
 }
 
 /* Animation d'entrée */
@@ -506,7 +508,7 @@
 .filter-btn:focus-visible,
 .action-btn:focus-visible,
 .card-action-btn:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
 }
 </style>
@@ -514,211 +516,209 @@
 
 {% block content %}
 <div class="depenses-container">
-    <div class="container-mobile">
-        <!-- Header -->
-        <header class="header-section">
-            <h1 class="header-title">Liste des Dépenses</h1>
-            <p class="header-subtitle">Gestion des dépenses</p>
-        </header>
+    <!-- Header -->
+    <header class="header-section">
+        <h1 class="header-title">Liste des Dépenses</h1>
+        <p class="header-subtitle">Gestion des dépenses</p>
+    </header>
 
-        <!-- Filtres -->
-        <section class="filters-section">
-            <form method="get" class="filters-form">
-                <div class="filter-group">
-                    <label class="filter-label">Catégorie</label>
-                    <select name="categorie" class="filter-input">
-                        <option value="">Toutes</option>
-                        {% for categorie in categories %}
-                        <option value="{{ categorie.id }}" {% if categorie_filter == categorie.id|stringformat:"s" %}selected{% endif %}>
-                            {{ categorie.nom }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Date</label>
-                    <input type="date" name="date" value="{{ date_filter }}" 
-                           class="filter-input">
-                </div>
-                <div>
-                    <button type="submit" class="filter-btn">
-                        Filtrer
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <!-- Cartes de statistiques -->
-        <section class="stats-grid">
-            <div class="stat-card interactive">
-                <div class="stat-content">
-                    <div class="stat-icon stat-icon-green">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <p class="stat-label">Total entrées</p>
-                        <p class="stat-value stat-value-green">{{ total_entrees }} GNF</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-card interactive">
-                <div class="stat-content">
-                    <div class="stat-icon stat-icon-red">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <p class="stat-label">Total sorties</p>
-                        <p class="stat-value stat-value-red">{{ total_depenses }} GNF</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-card interactive">
-                <div class="stat-content">
-                    <div class="stat-icon {% if solde_actuel >= 0 %}stat-icon-blue{% else %}stat-icon-orange{% endif %}">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <p class="stat-label">Solde actuel</p>
-                        <p class="stat-value {% if solde_actuel >= 0 %}stat-value-blue{% else %}stat-value-orange{% endif %}">{{ solde_actuel }} GNF</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Actions rapides -->
-        <section class="quick-actions">
-            <a href="{% url 'expenses:nouvelle_depense' %}" class="action-btn action-btn-green">
-                Nouvelle dépense
-            </a>
-            <a href="{% url 'expenses:statistiques_depenses' %}" class="action-btn action-btn-yellow">
-                Statistiques
-            </a>
-            <a href="{% url 'expenses:rapport_depenses' %}" class="action-btn action-btn-purple">
-                Rapport
-            </a>
-        </section>
-
-        <!-- Tableau/Cards des dépenses -->
-        <main class="table-section">
-            {% if depenses %}
-                <!-- Version Mobile: Cards -->
-                <div class="cards-container">
-                    {% for depense in depenses %}
-                    <div class="depense-card interactive">
-                        <div class="card-header">
-                            <span class="card-id">#{{ depense.id }}</span>
-                            <span class="card-montant">{{ depense.montant }} GNF</span>
-                        </div>
-                        
-                        <div class="card-details">
-                            <div class="card-detail">
-                                <span class="card-label">Description</span>
-                                <span class="card-value">{{ depense.description }}</span>
-                            </div>
-                            <div class="card-detail">
-                                <span class="card-label">Catégorie</span>
-                                <span class="card-category">{{ depense.categorie.nom }}</span>
-                            </div>
-                            <div class="card-detail">
-                                <span class="card-label">Date</span>
-                                <span class="card-value">{{ depense.date_depense|date:"d/m/Y" }}</span>
-                            </div>
-                            <div class="card-detail">
-                                <span class="card-label">Utilisateur</span>
-                                <span class="card-value">{{ depense.utilisateur.login }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="card-actions">
-                            <a href="{% url 'expenses:depense_detail' depense.id %}" class="card-action-btn card-action-view">
-                                Voir
-                            </a>
-                            {% if user.role == 'Radmin' %}
-                            <a href="{% url 'expenses:modifier_depense' depense.id %}" class="card-action-btn card-action-edit">
-                                Modifier
-                            </a>
-                            <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" class="card-action-btn card-action-delete">
-                                {% csrf_token %}
-                                <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font-size: inherit; padding: 0; width: 100%;"
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
-                                    Supprimer
-                                </button>
-                            </form>
-                            {% endif %}
-                        </div>
-                    </div>
+    <!-- Filtres -->
+    <section class="filters-section">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <label class="filter-label">Catégorie</label>
+                <select name="categorie" class="filter-input">
+                    <option value="">Toutes</option>
+                    {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {% if categorie_filter == categorie.id|stringformat:"s" %}selected{% endif %}>
+                        {{ categorie.nom }}
+                    </option>
                     {% endfor %}
-                </div>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Date</label>
+                <input type="date" name="date" value="{{ date_filter }}" 
+                       class="filter-input">
+            </div>
+            <div>
+                <button type="submit" class="filter-btn">
+                    Filtrer
+                </button>
+            </div>
+        </form>
+    </section>
 
-                <!-- Version Desktop: Table -->
-                <div class="table-desktop">
-                    <table class="table-desktop">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Description</th>
-                                <th>Catégorie</th>
-                                <th>Montant</th>
-                                <th>Date</th>
-                                <th>Utilisateur</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for depense in depenses %}
-                            <tr>
-                                <td>#{{ depense.id }}</td>
-                                <td>{{ depense.description }}</td>
-                                <td>
-                                    <span class="card-category">{{ depense.categorie.nom }}</span>
-                                </td>
-                                <td class="stat-value-red">{{ depense.montant }} GNF</td>
-                                <td>{{ depense.date_depense|date:"d/m/Y" }}</td>
-                                <td>{{ depense.utilisateur.login }}</td>
-                                <td>
-                                    <div style="display: flex; gap: 0.5rem;">
-                                        <a href="{% url 'expenses:depense_detail' depense.id %}" 
-                                           class="card-action-btn card-action-view" style="width: auto;">
-                                            Voir
-                                        </a>
-                                        {% if user.role == 'Radmin' %}
-                                        <a href="{% url 'expenses:modifier_depense' depense.id %}" 
-                                           class="card-action-btn card-action-edit" style="width: auto;">
-                                            Modifier
-                                        </a>
-                                        <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="card-action-btn card-action-delete" style="width: auto;"
-                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="empty-state">
-                    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+    <!-- Cartes de statistiques -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon stat-icon-green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    <h3 class="empty-title">Aucune dépense trouvée</h3>
-                    <p class="empty-text">Essayez de modifier les filtres ou ajoutez une nouvelle dépense.</p>
                 </div>
-            {% endif %}
-        </main>
-    </div>
+                <div class="stat-info">
+                    <p class="stat-label">Total entrées</p>
+                    <p class="stat-value stat-value-green">{{ total_entrees }} GNF</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon stat-icon-red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Total sorties</p>
+                    <p class="stat-value stat-value-red">{{ total_depenses }} GNF</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-icon {% if solde_actuel >= 0 %}stat-icon-blue{% else %}stat-icon-orange{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Solde actuel</p>
+                    <p class="stat-value {% if solde_actuel >= 0 %}stat-value-blue{% else %}stat-value-orange{% endif %}">{{ solde_actuel }} GNF</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Actions rapides -->
+    <section class="quick-actions">
+        <a href="{% url 'expenses:nouvelle_depense' %}" class="action-btn action-btn-green">
+            Nouvelle dépense
+        </a>
+        <a href="{% url 'expenses:statistiques_depenses' %}" class="action-btn action-btn-yellow">
+            Statistiques
+        </a>
+        <a href="{% url 'expenses:rapport_depenses' %}" class="action-btn action-btn-purple">
+            Rapport
+        </a>
+    </section>
+
+    <!-- Tableau/Cards des dépenses -->
+    <main class="table-section">
+        {% if depenses %}
+            <!-- Version Mobile: Cards -->
+            <div class="cards-container">
+                {% for depense in depenses %}
+                <div class="depense-card">
+                    <div class="card-header">
+                        <span class="card-id">#{{ depense.id }}</span>
+                        <span class="card-montant">{{ depense.montant }} GNF</span>
+                    </div>
+                    
+                    <div class="card-details">
+                        <div class="card-detail">
+                            <span class="card-label">Description</span>
+                            <span class="card-value">{{ depense.description }}</span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="card-label">Catégorie</span>
+                            <span class="card-category">{{ depense.categorie.nom }}</span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="card-label">Date</span>
+                            <span class="card-value">{{ depense.date_depense|date:"d/m/Y" }}</span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="card-label">Utilisateur</span>
+                            <span class="card-value">{{ depense.utilisateur.login }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <a href="{% url 'expenses:depense_detail' depense.id %}" class="card-action-btn card-action-view">
+                            Voir
+                        </a>
+                        {% if user.role == 'Radmin' %}
+                        <a href="{% url 'expenses:modifier_depense' depense.id %}" class="card-action-btn card-action-edit">
+                            Modifier
+                        </a>
+                        <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" class="card-action-btn card-action-delete">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font-size: inherit; padding: 0; width: 100%;"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
+                                Supprimer
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Version Desktop: Table -->
+            <div class="table-desktop">
+                <table class="table-desktop">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Catégorie</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Utilisateur</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for depense in depenses %}
+                        <tr>
+                            <td>#{{ depense.id }}</td>
+                            <td>{{ depense.description }}</td>
+                            <td>
+                                <span class="card-category">{{ depense.categorie.nom }}</span>
+                            </td>
+                            <td class="stat-value-red">{{ depense.montant }} GNF</td>
+                            <td>{{ depense.date_depense|date:"d/m/Y" }}</td>
+                            <td>{{ depense.utilisateur.login }}</td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a href="{% url 'expenses:depense_detail' depense.id %}" 
+                                       class="card-action-btn card-action-view" style="width: auto;">
+                                        Voir
+                                    </a>
+                                    {% if user.role == 'Radmin' %}
+                                    <a href="{% url 'expenses:modifier_depense' depense.id %}" 
+                                       class="card-action-btn card-action-edit" style="width: auto;">
+                                        Modifier
+                                    </a>
+                                    <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="card-action-btn card-action-delete" style="width: auto;"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <h3 class="empty-title">Aucune dépense trouvée</h3>
+                <p class="empty-text">Essayez de modifier les filtres ou ajoutez une nouvelle dépense.</p>
+            </div>
+        {% endif %}
+    </main>
 </div>
 {% endblock %}
