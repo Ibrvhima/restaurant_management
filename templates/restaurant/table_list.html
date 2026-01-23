@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-<!-- Fixed template structure - v3 - Render deployment fix -->
+<!-- Fixed template structure - v4 - Complete rewrite -->
 
 {% block title %}Tables - Restaurant Management{% endblock %}
 
@@ -23,35 +23,26 @@
             {% endif %}
         </div>
 
+        <!-- Grid des tables -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for table in tables %}
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
                 <div class="p-6">
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl font-semibold text-gray-900">Table {{ table.numero_table }}</h3>
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full
-                            {% if table.est_occupee %}
-                                bg-red-100 text-red-800
-                            {% else %}
-                                bg-green-100 text-green-800
-                            {% endif %}">
-                            {% if table.est_occupee %}
-                                Occupée
-                            {% else %}
-                                Libre
-                            {% endif %}
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full 
+                            {% if table.statut == 'DISPONIBLE' %}bg-green-100 text-green-800
+                            {% elif table.statut == 'OCCUPEE' %}bg-red-100 text-red-800
+                            {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                            {{ table.get_statut_display }}
                         </span>
                     </div>
                     
-                    <div class="space-y-2 mb-4">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Places:</span>
-                            <span class="font-medium">{{ table.nombre_places }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Responsable:</span>
-                            <span class="font-medium">{{ table.utilisateur.login|default:"Non assigné" }}</span>
-                        </div>
+                    <div class="text-gray-600 mb-4">
+                        <p class="text-sm">Capacité: {{ table.capacite }} personnes</p>
+                        {% if table.commande_en_cours %}
+                        <p class="text-sm text-orange-600">Commande en cours</p>
+                        {% endif %}
                     </div>
 
                     <div class="space-y-2">
@@ -59,22 +50,31 @@
                             Voir détails
                         </a>
                         {% if user.role == 'Rserveur' or user.role == 'Radmin' %}
-                        <button onclick="creerCommande('{{ table.id }}')" 
-                                class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
-                            Nouvelle commande
-                        </button>
+                        <a href="{% url 'restaurant:table_commandes' table.id %}" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-center block">
+                            Commandes
+                        </a>
+                        {% endif %}
+                        {% if user.role == 'Rtable' %}
+                        <a href="{% url 'restaurant:table_home' table.id %}" class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-center block">
+                            Menu
+                        </a>
                         {% endif %}
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="col-span-full text-center py-12">
-                <p class="text-gray-500 text-lg">Aucune table disponible.</p>
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune table trouvée</h3>
+                <p class="text-gray-500">Commencez par ajouter une nouvelle table.</p>
             </div>
             {% endfor %}
         </div>
     </div>
 </div>
+{% endblock %}
 
 {% block extra_js %}
 <script>
