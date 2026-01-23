@@ -130,7 +130,7 @@ def admin_user_list(request):
     
     users = User.objects.all().order_by('-date_creation')
     context = {'users': users}
-    return render(request, 'accounts/admin_user_list_simple.html', context)
+    return render(request, 'accounts/admin_user_list_pro.html', context)
 
 @login_required
 def admin_create_user(request):
