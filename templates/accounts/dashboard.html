@@ -4,6 +4,24 @@
 {% block title %}Tableau de bord - Restaurant Management{% endblock %}
 
 {% block content %}
+<!-- BOUTON DE SECOURS 100% HTML/CSS -->
+<input type="checkbox" id="mobileMenuToggle" style="display: none;">
+<label for="mobileMenuToggle" style="
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10000;
+    background: red;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+">🍔 MENU</label>
+
 <!-- Désactiver le header/footer de base pour le dashboard -->
 <style>
     main.pt-16 { padding-top: 0 !important; }
@@ -211,6 +229,32 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+    }
+    
+    /* CSS pour le menu mobile avec checkbox */
+    #mobileMenuToggle:checked ~ main .flex > #sidebar {
+        display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        background: linear-gradient(to bottom, #1e293b, #0f172a) !important;
+        z-index: 9999 !important;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5) !important;
+        overflow-y: auto !important;
+        transform: translateX(0) !important;
+    }
+    
+    #mobileMenuToggle:checked ~ main .flex > #mobileSidebarOverlay {
+        display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0,0,0,0.5) !important;
+        z-index: 9998 !important;
     }
     
     /* Sidebar mobile - simplifié pour éviter les conflits */
