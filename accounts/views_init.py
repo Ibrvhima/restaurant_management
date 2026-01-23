@@ -15,9 +15,9 @@ def init_database(request):
         
         # Créer un superutilisateur par défaut
         User = get_user_model()
-        if not User.objects.filter(username='admin').exists():
+        if not User.objects.filter(login='admin').exists():
             User.objects.create_superuser(
-                username='admin',
+                login='admin',
                 email='admin@restaurant.com',
                 password='admin123'
             )
