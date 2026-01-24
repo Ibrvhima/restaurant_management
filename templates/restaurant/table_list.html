@@ -50,7 +50,7 @@
                             Voir détails
                         </a>
                         {% if user.role == 'Rserveur' or user.role == 'Radmin' %}
-                        <a href="{% url 'restaurant:table_commandes' table.id %}" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-center block">
+                        <a href="{% url 'restaurant:table_commandes' %}" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-center block">
                             Commandes
                         </a>
                         {% endif %}
