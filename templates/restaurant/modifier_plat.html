@@ -1,0 +1,710 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Modifier un Plat - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: #374151;
+    --primary-light: #4b5563;
+    --secondary: #6b7280;
+    --success: #059669;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --light: #f9fafb;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 280px;
+    background: var(--primary);
+    color: white;
+    padding: 2rem 1rem;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.user-info h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.user-info p {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+.nav-menu {
+    list-style: none;
+}
+
+.nav-item {
+    margin-bottom: 0.5rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.content-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title h1 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--secondary);
+    font-size: 0.875rem;
+}
+
+.breadcrumb a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* ===== FORM CONTAINER ===== */
+.form-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.form-header h2 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: var(--secondary);
+}
+
+.plat-info {
+    background: var(--light);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.plat-info h3 {
+    font-size: 1rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.plat-info p {
+    color: var(--secondary);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* ===== FORM STYLES ===== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-label i {
+    color: var(--secondary);
+    font-size: 0.875rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    padding: 0.875rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+}
+
+/* ===== FORM ACTIONS ===== */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border);
+}
+
+.btn {
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(55, 65, 81, 0.25);
+}
+
+.btn-secondary {
+    background: var(--light);
+    color: var(--primary);
+    border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--border);
+    transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1001;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-menu-toggle {
+        display: none;
+    }
+}
+
+/* ===== ERROR STYLES ===== */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+}
+
+.errorlist li {
+    color: var(--danger);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.errorlist li::before {
+    content: '⚠️';
+}
+
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+    border-color: var(--danger);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <div class="user-info">
+                <h3>{{ user.get_full_name|default:user.login }}</h3>
+                <p>{{ user.get_role_display }}</p>
+            </div>
+        </div>
+
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="{% url 'accounts:dashboard' %}" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Tableau de bord</span>
+                    </a>
+                </li>
+                {% if user.role == 'Radmin' or user.role == 'Rserveur' %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:table_list' %}" class="nav-link">
+                        <i class="fas fa-table"></i>
+                        <span>Tables</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:menu_list' %}" class="nav-link">
+                        <i class="fas fa-utensils"></i>
+                        <span>Menu</span>
+                    </a>
+                </li>
+                {% if user.role == 'Radmin' or user.role == 'Rcuisinier' %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:nouveau_plat' %}" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Nouveau plat</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.role == 'Radmin' or user.role == 'Rcuisinier' %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:liste_categories' %}" class="nav-link">
+                        <i class="fas fa-tags"></i>
+                        <span>Catégories</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.role == 'Rserveur' %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:serveur_home' %}" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Service</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.role == 'Rcuisinier' %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:cuisinier_home' %}" class="nav-link">
+                        <i class="fas fa-chef-hat"></i>
+                        <span>Cuisine</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.role == 'Rcomptable' %}
+                <li class="nav-item">
+                    <a href="{% url 'restaurant:comptable_home' %}" class="nav-link">
+                        <i class="fas fa-calculator"></i>
+                        <span>Comptabilité</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'accounts:profile' %}" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'accounts:logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-header">
+            <div class="header-title">
+                <h1>Modifier un Plat</h1>
+                <div class="breadcrumb">
+                    <a href="{% url 'accounts:dashboard' %}">Accueil</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="{% url 'restaurant:menu_list' %}">Menu</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>Modifier</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Modifier le Plat</h2>
+                <p>Mettez à jour les informations du plat</p>
+            </div>
+
+            {% if plat %}
+            <div class="plat-info">
+                <h3>Informations actuelles</h3>
+                <p><strong>Nom:</strong> {{ plat.nom }}</p>
+                <p><strong>Catégorie:</strong> {{ plat.categorie.nom }}</p>
+                <p><strong>Prix actuel:</strong> {{ plat.prix }} FCFA</p>
+            </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="form-label" for="{{ form.nom.id_for_label }}">
+                            <i class="fas fa-utensils"></i>
+                            Nom du plat
+                        </label>
+                        {{ form.nom }}
+                        {% if form.nom.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.nom.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.categorie.id_for_label }}">
+                            <i class="fas fa-tag"></i>
+                            Catégorie
+                        </label>
+                        {{ form.categorie }}
+                        {% if form.categorie.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.categorie.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.prix.id_for_label }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            Prix (FCFA)
+                        </label>
+                        {{ form.prix }}
+                        {% if form.prix.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.prix.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="{{ form.description.id_for_label }}">
+                            <i class="fas fa-align-left"></i>
+                            Description
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.description.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="{{ form.ingredients.id_for_label }}">
+                            <i class="fas fa-list"></i>
+                            Ingrédients
+                        </label>
+                        {{ form.ingredients }}
+                        {% if form.ingredients.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.ingredients.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.temps_preparation.id_for_label }}">
+                            <i class="fas fa-clock"></i>
+                            Temps de préparation (minutes)
+                        </label>
+                        {{ form.temps_preparation }}
+                        {% if form.temps_preparation.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.temps_preparation.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.image.id_for_label }}">
+                            <i class="fas fa-image"></i>
+                            Image
+                        </label>
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.image.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if plat.image %}
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--secondary);">
+                                Image actuelle: <a href="{{ plat.image.url }}" target="_blank">Voir</a>
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-checkbox">
+                            {{ form.disponible }}
+                            <label for="{{ form.disponible.id_for_label }}">
+                                <i class="fas fa-check-circle"></i>
+                                Plat disponible
+                            </label>
+                        </div>
+                        {% if form.disponible.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.disponible.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'restaurant:plat_detail' plat.id %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script>
+// Mobile sidebar toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('active');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 768 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target) && 
+        sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+    }
+});
+
+// Form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const requiredFields = form.querySelectorAll('[required]');
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                isValid = false;
+            } else {
+                field.classList.remove('error');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Veuillez remplir tous les champs obligatoires.');
+        }
+    });
+    
+    // Remove error class on input
+    requiredFields.forEach(field => {
+        field.addEventListener('input', function() {
+            this.classList.remove('error');
+        });
+    });
+});
+</script>
+{% endblock %}
