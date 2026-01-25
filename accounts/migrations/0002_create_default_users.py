@@ -6,8 +6,16 @@ from django.contrib.auth.hashers import make_password
 def create_default_users(apps, schema_editor):
     """
     Crée les utilisateurs par défaut s'ils n'existent pas déjà
+    et supprime les comptes non désirés
     """
     User = apps.get_model('accounts', 'User')
+    
+    # Supprimer les comptes non désirés
+    unwanted_logins = ['employer', 'manger']
+    for login in unwanted_logins:
+        if User.objects.filter(login=login).exists():
+            User.objects.filter(login=login).delete()
+            print(f"Compte non désiré '{login}' supprimé")
     
     default_users = [
         {
