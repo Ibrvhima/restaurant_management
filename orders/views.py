@@ -156,3 +156,85 @@ def statistiques_commandes(request):
     }
     
     return render(request, 'orders/statistiques.html', context)
+
+@login_required
+def modifier_commande(request, commande_id):
+    """Modifier une commande existante"""
+    commande = get_object_or_404(Commande, id=commande_id)
+    
+    # Seuls les serveurs et admins peuvent modifier
+    if not (request.user.is_serveur or request.user.is_admin):
+        messages.error(request, "Accès non autorisé.")
+        return redirect('orders:commande_detail', commande_id=commande.id)
+    
+    # Ne pas modifier les commandes déjà terminées
+    if commande.etat in [EtatCommande.TERMINEE, EtatCommande.ANNULEE]:
+        messages.error(request, "Impossible de modifier une commande terminée ou annulée.")
+        return redirect('orders:commande_detail', commande_id=commande.id)
+    
+    if request.method == 'POST':
+        table_id = request.POST.get('table')
+        plats = request.POST.getlist('plats')
+        quantites = request.POST.getlist('quantites')
+        
+        if not table_id or not plats:
+            messages.error(request, 'Veuillez sélectionner une table et au moins un plat.')
+            return redirect('orders:modifier_commande', commande_id=commande.id)
+        
+        # Mettre à jour la table
+        commande.table_id = table_id
+        
+        # Supprimer les anciens plats de la commande
+        CommandePlat.objects.filter(commande=commande).delete()
+        
+        # Ajouter les nouveaux plats
+        total = 0
+        for plat_id, quantite in zip(plats, quantites):
+            if quantite and int(quantite) > 0:
+                commande_plat = CommandePlat.objects.create(
+                    commande=commande,
+                    plat_id=plat_id,
+                    quantite=int(quantite)
+                )
+                total += commande_plat.sous_total()
+        
+        # Mettre à jour le total
+        commande.total = total
+        commande.save()
+        
+        messages.success(request, f'Commande #{commande.id} modifiée avec succès!')
+        return redirect('orders:commande_detail', commande_id=commande.id)
+    
+    # Récupérer les tables et les plats disponibles
+    from restaurant.models import TableRestaurant, Plat
+    tables = TableRestaurant.objects.all()
+    plats = Plat.objects.filter(disponible=True)
+    
+    context = {
+        'commande': commande,
+        'tables': tables,
+        'plats': plats,
+        'commande_plats': commande.commandeplats.all()
+    }
+    return render(request, 'orders/modifier_commande.html', context)
+
+@require_POST
+@login_required
+def supprimer_commande(request, commande_id):
+    """Supprimer une commande"""
+    commande = get_object_or_404(Commande, id=commande_id)
+    
+    # Seuls les admins peuvent supprimer
+    if not request.user.is_admin:
+        messages.error(request, "Accès non autorisé. Seuls les administrateurs peuvent supprimer des commandes.")
+        return redirect('orders:commande_detail', commande_id=commande.id)
+    
+    # Ne pas supprimer les commandes en cours de préparation
+    if commande.etat == EtatCommande.EN_PREPARATION:
+        messages.error(request, "Impossible de supprimer une commande en cours de préparation.")
+        return redirect('orders:commande_detail', commande_id=commande.id)
+    
+    commande_id_str = str(commande.id)
+    commande.delete()
+    messages.success(request, f'Commande #{commande_id_str} supprimée avec succès!')
+    return redirect('orders:commande_list')

@@ -1,0 +1,286 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Modifier Commande #{{ commande.id }} - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== MOBILE-FIRST MODIFIER COMMANDE ===== */
+* { box-sizing: border-box; }
+
+.commande-container {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 1rem;
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .header-title { font-size: 2rem; }
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Form Container */
+.form-container {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    transition: border-color 0.15s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Plat Selection */
+.plat-selection {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.plat-header {
+    background: #f9fafb;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.plat-title {
+    font-weight: 600;
+    color: #374151;
+}
+
+.plat-price {
+    color: #059669;
+    font-weight: 600;
+}
+
+.plat-content {
+    padding: 1rem;
+}
+
+.plat-quantity {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quantity-input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    text-align: center;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.875rem;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+.btn-secondary {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4b5563;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.btn-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+    .btn-group {
+        flex-direction: column;
+    }
+}
+
+/* Alert */
+.alert {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.alert-warning {
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    color: #92400e;
+}
+
+/* Current Order Info */
+.current-order {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.current-order-title {
+    font-weight: 600;
+    color: #0c4a6e;
+    margin-bottom: 0.5rem;
+}
+
+.current-order-info {
+    font-size: 0.875rem;
+    color: #0c4a6e;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="commande-container">
+    <!-- Header -->
+    <div class="header-section">
+        <h1 class="header-title">Modifier Commande #{{ commande.id }}</h1>
+        <p class="header-subtitle">Modifiez les détails de la commande existante</p>
+    </div>
+
+    <!-- Current Order Info -->
+    <div class="current-order">
+        <div class="current-order-title">Informations actuelles</div>
+        <div class="current-order-info">
+            Table: {{ commande.table.numero }} | 
+            État: {{ commande.get_etat_display }} | 
+            Total actuel: {{ commande.total }} GNF |
+            Date: {{ commande.date_commande|date:"d/m/Y H:i" }}
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Table Selection -->
+            <div class="form-group">
+                <label class="form-label" for="table">Table *</label>
+                <select name="table" id="table" class="form-control" required>
+                    <option value="">Sélectionnez une table</option>
+                    {% for table in tables %}
+                        <option value="{{ table.id }}" {% if table.id == commande.table.id %}selected{% endif %}>
+                            Table {{ table.numero }} ({{ table.capacite }} places)
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Plats Selection -->
+            <div class="form-group">
+                <label class="form-label">Plats *</label>
+                {% for plat in plats %}
+                    <div class="plat-selection">
+                        <div class="plat-header">
+                            <div class="plat-title">{{ plat.nom }}</div>
+                            <div class="plat-price">{{ plat.prix }} GNF</div>
+                        </div>
+                        <div class="plat-content">
+                            <div class="plat-quantity">
+                                <label>Quantité:</label>
+                                <input type="number" 
+                                       name="quantites" 
+                                       class="quantity-input" 
+                                       min="0" 
+                                       max="99" 
+                                       value="{% for cp in commande_plats %}{% if cp.plat.id == plat.id %}{{ cp.quantite }}{% endif %}{% endfor %}">
+                                <input type="hidden" name="plats" value="{{ plat.id }}">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                <a href="{% url 'orders:commande_detail' commande.id %}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
