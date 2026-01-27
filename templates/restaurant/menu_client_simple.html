@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Table {{ table.numero_table }} | Restaurant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-utensils text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Restaurant</h1>
+                        <p class="text-sm text-gray-600">Table {{ table.numero_table }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        <!-- Message de bienvenue -->
+        <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl p-6 mb-8">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold mb-2">Bienvenue à votre table !</h2>
+                <p class="text-orange-100">Scannez, commandez et profitez de votre repas</p>
+            </div>
+        </div>
+
+        <!-- Menu Categories -->
+        {% for category_data in menu_data %}
+        <section class="mb-8">
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-orange-100 to-red-100 px-6 py-4">
+                    <h3 class="text-xl font-bold text-gray-900">{{ category_data.categorie.nom }}</h3>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {% for plat in category_data.plats %}
+                        <div class="bg-white border rounded-lg overflow-hidden hover:shadow-lg transition">
+                            {% if plat.image %}
+                            <div class="h-48 bg-gray-200 relative overflow-hidden">
+                                <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                            {% endif %}
+                            
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-900 flex-1">{{ plat.nom }}</h4>
+                                    <span class="text-lg font-bold text-orange-600 ml-2">{{ plat.prix }} GNF</span>
+                                </div>
+                                
+                                {% if plat.description %}
+                                <p class="text-sm text-gray-600 mb-3">{{ plat.description|truncatewords:15 }}</p>
+                                {% endif %}
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        {% if plat.disponible %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-check-circle mr-1"></i>Disponible
+                                        </span>
+                                        {% else %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <i class="fas fa-times-circle mr-1"></i>Indisponible
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+
+        {% if not menu_data %}
+        <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+            <i class="fas fa-utensils text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Menu en préparation</h3>
+            <p class="text-gray-600">Notre chef prépare actuellement de délicieux plats pour vous.</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-6xl mx-auto px-4 py-6">
+            <div class="text-center">
+                <p class="text-gray-600">Appelez le serveur pour passer votre commande</p>
+                <div class="mt-4 flex justify-center space-x-4">
+                    <button onclick="window.location.reload()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg">
+                        <i class="fas fa-sync-alt mr-2"></i>Rafraîchir le menu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

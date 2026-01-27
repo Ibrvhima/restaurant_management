@@ -1397,6 +1397,35 @@ def api_generer_qr_code(request, table_id):
             'error': str(e)
         }, status=400)
 
+def menu_client_public(request, table_id):
+    """Page publique du menu pour les clients qui scanment le QR Code"""
+    try:
+        table = get_object_or_404(TableRestaurant, id=table_id)
+        
+        # Récupérer tous les plats disponibles
+        categories = Categorie.objects.filter(plat__isnull=False).distinct()
+        menu_data = []
+        
+        for categorie in categories:
+            plats = Plat.objects.filter(categorie=categorie, disponible=True)
+            if plats.exists():
+                menu_data.append({
+                    'categorie': categorie,
+                    'plats': plats
+                })
+        
+        context = {
+            'table': table,
+            'menu_data': menu_data,
+            'site_url': getattr(settings, 'PRODUCTION_URL', 'http://127.0.0.1:8000'),
+        }
+        
+        return render(request, 'restaurant/menu_client_simple.html', context)
+        
+    except Exception as e:
+        # Page d'erreur si la table n'existe pas
+        return render(request, 'restaurant/qr_code_erreur.html', {'erreur': str(e)})
+
 @login_required
 @admin_or_role_required('Radmin', 'Rserveur', 'Rcuisinier', 'Rcaissier', 'Rcomptable')
 def regenerer_tous_qr_codes_urls(request):

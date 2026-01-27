@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Table {{ table.numero_table }} | Restaurant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .category-section {
+            scroll-margin-top: 80px;
+        }
+        .floating-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        @media (max-width: 640px) {
+            .floating-cart {
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-utensils text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Restaurant</h1>
+                        <p class="text-sm text-gray-600">Table {{ table.numero_table }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCart()" class="relative p-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation rapide -->
+    <nav class="bg-white border-b sticky top-16 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex space-x-4 overflow-x-auto scrollbar-hide">
+                {% for category_data in menu_data %}
+                <a href="#category-{{ category_data.categorie.id }}" 
+                   class="flex-shrink-0 px-4 py-2 bg-gray-100 hover:bg-orange-100 rounded-full text-sm font-medium text-gray-700 hover:text-orange-700 transition">
+                    {{ category_data.categorie.nom }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-6 pb-24">
+        <!-- Message de bienvenue -->
+        <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl p-6 mb-8">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold mb-2">Bienvenue à votre table !</h2>
+                <p class="text-orange-100">Scannez, commandez et profitez de votre repas</p>
+            </div>
+        </div>
+
+        <!-- Menu Categories -->
+        {% for category_data in menu_data %}
+        <section id="category-{{ category_data.categorie.id }}" class="category-section mb-8">
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-orange-100 to-red-100 px-6 py-4">
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center">
+                        <i class="fas fa-{{ category_data.categorie.nom|lower }} text-orange-500 mr-3"></i>
+                        {{ category_data.categorie.nom }}
+                    </h3>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {% for plat in category_data.plats %}
+                        <div class="menu-item bg-white border rounded-lg overflow-hidden hover:shadow-lg">
+                            {% if plat.image %}
+                            <div class="h-48 bg-gray-200 relative overflow-hidden">
+                                <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" 
+                                     class="w-full h-full object-cover">
+                                {% if plat.necessite_preparation %}
+                                <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                                    <i class="fas fa-clock mr-1"></i>Préparation
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-900 flex-1">{{ plat.nom }}</h4>
+                                    <span class="text-lg font-bold text-orange-600 ml-2">{{ plat.prix }} GNF</span>
+                                </div>
+                                
+                                {% if plat.description %}
+                                <p class="text-sm text-gray-600 mb-3">{{ plat.description|truncatewords:15 }}</p>
+                                {% endif %}
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        {% if plat.disponible %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-check-circle mr-1"></i>Disponible
+                                        </span>
+                                        {% else %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <i class="fas fa-times-circle mr-1"></i>Indisponible
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if plat.disponible %}
+                                    <button onclick="addToCart({{ plat.id }}, '{{ plat.nom|escapejs }}', {{ plat.prix }})" 
+                                            class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition">
+                                        <i class="fas fa-plus mr-1"></i>Ajouter
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+
+        {% if not menu_data %}
+        <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+            <i class="fas fa-utensils text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Menu en préparation</h3>
+            <p class="text-gray-600">Notre chef prépare actuellement de délicieux plats pour vous.</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Panier flottant -->
+    <div id="cartSidebar" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl">
+            <div class="flex flex-col h-full">
+                <!-- Header du panier -->
+                <div class="bg-orange-500 text-white p-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold">Votre Commande</h3>
+                        <button onclick="toggleCart()" class="text-white hover:text-orange-200">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Contenu du panier -->
+                <div class="flex-1 overflow-y-auto p-4">
+                    <div id="cartItems" class="space-y-3">
+                        <!-- Les items du panier seront ajoutés ici dynamiquement -->
+                    </div>
+                    
+                    <div id="emptyCart" class="text-center py-8">
+                        <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500">Votre panier est vide</p>
+                    </div>
+                </div>
+                
+                <!-- Footer du panier -->
+                <div class="border-t p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="font-semibold">Total:</span>
+                        <span id="cartTotal" class="text-xl font-bold text-orange-600">0 GNF</span>
+                    </div>
+                    <button onclick="passerCommande()" 
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition disabled:bg-gray-300"
+                            id="passerCommandeBtn" disabled>
+                        Passer la commande
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div class="floating-cart md:hidden">
+        <button onclick="toggleCart()" 
+                class="bg-orange-500 hover:bg-orange-600 text-white rounded-full p-4 shadow-lg transition">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="floatingCartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">0</span>
+        </button>
+    </div>
+
+    <script>
+        // Panier
+        let cart = [];
+        
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            sidebar.classList.toggle('hidden');
+        }
+        
+        function addToCart(platId, platNom, platPrix) {
+            const existingItem = cart.find(item => item.id === platId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: platId,
+                    nom: platNom,
+                    prix: platPrix,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification('Article ajouté au panier');
+        }
+        
+        function removeFromCart(platId) {
+            cart = cart.filter(item => item.id !== platId);
+            updateCart();
+        }
+        
+        function updateQuantity(platId, change) {
+            const item = cart.find(item => item.id === platId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(platId);
+                } else {
+                    updateCart();
+                }
+            }
+        }
+        
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const emptyCart = document.getElementById('emptyCart');
+            const cartCount = document.getElementById('cartCount');
+            const floatingCartCount = document.getElementById('floatingCartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            const passerCommandeBtn = document.getElementById('passerCommandeBtn');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '';
+                emptyCart.style.display = 'block';
+                passerCommandeBtn.disabled = true;
+            } else {
+                emptyCart.style.display = 'none';
+                passerCommandeBtn.disabled = false;
+                
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900">${item.nom}</h4>
+                            <p class="text-sm text-gray-600">${item.prix} GNF</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateQuantity(${item.id}, -1)" 
+                                    class="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="font-medium w-8 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" 
+                                    class="w-8 h-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                            <button onclick="removeFromCart(${item.id})" 
+                                    class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center ml-2">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const totalItems = cart.reduce(function(sum, item) { return sum + item.quantity; }, 0);
+            const totalPrice = cart.reduce(function(sum, item) { return sum + (item.prix * item.quantity); }, 0);
+            
+            cartCount.textContent = totalItems;
+            floatingCartCount.textContent = totalItems;
+            cartTotal.textContent = totalPrice + ' GNF';
+        }
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-20 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        function passerCommande() {
+            if (cart.length === 0) {
+                showNotification('Votre panier est vide');
+                return;
+            }
+            
+            // Simuler la commande (à remplacer par une vraie API)
+            const commandeData = {
+                table_id: {{ table.id }},
+                items: cart,
+                total: cart.reduce(function(sum, item) { return sum + (item.prix * item.quantity); }, 0)
+            };
+            
+            // Afficher une confirmation
+            if (confirm('Confirmer votre commande ?\n\n' + 
+                       cart.map(item => `${item.quantity}x ${item.nom} - ${item.prix * item.quantity} GNF`).join('\n') + 
+                       '\n\nTotal: ' + commandeData.total + ' GNF')) {
+                
+                // Ici, vous enverriez les données à votre API
+                showNotification('Commande passée avec succès !');
+                cart = [];
+                updateCart();
+                toggleCart();
+                
+                // Rediriger vers une page de suivi
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        }
+        
+        // Initialisation
+        updateCart();
+    </script>
+</body>
+</html>

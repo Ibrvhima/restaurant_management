@@ -70,4 +70,7 @@ urlpatterns = [
     
     # Imprimer QR code
     path('qr-codes/imprimer/<int:table_id>/', views.imprimer_qr_code, name='imprimer_qr_code'),
+    
+    # Menu public pour clients (QR Code)
+    path('menu-client/<int:table_id>/', views.menu_client_public, name='menu_client_public'),
 ]
