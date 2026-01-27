@@ -6,41 +6,54 @@
 {% block content %}
 <div class="min-h-screen bg-slate-50">
     <!-- Header responsive -->
-    <div class="bg-slate-600 text-white">
-        <div class="container mx-auto px-4 py-4 sm:py-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                <div>
-                    <h1 class="text-xl sm:text-2xl font-bold">Table {{ table.numero_table }}</h1>
-                    <p class="text-slate-200 text-sm sm:text-base">{{ table.nombre_places }} places</p>
-                    {% if is_client %}
-                    <p class="text-slate-300 text-xs sm:text-sm mt-1">👋 Bienvenue ! Scannez et commandez directement</p>
-                    {% endif %}
+    <div class="bg-gradient-to-r from-slate-700 to-slate-600 text-white shadow-lg">
+        <div class="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold">Table {{ table.numero_table }}</h1>
+                        <p class="text-slate-200 text-xs sm:text-sm">{{ table.nombre_places }} places</p>
+                        {% if is_client %}
+                        <p class="text-slate-300 text-xs mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            Bienvenue ! Commandez directement
+                        </p>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <div class="flex items-center space-x-2">
                     <!-- Panier -->
                     <div class="relative">
-                        <button id="panier-btn" class="bg-white text-slate-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-slate-50 transition flex items-center space-x-2 text-sm sm:text-base">
-                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button id="panier-btn" class="bg-white text-slate-700 px-2 py-2 sm:px-3 sm:py-2 rounded-lg hover:bg-slate-50 transition flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                             <span class="hidden sm:inline">Panier</span>
-                            <span class="sm:hidden">🛒</span>
-                            <span id="panier-count" class="bg-red-400 text-white text-xs rounded-full px-2 py-1 ml-2">0</span>
+                            <span id="panier-count" class="bg-red-500 text-white text-xs rounded-full px-1 sm:px-2 py-0.5 ml-1 min-w-[16px] text-center">0</span>
                         </button>
                     </div>
                     <!-- Commandes -->
                     {% if not is_client %}
-                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white text-slate-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-slate-50 transition text-sm sm:text-base">
-                        <span class="hidden sm:inline">Mes Commandes</span>
-                        <span class="sm:hidden">📋</span>
+                    <a href="{% url 'restaurant:table_commandes' %}" class="bg-white/10 text-white px-2 py-2 sm:px-3 sm:py-2 rounded-lg hover:bg-white/20 transition flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Commandes</span>
                     </a>
                     {% endif %}
                     <!-- État Commandes -->
-                    <button id="etat-commandes-btn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    <button id="etat-commandes-btn" class="bg-slate-600 hover:bg-slate-700 text-white px-2 py-2 sm:px-3 sm:py-2 rounded-lg transition flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span id="etat-btn-text">Suivre mes commandes</span>
+                        <span class="hidden sm:inline">Suivre</span>
                     </button>
                 </div>
             </div>
@@ -75,76 +88,84 @@
     </div>
 
     <!-- Filtres -->
-    <div class="bg-white shadow-sm border-b border-slate-200">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex flex-wrap gap-4 items-center">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Catégorie</label>
-                    <select id="categorie-filter" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500">
-                        <option value="">Toutes les catégories</option>
+    <div class="bg-white border-b shadow-sm">
+        <div class="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <div class="flex-1 sm:flex-none sm:w-32">
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Catégorie</label>
+                    <select id="categorie-filter" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:border-slate-500">
+                        <option value="">Toutes</option>
                         {% for categorie in categories %}
                         <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Type</label>
-                    <select id="type-filter" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500">
-                        <option value="">Tous les types</option>
-                        <option value="ENTREE">Entrées</option>
-                        <option value="PRINCIPAL">Plats principaux</option>
-                        <option value="SPECIAL">Spéciaux</option>
-                        <option value="DESSERT">Desserts</option>
-                        <option value="BOISSON">Boissons</option>
-                        <option value="ACCOMPAGNEMENT">Accompagnements</option>
+                <div class="flex-1 sm:flex-none sm:w-32">
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Type</label>
+                    <select id="type-filter" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:border-slate-500">
+                        <option value="">Tous</option>
+                        <option value="entree">Entrées</option>
+                        <option value="plat">Plats</option>
+                        <option value="dessert">Desserts</option>
+                        <option value="boisson">Boissons</option>
                     </select>
                 </div>
                 <div class="flex-1">
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Recherche</label>
-                    <input type="text" id="search-input" placeholder="Rechercher un plat..." 
-                           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500">
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Recherche</label>
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="Rechercher..." 
+                               class="w-full px-2 py-1.5 pl-7 text-xs border border-slate-300 rounded focus:outline-none focus:border-slate-500">
+                        <svg class="w-3 h-3 text-slate-400 absolute left-2 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Liste des plats -->
-    <div class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="plats-container">
+    <div class="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4" id="plats-container">
             {% for plat in plats %}
-            <div class="plat-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition" 
+            <div class="plat-card bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition border border-gray-200" 
                  data-categorie="{{ plat.categorie.id|default:'' }}" 
                  data-type="{{ plat.type_plat }}" 
                  data-nom="{{ plat.nom|lower }}">
                 <div class="relative">
                     {% if plat.image %}
-                        <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="w-full h-48 object-cover">
+                        <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="w-full h-32 sm:h-36 md:h-40 object-cover">
                     {% else %}
-                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                            <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-full h-32 sm:h-36 md:h-40 bg-gray-100 flex items-center justify-center">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                             </svg>
                         </div>
                     {% endif %}
-                    <div class="absolute top-2 right-2">
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">
+                    <div class="absolute top-1 right-1">
+                        <span class="px-1.5 py-0.5 text-xs font-medium rounded bg-white text-slate-600">
                             {{ plat.get_type_plat_display }}
                         </span>
                     </div>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg text-slate-900 mb-2">{{ plat.nom }}</h3>
+                <div class="p-2 sm:p-3">
+                    <div class="flex justify-between items-start mb-1">
+                        <h3 class="font-medium text-sm sm:text-base text-slate-900 flex-1 pr-2">{{ plat.nom }}</h3>
+                        <span class="text-sm sm:text-base font-bold text-slate-700 whitespace-nowrap">{{ plat.prix }} GNF</span>
+                    </div>
                     {% if plat.categorie %}
-                        <p class="text-sm text-slate-600 mb-2">{{ plat.categorie.nom }}</p>
+                        <p class="text-xs text-slate-500 mb-1">{{ plat.categorie.nom }}</p>
                     {% endif %}
                     {% if plat.description %}
-                        <p class="text-sm text-slate-700 mb-3">{{ plat.description|truncatewords:15 }}</p>
+                        <p class="text-xs text-slate-600 mb-2 line-clamp-2">{{ plat.description|truncatewords:8 }}</p>
                     {% endif %}
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold text-slate-600">{{ plat.prix }} GNF</span>
-                        <button type="button" class="ajouter-panier bg-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition" 
+                    <div class="flex gap-1">
+                        <button type="button" class="ajouter-panier flex-1 bg-slate-600 hover:bg-slate-700 text-white px-2 py-1.5 sm:px-3 sm:py-2 rounded text-xs sm:text-sm transition flex items-center justify-center" 
                                 data-plat-id="{{ plat.id }}" data-plat-nom="{{ plat.nom }}" data-prix="{{ plat.prix }}">
-                            Ajouter
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <span class="hidden sm:inline">Ajouter</span>
                         </button>
                     </div>
                 </div>
