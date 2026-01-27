@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Changer l'état - Commande #{{ commande.id }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <a href="{% url 'restaurant:serveur_table_commandes' commande.table.id %}" class="text-blue-600 hover:text-blue-800 mb-4 inline-block">
+                    ← Retour aux commandes
+                </a>
+                <h1 class="text-3xl font-bold text-gray-900">Changer l'état de la commande</h1>
+                <p class="text-gray-600">Commande #{{ commande.id }} - Table {{ commande.table.numero_table }}</p>
+            </div>
+
+            <!-- Informations actuelles -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                <div class="bg-blue-600 text-white p-6">
+                    <h2 class="text-xl font-bold">État actuel</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Commande du {{ commande.date_commande|date:"d/m/Y H:i" }}</p>
+                            <p class="text-lg font-semibold">Total : {{ commande.total }} GNF</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-4 py-2 text-lg font-semibold rounded-full 
+                                {% if commande.etat == 'EN_ATTENTE' %}bg-yellow-100 text-yellow-800
+                                {% elif commande.etat == 'EN_PREPARATION' %}bg-orange-100 text-orange-800
+                                {% elif commande.etat == 'EN_COURS' %}bg-blue-100 text-blue-800
+                                {% elif commande.etat == 'TERMINEE' %}bg-green-100 text-green-800
+                                {% elif commande.etat == 'ANNULEE' %}bg-red-100 text-red-800
+                                {% endif %}">
+                                {{ commande.get_etat_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plats de la commande -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Plats commandés</h3>
+                    <div class="space-y-2">
+                        {% for item in commande.commandeplat_set.all %}
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
+                            <div>
+                                <p class="font-medium">{{ item.plat.nom }}</p>
+                                <p class="text-sm text-gray-600">{{ item.plat.prix_unitaire }} GNF × {{ item.quantite }}</p>
+                                {% if item.plat.necessite_preparation %}
+                                <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">À préparer</span>
+                                {% else %}
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Service direct</span>
+                                {% endif %}
+                            </div>
+                            <p class="font-bold text-blue-600">{{ item.sous_total }} GNF</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire de changement d'état -->
+            {% if etats_possibles %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6">
+                    <form method="post">
+                        {% csrf_token %}
+                        <h3 class="text-lg font-semibold mb-4">Nouvel état</h3>
+                        
+                        <div class="space-y-3 mb-6">
+                            {% for etat_value, etat_label in etats_possibles %}
+                            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="radio" name="nouvel_etat" value="{{ etat_value }}" 
+                                       class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                       {% if forloop.first %}checked{% endif %}>
+                                <div class="flex-1">
+                                    <p class="font-medium">{{ etat_label }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        {% if etat_value == 'EN_PREPARATION' %}
+                                            La commande est prise en charge par la cuisine
+                                        {% elif etat_value == 'EN_COURS' %}
+                                            La commande est en cours de service
+                                        {% elif etat_value == 'TERMINEE' %}
+                                            La commande est servie au client
+                                        {% elif etat_value == 'ANNULEE' %}
+                                            La commande est annulée
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <a href="{% url 'restaurant:serveur_table_commandes' commande.table.id %}" 
+                               class="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition text-center">
+                                Annuler
+                            </a>
+                            <button type="submit" 
+                                    class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                                Confirmer le changement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <!-- Message si aucun changement possible -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6 text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">État final</h3>
+                    <p class="text-gray-600">Cette commande est dans un état final et ne peut plus être modifiée.</p>
+                    <a href="{% url 'restaurant:serveur_table_commandes' commande.table.id %}" 
+                       class="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                        Retour aux commandes
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

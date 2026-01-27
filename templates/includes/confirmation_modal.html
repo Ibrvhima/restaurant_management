@@ -1,0 +1,289 @@
+<!-- Modal de confirmation stylisée -->
+<div id="confirmationModal" class="modal-overlay" style="display: none;">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+            </div>
+            <h3 class="modal-title">Confirmation de suppression</h3>
+        </div>
+        
+        <div class="modal-body">
+            <p class="modal-message" id="modalMessage">
+                Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.
+            </p>
+            <div class="modal-details" id="modalDetails"></div>
+        </div>
+        
+        <div class="modal-footer">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="closeConfirmationModal()">
+                Annuler
+            </button>
+            <button type="button" class="modal-btn modal-btn-confirm" id="modalConfirmBtn">
+                Supprimer
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.modal-icon {
+    width: 48px;
+    height: 48px;
+    background: #ef4444;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 20px 24px;
+}
+
+.modal-message {
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.5;
+    margin: 0 0 16px 0;
+}
+
+.modal-details {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Modal Footer */
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px 24px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.modal-btn-cancel {
+    background: #6b7280;
+    color: white;
+}
+
+.modal-btn-cancel:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+}
+
+.modal-btn-confirm {
+    background: #ef4444;
+    color: white;
+}
+
+.modal-btn-confirm:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .modal-container {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .modal-header {
+        padding: 20px 16px 12px;
+    }
+    
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .modal-footer {
+        padding: 12px 16px 20px;
+        flex-direction: column;
+    }
+    
+    .modal-btn {
+        width: 100%;
+    }
+}
+
+/* Loading state */
+.modal-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.modal-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top: 2px solid transparent;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>
+
+<script>
+// Fonctions globales pour la modal
+let currentAction = null;
+let currentForm = null;
+
+function showConfirmationModal(title, message, details, confirmCallback) {
+    const modal = document.getElementById('confirmationModal');
+    const modalTitle = modal.querySelector('.modal-title');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalDetails = document.getElementById('modalDetails');
+    const confirmBtn = document.getElementById('modalConfirmBtn');
+    
+    // Mettre à jour le contenu
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    
+    if (details) {
+        modalDetails.innerHTML = details;
+        modalDetails.style.display = 'block';
+    } else {
+        modalDetails.style.display = 'none';
+    }
+    
+    // Configurer le bouton de confirmation
+    currentAction = confirmCallback;
+    confirmBtn.onclick = function() {
+        if (currentAction) {
+            confirmBtn.classList.add('loading');
+            currentAction();
+        }
+    };
+    
+    // Afficher la modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeConfirmationModal() {
+    const modal = document.getElementById('confirmationModal');
+    const confirmBtn = document.getElementById('modalConfirmBtn');
+    
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    confirmBtn.classList.remove('loading');
+    currentAction = null;
+    currentForm = null;
+}
+
+// Fermer la modal en cliquant à l'extérieur
+document.getElementById('confirmationModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeConfirmationModal();
+    }
+});
+
+// Fermer avec la touche Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeConfirmationModal();
+    }
+});
+</script>

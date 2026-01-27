@@ -1,0 +1,375 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Modifier le Paiement - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mobile-first.css' %}">
+<style>
+/* Container */
+.modifier-paiement-container {
+    min-height: 100vh;
+    background: var(--gray-50);
+    padding: var(--space-md);
+}
+
+@media (min-width: 768px) {
+    .modifier-paiement-container {
+        padding: var(--space-lg);
+    }
+}
+
+/* Header */
+.header-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border: 1px solid var(--gray-200);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+}
+
+.header-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-xs);
+}
+
+.header-subtitle {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--gray-100);
+    color: var(--gray-700);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+}
+
+.back-btn:hover {
+    background: var(--gray-200);
+    transform: translateY(-1px);
+}
+
+/* Formulaire */
+.form-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border: 1px solid var(--gray-200);
+}
+
+.form-header {
+    margin-bottom: var(--space-lg);
+}
+
+.form-title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: var(--space-sm);
+}
+
+.form-subtitle {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+/* Info Paiement */
+.paiement-info {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.paiement-info h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: var(--space-md);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+}
+
+@media (min-width: 640px) {
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: var(--text-sm);
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: var(--text-sm);
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+/* Formulaire */
+.modifier-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.form-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.form-select {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-base);
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    background: white;
+    min-height: 44px;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Actions */
+.form-actions {
+    display: flex;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--gray-200);
+}
+
+@media (max-width: 640px) {
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+.btn {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    border: none;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+}
+
+.btn-secondary:hover {
+    background: var(--gray-200);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Alertes */
+.alert {
+    padding: var(--space-md);
+    border-radius: 0.5rem;
+    margin-bottom: var(--space-lg);
+    border: 1px solid;
+}
+
+.alert-info {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1e40af;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    border-color: #f59e0b;
+    color: #92400e;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="modifier-paiement-container">
+    <!-- Header -->
+    <header class="header-section">
+        <div class="header-content">
+            <div>
+                <h1 class="header-title">Modifier le Paiement</h1>
+                <p class="header-subtitle">Mettre à jour les informations du paiement</p>
+            </div>
+            <a href="{% url 'payments:paiement_detail' paiement.id %}" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour
+            </a>
+        </div>
+    </header>
+
+    <!-- Informations du paiement -->
+    <section class="form-section">
+        <div class="paiement-info">
+            <h3>Informations du Paiement</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">ID Paiement:</span>
+                    <span class="info-value">#{{ paiement.id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Commande:</span>
+                    <span class="info-value">#{{ paiement.commande.id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Montant:</span>
+                    <span class="info-value">{{ paiement.montant }} GNF</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">{{ paiement.date_paiement|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Caissier:</span>
+                    <span class="info-value">{{ paiement.caissier.login|default:"N/A" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Méthode actuelle:</span>
+                    <span class="info-value">
+                        {% if paiement.methode %}
+                            {{ paiement.get_methode_paiement_display }}
+                        {% else %}
+                            <span style="color: #9ca3af; font-style: italic;">Non spécifié</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulaire de modification -->
+    <section class="form-section">
+        <div class="form-header">
+            <h2 class="form-title">Modifier la Méthode de Paiement</h2>
+            <p class="form-subtitle">Sélectionnez la nouvelle méthode de paiement pour cette transaction</p>
+        </div>
+
+        {% if not paiement.methode %}
+        <div class="alert alert-warning">
+            <strong>Attention:</strong> Ce paiement n'a pas de méthode de paiement spécifiée. Veuillez en sélectionner une.
+        </div>
+        {% endif %}
+
+        <form method="post" class="modifier-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="methode" class="form-label">
+                    Nouvelle méthode de paiement *
+                </label>
+                <select name="methode" id="methode" class="form-select" required>
+                    <option value="">-- Sélectionnez une méthode --</option>
+                    {% for methode_value, methode_label in methodes %}
+                    <option value="{{ methode_value }}" 
+                            {% if paiement.methode == methode_value %}selected{% endif %}>
+                        {{ methode_label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'payments:paiement_detail' paiement.id %}" class="btn btn-secondary">
+                    Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

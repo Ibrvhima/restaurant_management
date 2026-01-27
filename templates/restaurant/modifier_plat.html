@@ -433,7 +433,7 @@ body {
                 {% endif %}
                 {% if user.role == 'Radmin' or user.role == 'Rcuisinier' %}
                 <li class="nav-item">
-                    <a href="{% url 'restaurant:liste_categories' %}" class="nav-link">
+                    <a href="{% url 'restaurant:categorie_list' %}" class="nav-link">
                         <i class="fas fa-tags"></i>
                         <span>Catégories</span>
                     </a>
@@ -505,7 +505,7 @@ body {
                 <h3>Informations actuelles</h3>
                 <p><strong>Nom:</strong> {{ plat.nom }}</p>
                 <p><strong>Catégorie:</strong> {{ plat.categorie.nom }}</p>
-                <p><strong>Prix actuel:</strong> {{ plat.prix }} FCFA</p>
+                <p><strong>Prix actuel:</strong> {{ plat.prix_unitaire }} FCFA</p>
             </div>
             {% endif %}
 
@@ -544,14 +544,29 @@ body {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="{{ form.prix.id_for_label }}">
+                        <label class="form-label" for="{{ form.type_plat.id_for_label }}">
+                            <i class="fas fa-utensils"></i>
+                            Type de plat
+                        </label>
+                        {{ form.type_plat }}
+                        {% if form.type_plat.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.type_plat.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.prix_unitaire.id_for_label }}">
                             <i class="fas fa-money-bill-wave"></i>
                             Prix (FCFA)
                         </label>
-                        {{ form.prix }}
-                        {% if form.prix.errors %}
+                        {{ form.prix_unitaire }}
+                        {% if form.prix_unitaire.errors %}
                             <ul class="errorlist">
-                                {% for error in form.prix.errors %}
+                                {% for error in form.prix_unitaire.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
@@ -573,36 +588,7 @@ body {
                         {% endif %}
                     </div>
 
-                    <div class="form-group full-width">
-                        <label class="form-label" for="{{ form.ingredients.id_for_label }}">
-                            <i class="fas fa-list"></i>
-                            Ingrédients
-                        </label>
-                        {{ form.ingredients }}
-                        {% if form.ingredients.errors %}
-                            <ul class="errorlist">
-                                {% for error in form.ingredients.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="{{ form.temps_preparation.id_for_label }}">
-                            <i class="fas fa-clock"></i>
-                            Temps de préparation (minutes)
-                        </label>
-                        {{ form.temps_preparation }}
-                        {% if form.temps_preparation.errors %}
-                            <ul class="errorlist">
-                                {% for error in form.temps_preparation.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
-
+                    
                     <div class="form-group">
                         <label class="form-label" for="{{ form.image.id_for_label }}">
                             <i class="fas fa-image"></i>

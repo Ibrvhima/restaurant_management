@@ -1,0 +1,128 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Supprimer Table - Restaurant Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Supprimer la table</h1>
+            <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cette table ?</p>
+        </div>
+        
+        <!-- Table Information -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <div class="grid grid-cols-1 gap-4">
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500">Numéro de table:</span>
+                    <span class="text-sm font-bold text-gray-900">#{{ table.numero_table }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500">Capacité:</span>
+                    <span class="text-sm font-bold text-gray-900">{{ table.nombre_places|default:"0" }} place{{ table.nombre_places|default:"0"|pluralize:"s" }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500">Statut:</span>
+                    <span class="text-sm font-bold {% if table.est_occupee %}text-red-600{% else %}text-green-600{% endif %}">
+                        {% if table.est_occupee %}Occupée{% else %}Libre{% endif %}
+                    </span>
+                </div>
+                {% if table.commande_en_cours %}
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500">Commande:</span>
+                    <span class="text-sm font-bold text-blue-600">#{{ table.commande_en_cours.id }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Warning Message -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-yellow-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+                <div class="text-sm text-yellow-800">
+                    <p class="font-medium">Attention</p>
+                    <p>La suppression de cette table est <strong>irréversible</strong>. Toutes les données associées seront perdues.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <form method="post" id="deleteForm" class="space-y-4">
+            {% csrf_token %}
+            <div class="flex gap-4">
+                <a href="{% url 'restaurant:table_list' %}" 
+                   class="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-center font-medium">
+                    Annuler
+                </a>
+                <button type="button" 
+                        data-table-id="{{ table.id }}"
+                        data-table-number="{{ table.numero_table }}"
+                        onclick="confirmDeleteTable(this)"
+                        class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-center font-medium">
+                    Supprimer la table
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function confirmDeleteTable(button) {
+    const tableId = button.dataset.tableId;
+    const tableNumber = button.dataset.tableNumber;
+    
+    const title = 'Supprimer la table';
+    const message = `Êtes-vous sûr de vouloir supprimer la table #${tableNumber} ?`;
+    const details = `
+        <div style="margin-bottom: 12px;">
+            <strong>Table:</strong> #${tableNumber}
+        </div>
+        <div style="margin-bottom: 12px;">
+            <strong>Capacité:</strong> {{ table.nombre_places|default:"0" }} place{{ table.nombre_places|default:"0"|pluralize:"s" }}
+        </div>
+        <div style="margin-bottom: 12px;">
+            <strong>Statut:</strong> {% if table.est_occupee %}Occupée{% else %}Libre{% endif %}
+        </div>
+        {% if table.commande_en_cours %}
+        <div style="margin-bottom: 12px;">
+            <strong>Commande en cours:</strong> #{{ table.commande_en_cours.id }}
+        </div>
+        {% endif %}
+        <div style="color: #ef4444; font-size: 12px; margin-top: 12px;">
+            ⚠️ Cette action est irréversible et ne peut être annulée
+        </div>
+    `;
+    
+    showConfirmationModal(title, message, details, function() {
+        // Créer et soumettre le formulaire
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/restaurant/table/supprimer/${tableId}/`;
+        
+        // Ajouter le token CSRF
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken.value;
+            form.appendChild(csrfInput);
+        }
+        
+        // Soumettre le formulaire
+        document.body.appendChild(form);
+        form.submit();
+    });
+}
+</script>
+{% endblock %}

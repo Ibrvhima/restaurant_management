@@ -129,8 +129,19 @@ def admin_user_list(request):
         return redirect('accounts:dashboard')
     
     users = User.objects.all().order_by('-date_creation')
-    context = {'users': users}
-    return render(request, 'accounts/admin_user_list_clean.html', context)
+    
+    # Calculer les statistiques
+    total_users = users.count()
+    active_users = users.filter(actif=True).count()
+    inactive_users = users.filter(actif=False).count()
+    
+    context = {
+        'users': users,
+        'total_users': total_users,
+        'active_users': active_users,
+        'inactive_users': inactive_users,
+    }
+    return render(request, 'accounts/admin_user_list.html', context)
 
 @login_required
 def admin_create_user(request):

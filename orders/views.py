@@ -40,7 +40,16 @@ def commande_list(request):
 def commande_detail(request, commande_id):
     """Détail d'une commande"""
     commande = get_object_or_404(Commande, id=commande_id)
-    return render(request, 'orders/commande_detail.html', {'commande': commande})
+    
+    # Récupérer les plats de la commande avec toutes les informations
+    commande_plats = commande.commandeplat_set.select_related('plat').all()
+    
+    context = {
+        'commande': commande,
+        'commande_plats': commande_plats,
+        'etat_choices': EtatCommande.choices,
+    }
+    return render(request, 'orders/commande_detail.html', context)
 
 @login_required
 def nouvelle_commande(request):
@@ -214,7 +223,7 @@ def modifier_commande(request, commande_id):
         'commande': commande,
         'tables': tables,
         'plats': plats,
-        'commande_plats': commande.commandeplats.all()
+        'commande_plats': commande.commandeplat_set.all()
     }
     return render(request, 'orders/modifier_commande.html', context)
 

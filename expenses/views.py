@@ -63,53 +63,61 @@ def depense_detail(request, depense_id):
     depense = get_object_or_404(Depense, id=depense_id)
     return render(request, 'expenses/depense_detail.html', {'depense': depense})
 
+from django.views.decorators.http import require_POST
+
 @login_required
 def nouvelle_depense(request):
     """Créer une nouvelle dépense"""
-    if request.method == 'POST':
-        description = request.POST.get('description')
-        montant = request.POST.get('montant')
-        categorie_id = request.POST.get('categorie')
-        date_depense = request.POST.get('date_depense')
-        
-        if not description or not montant or not categorie_id:
-            messages.error(request, 'Veuillez remplir tous les champs obligatoires.')
-            return redirect('expenses:nouvelle_depense')
-        
-        try:
-            montant = float(montant)
-            if montant <= 0:
-                raise ValueError()
-        except ValueError:
-            messages.error(request, 'Montant invalide.')
-            return redirect('expenses:nouvelle_depense')
-        
-        # Gérer la date
-        if date_depense:
-            try:
-                date_depense = datetime.strptime(date_depense, '%Y-%m-%d').date()
-            except ValueError:
-                date_depense = timezone.now().date()
-        else:
-            date_depense = timezone.now().date()
-        
-        # Créer la dépense
-        depense = Depense.objects.create(
-            description=description,
-            montant=montant,
-            categorie_id=categorie_id,
-            date_depense=date_depense,
-            utilisateur=request.user
-        )
-        
-        messages.success(request, f'Dépense #{depense.id} enregistrée avec succès!')
-        return redirect('depense_detail', depense_id=depense.id)
+    if request.method == 'GET':
+        categories = CategorieDepense.objects.all()
+        context = {
+            'categories': categories
+        }
+        return render(request, 'expenses/nouvelle_depense.html', context)
     
-    categories = CategorieDepense.objects.all()
-    context = {
-        'categories': categories
+    # Traitement POST
+    description = request.POST.get('description')
+    montant = request.POST.get('montant')
+    categorie_id = request.POST.get('categorie')
+    date_depense = request.POST.get('date_depense')
+    
+    if not description or not montant:
+        messages.error(request, 'Veuillez remplir la description et le montant.')
+        return redirect('expenses:nouvelle_depense')
+    
+    try:
+        montant = float(montant)
+        if montant <= 0:
+            raise ValueError()
+    except ValueError:
+        messages.error(request, 'Montant invalide.')
+        return redirect('expenses:nouvelle_depense')
+    
+    # Gérer la date
+    if date_depense:
+        try:
+            date_depense = datetime.strptime(date_depense, '%Y-%m-%d').date()
+        except ValueError:
+            date_depense = timezone.now().date()
+    else:
+        date_depense = timezone.now().date()
+    
+    # Créer la dépense
+    depense_data = {
+        'description': description,
+        'montant': montant,
+        'date_depense': date_depense,
+        'utilisateur': request.user
     }
-    return render(request, 'expenses/nouvelle_depense.html', context)
+    
+    # Ajouter la catégorie seulement si elle est spécifiée
+    if categorie_id and categorie_id != '':
+        depense_data['categorie_id'] = categorie_id
+    
+    depense = Depense.objects.create(**depense_data)
+    
+    messages.success(request, f'Dépense #{depense.id} enregistrée avec succès!')
+    return redirect('expenses:depense_detail', depense_id=depense.id)
 
 @login_required
 def modifier_depense(request, depense_id):

@@ -1,0 +1,467 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Gestion des QR Codes - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<style>
+/* QR Code Management Styles */
+.qr-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f3f4 100%);
+    padding: 2rem;
+}
+
+.header-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}
+
+.header-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* QR Code Cards */
+.qr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.qr-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.qr-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.qr-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+
+.qr-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.qr-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.status-inactive {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.status-expired {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.qr-body {
+    padding: 1.5rem;
+}
+
+.qr-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.qr-info-item {
+    text-align: center;
+}
+
+.qr-info-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.qr-info-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.qr-image-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.qr-image {
+    width: 150px;
+    height: 150px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background: white;
+}
+
+.qr-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.qr-btn {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.qr-btn:hover {
+    transform: translateY(-1px);
+}
+
+.qr-btn-regenerate {
+    background: #3b82f6;
+    color: white;
+}
+
+.qr-btn-regenerate:hover {
+    background: #2563eb;
+}
+
+.qr-btn-activate {
+    background: #22c55e;
+    color: white;
+}
+
+.qr-btn-activate:hover {
+    background: #16a34a;
+}
+
+.qr-btn-deactivate {
+    background: #ef4444;
+    color: white;
+}
+
+.qr-btn-deactivate:hover {
+    background: #dc2626;
+}
+
+.qr-btn-download {
+    background: #6b7280;
+    color: white;
+}
+
+.qr-btn-download:hover {
+    background: #4b5563;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b7280;
+}
+
+.empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.5rem;
+    color: #d1d5db;
+}
+
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+
+.empty-text {
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+}
+
+/* Modal for QR code regeneration */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    padding: 2rem;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #111827;
+}
+
+.modal-form {
+    margin-bottom: 1.5rem;
+}
+
+.modal-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.modal-btn-cancel {
+    background: #6b7280;
+    color: white;
+}
+
+.modal-btn-cancel:hover {
+    background: #4b5563;
+}
+
+.modal-btn-confirm {
+    background: #3b82f6;
+    color: white;
+}
+
+.modal-btn-confirm:hover {
+    background: #2563eb;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="qr-container">
+    <!-- Header -->
+    <header class="header-section">
+        <div>
+            <h1 class="header-title">📱 Gestion des QR Codes</h1>
+            <p class="header-subtitle">Gérez les codes QR pour vos tables</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'restaurant:table_list' %}" 
+               class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium">
+                Retour aux tables
+            </a>
+            <a href="{% url 'restaurant:regenerer_tous_qr_codes_urls' %}" 
+               class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                🔄 Régénérer URLs
+            </a>
+            <a href="{% url 'restaurant:generer_qr_codes_toutes' %}" 
+               class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium">
+                ➕ Générer tous les QR codes
+            </a>
+        </div>
+    </header>
+
+    <!-- QR Codes Grid -->
+    {% if qr_codes %}
+    <div class="qr-grid">
+        {% for qr_code in qr_codes %}
+        <div class="qr-card">
+            <div class="qr-header">
+                <div class="qr-number">Table {{ qr_code.table.numero_table }}</div>
+                <div class="qr-status 
+                    {% if qr_code.est_actif %}status-active
+                    {% else %}status-inactive{% endif %}">
+                    {% if qr_code.est_actif %}Actif
+                    {% else %}Inactif{% endif %}
+                </div>
+            </div>
+            
+            <div class="qr-body">
+                <div class="qr-info">
+                    <div class="qr-info-item">
+                        <div class="qr-info-label">Créé le</div>
+                        <div class="qr-info-value">{{ qr_code.date_generation|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="qr-info-item">
+                        <div class="qr-info-label">Utilisations</div>
+                        <div class="qr-info-value">{{ qr_code.nombre_utilisations }}</div>
+                    </div>
+                    <div class="qr-info-item">
+                        <div class="qr-info-label">Dernier scan</div>
+                        <div class="qr-info-value">
+                            {% if qr_code.dernier_scan %}
+                                {{ qr_code.dernier_scan|date:"d/m H:i" }}
+                            {% else %}
+                                Jamais
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="qr-info-item">
+                        <div class="qr-info-label">Statut</div>
+                        <div class="qr-info-value">
+                            {% if qr_code.est_actif %}
+                                <span class="text-green-600 font-medium">Actif</span>
+                            {% else %}
+                                <span class="text-red-600 font-medium">Inactif</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if qr_code.qr_code_image %}
+                <div class="qr-image-container">
+                    <img src="data:image/png;base64,{{ qr_code.qr_code_image }}" 
+                         alt="QR Code Table {{ qr_code.table.numero_table }}" 
+                         class="qr-image">
+                </div>
+                {% endif %}
+                
+                <div class="qr-actions">
+                    {% if qr_code.est_actif %}
+                    <a href="/restaurant/qr-codes/desactiver/{{ qr_code.table.id }}/" 
+                       class="qr-btn qr-btn-deactivate">
+                        ⏸️ Désactiver
+                    </a>
+                    {% else %}
+                    <a href="/restaurant/qr-codes/activer/{{ qr_code.table.id }}/" 
+                       class="qr-btn qr-btn-activate">
+                        ▶️ Activer
+                    </a>
+                    {% endif %}
+                    
+                    {% if qr_code.qr_code_image %}
+                    <button onclick="downloadQRCode('{{ qr_code.table.numero_table }}')" 
+                            class="qr-btn qr-btn-download">
+                        📥 Télécharger
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+            </svg>
+        </div>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Gestion des QR Codes</h1>
+            <div class="flex gap-3">
+                <a href="{% url 'restaurant:regenerer_tous_qr_codes_urls' %}" 
+                   class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                    🔄 Régénérer URLs
+                </a>
+                <a href="{% url 'restaurant:generer_qr_codes_toutes' %}" 
+                   class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium">
+                    ➕ Générer tous les QR codes
+                </a>
+            </div>
+        </div>
+        <h3 class="empty-title">Aucun QR code trouvé</h3>
+        <p class="empty-text">Commencez par générer des QR codes pour vos tables.</p>
+    </div>
+    {% endif %}
+</div>
+
+
+<script>
+function downloadQRCode(tableNumber) {
+    // Trouver l'image QR code correspondante
+    const qrCards = document.querySelectorAll('.qr-card');
+    qrCards.forEach(card => {
+        const cardTableNumber = card.querySelector('.qr-number').textContent.replace('Table ', '');
+        if (cardTableNumber == tableNumber) {
+            const qrImage = card.querySelector('.qr-image');
+            if (qrImage) {
+                const link = document.createElement('a');
+                link.download = 'qr_code_table_' + tableNumber + '.png';
+                link.href = qrImage.src;
+                link.click();
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

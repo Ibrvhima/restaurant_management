@@ -646,13 +646,13 @@
                         <a href="{% url 'expenses:modifier_depense' depense.id %}" class="card-action-btn card-action-edit">
                             Modifier
                         </a>
-                        <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" class="card-action-btn card-action-delete">
-                            {% csrf_token %}
-                            <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font-size: inherit; padding: 0; width: 100%;"
-                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
-                                Supprimer
-                            </button>
-                        </form>
+                        <button type="button" class="card-action-btn card-action-delete" 
+                        data-depense-id="{{ depense.id }}"
+                        data-depense-description="{{ depense.description|escapejs }}"
+                        data-depense-montant="{{ depense.montant }}"
+                        onclick="confirmDeleteDepense(this)">
+                            Supprimer
+                        </button>
                         {% endif %}
                     </div>
                 </div>
@@ -695,13 +695,13 @@
                                        class="card-action-btn card-action-edit" style="width: auto;">
                                         Modifier
                                     </a>
-                                    <form method="post" action="{% url 'expenses:supprimer_depense' depense.id %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="card-action-btn card-action-delete" style="width: auto;"
-                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette dépense?')">
+                                    <button type="button" class="card-action-btn card-action-delete" style="width: auto;"
+                                        data-depense-id="{{ depense.id }}"
+                                        data-depense-description="{{ depense.description|escapejs }}"
+                                        data-depense-montant="{{ depense.montant }}"
+                                        onclick="confirmDeleteDepense(this)">
                                             Supprimer
                                         </button>
-                                    </form>
                                     {% endif %}
                                 </div>
                             </td>
@@ -721,4 +721,49 @@
         {% endif %}
     </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDeleteDepense(button) {
+    const depenseId = button.dataset.depenseId;
+    const description = button.dataset.depenseDescription;
+    const montant = button.dataset.depenseMontant;
+    
+    const title = 'Supprimer la dépense';
+    const message = `Êtes-vous sûr de vouloir supprimer cette dépense ?`;
+    const details = `
+        <div style="margin-bottom: 12px;">
+            <strong>Description:</strong> ${description}
+        </div>
+        <div style="margin-bottom: 12px;">
+            <strong>Montant:</strong> ${montant} GNF
+        </div>
+        <div style="color: #ef4444; font-size: 12px;">
+            ⚠️ Cette action est irréversible
+        </div>
+    `;
+    
+    showConfirmationModal(title, message, details, function() {
+        // Créer et soumettre le formulaire
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/expenses/supprimer/${depenseId}/`;
+        
+        // Ajouter le token CSRF
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken.value;
+            form.appendChild(csrfInput);
+        }
+        
+        // Soumettre le formulaire
+        document.body.appendChild(form);
+        form.submit();
+    });
+}
+</script>
 {% endblock %}

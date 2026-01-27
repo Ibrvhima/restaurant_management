@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Table {{ table.numero_table }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .plat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .plat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .btn-add {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-add:active {
+            transform: scale(0.95);
+        }
+        
+        .badge-quantite {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-green-600 to-green-700 text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold">🍽️ Menu Restaurant</h1>
+                    <p class="text-green-100 text-sm">Table {{ table.numero_table }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="text-right">
+                        <p class="text-xs text-green-100">Panier</p>
+                        <p class="font-bold" id="total-panier">0 GNF</p>
+                    </div>
+                    <div class="relative">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        <span id="badge-panier" class="badge-quantite absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 pb-24">
+        <!-- Catégories -->
+        <div class="mb-6">
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2" id="categories-nav">
+                {% for categorie in categories %}
+                <button onclick="scrollToCategory('{{ categorie.nom|slugify }}')" 
+                        class="category-btn px-4 py-2 bg-white rounded-full shadow-md text-sm font-medium whitespace-nowrap hover:bg-green-50 hover:text-green-700 transition-all">
+                    {{ categorie.nom }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Menu mobile adapté -->
+        {% for categorie_nom, plats in plats_par_categorie.items %}
+        <section id="{{ categorie_nom|slugify }}" class="mb-8 animate-slide-up">
+            <div class="flex items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">{{ categorie_nom }}</h2>
+                <div class="ml-3 h-px bg-gray-300 flex-1"></div>
+            </div>
+            
+            <div class="grid gap-4">
+                {% for plat in plats %}
+                <div class="plat-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="flex">
+                        <!-- Image du plat (placeholder) -->
+                        <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                            <span class="text-2xl">🍽️</span>
+                        </div>
+                        
+                        <!-- Infos du plat -->
+                        <div class="flex-1 p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">{{ plat.nom }}</h3>
+                                    {% if plat.description %}
+                                    <p class="text-sm text-gray-600 mt-1">{{ plat.description|truncatewords:8 }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-green-600 text-lg">{{ plat.prix_unitaire }} GNF</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                                    Disponible
+                                </span>
+                                <button onclick="ajouterAuPanier({{ plat.id }}, '{{ plat.nom|escapejs }}', '{{ plat.prix_unitaire }}')" 
+                                        class="btn-add bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+
+        {% if not plats_par_categorie %}
+        <div class="text-center py-12">
+            <div class="text-6xl mb-4">🍽️</div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">Aucun plat disponible</h3>
+            <p class="text-gray-500">Le menu est en cours de préparation</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Panier Flottant -->
+    <div id="panier-flottant" class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-2xl transform translate-y-full transition-transform duration-300 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-semibold text-gray-800">Votre Commande</h3>
+                <button onclick="togglePanier()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="panier-items" class="max-h-48 overflow-y-auto mb-3">
+                <!-- Items du panier seront ajoutés ici -->
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-semibold">Total:</span>
+                    <span class="font-bold text-xl text-green-600" id="panier-total">0 GNF</span>
+                </div>
+                <button onclick="validerCommande()" 
+                        class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                    Valider la commande
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bouton Panier (quand vide) -->
+    <button id="btn-panier-vide" onclick="togglePanier()" 
+            class="fixed bottom-6 right-6 bg-green-600 text-white rounded-full w-16 h-16 shadow-lg flex items-center justify-center hover:bg-green-700 transition-all z-40 hidden">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span id="badge-panier-vide" class="badge-quantite absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+    </button>
+
+    <script>
+        // État du panier
+        let panier = [];
+        let panierOuvert = false;
+
+        // Fonctions du panier
+        function ajouterAuPanier(platId, platNom, platPrix) {
+            const existingItem = panier.find(item => item.id === platId);
+            
+            if (existingItem) {
+                existingItem.quantite += 1;
+            } else {
+                panier.push({
+                    id: platId,
+                    nom: platNom,
+                    prix: Number(platPrix),
+                    quantite: 1
+                });
+            }
+            
+            updatePanier();
+            showNotification(platNom + ' ajouté au panier');
+        }
+
+        function updatePanier() {
+            const total = panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
+            const totalItems = panier.reduce((sum, item) => sum + item.quantite, 0);
+            
+            // Mettre à jour les totaux
+            document.getElementById('total-panier').textContent = `${total.toLocaleString()} GNF`;
+            document.getElementById('panier-total').textContent = `${total.toLocaleString()} GNF`;
+            
+            // Mettre à jour les badges
+            const badges = ['badge-panier', 'badge-panier-vide'];
+            badges.forEach(badgeId => {
+                const badge = document.getElementById(badgeId);
+                if (totalItems > 0) {
+                    badge.textContent = totalItems;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
+            
+            // Mettre à jour les items du panier
+            const panierItems = document.getElementById('panier-items');
+            if (panier.length === 0) {
+                panierItems.innerHTML = '<p class="text-gray-500 text-center">Votre panier est vide</p>';
+            } else {
+                panierItems.innerHTML = panier.map(item => `
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <div class="flex-1">
+                            <p class="font-medium">${item.nom}</p>
+                            <p class="text-sm text-gray-600">${item.prix.toLocaleString()} GNF x ${item.quantite}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="modifierQuantite(${item.id}, -1)" class="w-6 h-6 bg-gray-200 rounded-full hover:bg-gray-300">-</button>
+                            <span class="font-medium">${item.quantite}</span>
+                            <button onclick="modifierQuantite(${item.id}, 1)" class="w-6 h-6 bg-gray-200 rounded-full hover:bg-gray-300">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Afficher/masquer le bouton panier vide
+            const btnPanierVide = document.getElementById('btn-panier-vide');
+            if (panier.length > 0) {
+                btnPanierVide.classList.remove('hidden');
+            } else {
+                btnPanierVide.classList.add('hidden');
+                if (panierOuvert) {
+                    togglePanier();
+                }
+            }
+        }
+
+        function modifierQuantite(platId, delta) {
+            const item = panier.find(item => item.id === platId);
+            if (item) {
+                item.quantite += delta;
+                if (item.quantite <= 0) {
+                    panier = panier.filter(item => item.id !== platId);
+                }
+                updatePanier();
+            }
+        }
+
+        function togglePanier() {
+            const panierFlottant = document.getElementById('panier-flottant');
+            panierOuvert = !panierOuvert;
+            
+            if (panierOuvert) {
+                panierFlottant.style.transform = 'translateY(0)';
+            } else {
+                panierFlottant.style.transform = 'translateY(100%)';
+            }
+        }
+
+        function validerCommande() {
+            if (panier.length === 0) {
+                showNotification('Votre panier est vide', 'error');
+                return;
+            }
+            
+            // Préparer les données pour la commande
+            const commandeData = {
+                table_id: {{ table.id }},
+                items: panier.map(item => ({
+                    plat_id: item.id,
+                    quantite: item.quantite
+                })),
+                total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+            };
+            
+            // Envoyer la commande (à implémenter avec l'API)
+            showNotification('Commande en cours d\'envoi...', 'info');
+            
+            // Simuler l'envoi pour le moment
+            setTimeout(() => {
+                showNotification('Commande envoyée avec succès !', 'success');
+                panier = [];
+                updatePanier();
+                togglePanier();
+            }, 2000);
+        }
+
+        function scrollToCategory(categoryId) {
+            const element = document.getElementById(categoryId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-up ${
+                type === 'success' ? 'bg-green-600 text-white' :
+                type === 'error' ? 'bg-red-600 text-white' :
+                'bg-blue-600 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePanier();
+        });
+    </script>
+</body>
+</html>

@@ -40,19 +40,33 @@ class AutoMigrationMiddleware:
                                     password='admin123'
                                 )
                             
-                            # Utilisateurs de test
-                            if not User.objects.filter(login='manager').exists():
+                            # Utilisateurs par défaut
+                            if not User.objects.filter(login='Table1').exists():
                                 User.objects.create_user(
-                                    login='manager',
-                                    password='manager123',
-                                    role='Rmanager'
+                                    login='Table1',
+                                    password='Table1@',
+                                    role='Rtable'
                                 )
                             
-                            if not User.objects.filter(login='employe').exists():
+                            if not User.objects.filter(login='Cuisinier1').exists():
                                 User.objects.create_user(
-                                    login='employe',
-                                    password='employe123',
-                                    role='Remploye'
+                                    login='Cuisinier1',
+                                    password='Cuisinier1@',
+                                    role='Rcuisinier'
+                                )
+                            
+                            if not User.objects.filter(login='Serveur1').exists():
+                                User.objects.create_user(
+                                    login='Serveur1',
+                                    password='Serveur1@',
+                                    role='Rserveur'
+                                )
+                            
+                            if not User.objects.filter(login='Comptable1').exists():
+                                User.objects.create_user(
+                                    login='Comptable1',
+                                    password='Comptable1@',
+                                    role='Rcomptable'
                                 )
                         
                         migrations_applied = True
@@ -70,18 +84,32 @@ class AutoMigrationMiddleware:
                                     password='admin123'
                                 )
                             
-                            if not User.objects.filter(login='manager').exists():
+                            if not User.objects.filter(login='Table1').exists():
                                 User.objects.create_user(
-                                    login='manager',
-                                    password='manager123',
-                                    role='Rmanager'
+                                    login='Table1',
+                                    password='Table1@',
+                                    role='Rtable'
                                 )
                             
-                            if not User.objects.filter(login='employe').exists():
+                            if not User.objects.filter(login='Cuisinier1').exists():
                                 User.objects.create_user(
-                                    login='employe',
-                                    password='employe123',
-                                    role='Remploye'
+                                    login='Cuisinier1',
+                                    password='Cuisinier1@',
+                                    role='Rcuisinier'
+                                )
+                            
+                            if not User.objects.filter(login='Serveur1').exists():
+                                User.objects.create_user(
+                                    login='Serveur1',
+                                    password='Serveur1@',
+                                    role='Rserveur'
+                                )
+                            
+                            if not User.objects.filter(login='Comptable1').exists():
+                                User.objects.create_user(
+                                    login='Comptable1',
+                                    password='Comptable1@',
+                                    role='Rcomptable'
                                 )
                             
                             migrations_applied = True

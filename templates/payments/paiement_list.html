@@ -113,11 +113,126 @@
 }
 
 .filter-label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
     font-size: var(--text-sm);
     font-weight: 500;
     color: var(--gray-700);
-    margin-bottom: var(--space-xs);
+}
+
+/* Quick Filters Section */
+.quick-filters-section {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    border: 1px solid var(--gray-200);
+}
+
+.quick-filters-header {
+    margin-bottom: var(--space-md);
+}
+
+.quick-filters-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.quick-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-sm);
+}
+
+@media (max-width: 640px) {
+    .quick-filters-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .quick-filters-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.quick-filter-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: white;
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.quick-filter-btn:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: var(--gray-900);
+    text-decoration: none;
+}
+
+.quick-filter-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.quick-filter-btn.active:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.quick-filter-btn svg {
+    flex-shrink: 0;
+}
+
+/* Style pour les méthodes manquantes */
+.methode-manquante {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.methode-manquante svg {
+    flex-shrink: 0;
+}
+
+/* Style pour les valeurs non spécifiées (backup) */
+.text-muted {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 0.875rem;
 }
 
 .filter-input {
@@ -325,6 +440,25 @@
     color: white;
 }
 
+.action-btn-urgent {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.action-btn-urgent:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.action-btn-urgent:active {
+    transform: translateY(0);
+}
+
 .action-delete {
     background: white;
     color: var(--danger-soft);
@@ -411,24 +545,124 @@
         <section class="filters-section">
             <form method="get" class="filters-form">
                 <div class="filter-group">
-                    <label class="filter-label">Méthode</label>
+                    <label class="filter-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        Moyen de paiement
+                    </label>
                     <select name="methode" class="filter-input">
-                        <option value="">Toutes</option>
+                        <option value="">Toutes les méthodes</option>
                         {% for methode_value, methode_label in methodes %}
                         <option value="{{ methode_value }}" {% if methode_filter == methode_value %}selected{% endif %}>
                             {{ methode_label }}
                         </option>
                         {% endfor %}
+                        <option value="NON_SPECIFIE" {% if methode_filter == 'NON_SPECIFIE' %}selected{% endif %}>
+                            Non spécifié
+                        </option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label class="filter-label">Date</label>
+                    <label class="filter-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Date
+                    </label>
                     <input type="date" name="date" value="{{ date_filter }}" class="filter-input">
                 </div>
                 <button type="submit" class="filter-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                    </svg>
                     Filtrer
                 </button>
             </form>
+        </section>
+
+        <!-- Filtres Rapides -->
+        <section class="quick-filters-section">
+            <div class="quick-filters-header">
+                <h3 class="quick-filters-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 3.293A1 1 0 013 4z"/>
+                    </svg>
+                    Filtres rapides par méthode
+                </h3>
+            </div>
+            <div class="quick-filters-grid">
+                <a href="{% url 'payments:paiement_list' %}" 
+                   class="quick-filter-btn {% if not methode_filter %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="9" y1="9" x2="15" y2="9"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
+                    </svg>
+                    Toutes
+                </a>
+                
+                <a href="?methode=ESPECE" 
+                   class="quick-filter-btn {% if methode_filter == 'ESPECE' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    Espèce
+                </a>
+                
+                <a href="?methode=CARTE" 
+                   class="quick-filter-btn {% if methode_filter == 'CARTE' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    Carte
+                </a>
+                
+                <a href="?methode=MOBILE_MONEY" 
+                   class="quick-filter-btn {% if methode_filter == 'MOBILE_MONEY' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                    </svg>
+                    Mobile Money
+                </a>
+                
+                <a href="?methode=VIREMENT" 
+                   class="quick-filter-btn {% if methode_filter == 'VIREMENT' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <path d="M20 8v6M23 11h-6"/>
+                    </svg>
+                    Virement
+                </a>
+                
+                <a href="?methode=CHEQUE" 
+                   class="quick-filter-btn {% if methode_filter == 'CHEQUE' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                    Chèque
+                </a>
+                
+                <a href="?methode=NON_SPECIFIE" 
+                   class="quick-filter-btn {% if methode_filter == 'NON_SPECIFIE' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Non spécifié
+                </a>
+            </div>
         </section>
 
         <!-- Table/Cards -->
@@ -450,18 +684,25 @@
                             </div>
                             <div class="card-detail">
                                 <span class="card-label">Méthode</span>
-                                <span class="card-value">{{ paiement.get_methode_paiement_display }}</span>
+                                <span class="card-value">
+    {% if paiement.methode %}
+        {{ paiement.get_methode_display }}
+    {% else %}
+        <span class="methode-manquante">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Méthode manquante
+        </span>
+    {% endif %}
+</span>
                             </div>
                             <div class="card-detail">
                                 <span class="card-label">Statut</span>
                                 <span class="card-value">
-                                    {% if paiement.statut == 'complété' %}
-                                        <span class="badge badge-success">Complété</span>
-                                    {% elif paiement.statut == 'en_attente' %}
-                                        <span class="badge badge-pending">En attente</span>
-                                    {% else %}
-                                        <span class="badge badge-failed">Échoué</span>
-                                    {% endif %}
+                                    <span class="badge badge-success">Complété</span>
                                 </span>
                             </div>
                         </div>
@@ -470,13 +711,7 @@
                             <a href="{% url 'payments:paiement_detail' paiement.id %}" class="action-btn action-view">
                                 Voir
                             </a>
-                            <a href="{% url 'payments:modifier_paiement' paiement.id %}" class="action-btn action-edit">
-                                Modifier
-                            </a>
-                            <a href="{% url 'payments:supprimer_paiement' paiement.id %}" class="action-btn action-delete">
-                                Supprimer
-                            </a>
-                        </div>
+                                                    </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -500,15 +735,22 @@
                                 <td>#{{ paiement.id }}</td>
                                 <td>{{ paiement.date_paiement|date:"d/m/Y H:i" }}</td>
                                 <td>{{ paiement.montant }} GNF</td>
-                                <td>{{ paiement.get_methode_paiement_display }}</td>
                                 <td>
-                                    {% if paiement.statut == 'complété' %}
-                                        <span class="badge badge-success">Complété</span>
-                                    {% elif paiement.statut == 'en_attente' %}
-                                        <span class="badge badge-pending">En attente</span>
-                                    {% else %}
-                                        <span class="badge badge-failed">Échoué</span>
-                                    {% endif %}
+    {% if paiement.methode %}
+        {{ paiement.get_methode_display }}
+    {% else %}
+        <span class="methode-manquante">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Méthode manquante
+        </span>
+    {% endif %}
+</td>
+                                <td>
+                                    <span class="badge badge-success">Complété</span>
                                 </td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem;">
@@ -516,14 +758,15 @@
                                            class="action-btn action-view" style="width: auto;">
                                             Voir
                                         </a>
+                                                                                {% if not paiement.methode %}
                                         <a href="{% url 'payments:modifier_paiement' paiement.id %}" 
-                                           class="action-btn action-edit" style="width: auto;">
-                                            Modifier
+                                           class="action-btn action-btn-urgent" style="width: auto;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-4m-7 4V7a2 2 0 012 2h4M8.5 10.5V7a2 2 0 012 2h1"/>
+                                            </svg>
+                                            Renseigner
                                         </a>
-                                        <a href="{% url 'payments:supprimer_paiement' paiement.id %}" 
-                                           class="action-btn action-delete" style="width: auto;">
-                                            Supprimer
-                                        </a>
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>

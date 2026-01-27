@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code - Table {{ table_number }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            margin: 0; 
+            background: #f8f9fa; 
+        }
+        .container { 
+            max-width: 400px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .header { 
+            margin-bottom: 30px; 
+        }
+        .title { 
+            font-size: 28px; 
+            font-weight: bold; 
+            color: #2c3e50; 
+            margin-bottom: 10px; 
+        }
+        .subtitle { 
+            font-size: 18px; 
+            color: #7f8c8d; 
+            margin-bottom: 20px; 
+        }
+        .qr-container { 
+            margin: 30px 0; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 10px; 
+            border: 2px dashed #3498db; 
+        }
+        .qr-image { 
+            width: 200px; 
+            height: 200px; 
+            margin: 0 auto; 
+            display: block; 
+        }
+        .instructions { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: #e8f5e8; 
+            border-radius: 10px; 
+            border-left: 4px solid #27ae60; 
+        }
+        .instructions h3 { 
+            color: #27ae60; 
+            margin-bottom: 10px; 
+            font-size: 16px; 
+        }
+        .instructions p { 
+            color: #2c3e50; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            margin: 5px 0; 
+        }
+        .footer { 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 1px solid #ecf0f1; 
+            font-size: 12px; 
+            color: #95a5a6; 
+        }
+        .step { 
+            display: flex; 
+            align-items: center; 
+            margin: 10px 0; 
+        }
+        .step-number { 
+            background: #3498db; 
+            color: white; 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            margin-right: 10px; 
+            font-size: 12px; 
+        }
+        @media print { 
+            body { 
+                background: white; 
+                padding: 10px; 
+            } 
+            .container { 
+                box-shadow: none; 
+                border: 1px solid #ddd; 
+            } 
+            .instructions { 
+                background: white; 
+                border: 1px solid #27ae60; 
+            } 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🍽️ Bienvenue !</div>
+            <div class="subtitle">Table {{ table_number }}</div>
+        </div>
+        
+        <div class="qr-container">
+            <img src="data:image/png;base64,{{ qr_code_image }}" alt="QR Code" class="qr-image">
+        </div>
+        
+        <div class="instructions">
+            <h3>📱 Comment commander ?</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <p>Scannez ce code QR avec votre téléphone</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <p>Consultez notre menu complet</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <p>Passez votre commande directement</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <p>Nous vous livrons à votre table</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Merci de votre visite !</p>
+            <p>Scannez, commandez, dégustez !</p>
+        </div>
+    </div>
+    
+    <script>
+        window.onload = function() { 
+            window.print(); 
+        };
+    </script>
+</body>
+</html>

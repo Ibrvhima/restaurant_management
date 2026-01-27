@@ -106,143 +106,213 @@
             {% endif %}
 
             <!-- Statistiques actuelles -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center">
-                        <div class="p-3 bg-blue-100 rounded-full">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2 bg-blue-100 rounded-full">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Commandes</p>
-                            <p class="text-2xl font-semibold text-gray-900">{{ stats.total_commandes }}</p>
+                        <div class="ml-3">
+                            <p class="text-xs text-gray-600">Commandes</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ stats.total_commandes }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center">
-                        <div class="p-3 bg-green-100 rounded-full">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2 bg-green-100 rounded-full">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Paiements</p>
-                            <p class="text-2xl font-semibold text-gray-900">{{ stats.total_paiements }}</p>
+                        <div class="ml-3">
+                            <p class="text-xs text-gray-600">Paiements</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ stats.total_paiements }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center">
-                        <div class="p-3 bg-red-100 rounded-full">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2 bg-red-100 rounded-full">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Dépenses</p>
-                            <p class="text-2xl font-semibold text-gray-900">{{ stats.total_depenses }}</p>
+                        <div class="ml-3">
+                            <p class="text-xs text-gray-600">Dépenses</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ stats.total_depenses }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center">
-                        <div class="p-3 bg-yellow-100 rounded-full">
-                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2 bg-yellow-100 rounded-full">
+                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Solde Caisse</p>
-                            <p class="text-2xl font-semibold text-gray-900">{{ stats.solde_caisse }} GNF</p>
+                        <div class="ml-3">
+                            <p class="text-xs text-gray-600">Solde Caisse</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ stats.solde_caisse }} GNF</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Actions de suppression -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
-                    <div class="flex items-center mb-4">
-                        <svg class="w-8 h-8 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-500">
+                    <div class="flex items-center mb-3">
+                        <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Supprimer les commandes</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Supprimer les commandes</h3>
                     </div>
-                    <p class="text-gray-600 mb-4">Supprimer définitivement toutes les commandes du système. Cette action est irréversible.</p>
-                    <form method="post" action="{% url 'accounts:admin_clear_commandes' %}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer TOUTES les commandes? Cette action est irréversible!')">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                            Supprimer toutes les commandes
-                        </button>
-                    </form>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
-                    <div class="flex items-center mb-4">
-                        <svg class="w-8 h-8 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <p class="text-sm text-gray-600 mb-3">Supprimer définitivement toutes les commandes du système. Cette action est irréversible.</p>
+                    <button onclick="showConfirmModal('commandes')" class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition text-sm">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Supprimer les paiements</h3>
-                    </div>
-                    <p class="text-gray-600 mb-4">Supprimer définitivement tous les paiements du système. Cette action est irréversible.</p>
-                    <form method="post" action="{% url 'accounts:admin_clear_paiements' %}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer TOUS les paiements? Cette action est irréversible!')">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                            Supprimer tous les paiements
-                        </button>
-                    </form>
+                        Supprimer toutes les commandes
+                    </button>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
-                    <div class="flex items-center mb-4">
-                        <svg class="w-8 h-8 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-500">
+                    <div class="flex items-center mb-3">
+                        <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Supprimer les dépenses</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Supprimer les paiements</h3>
                     </div>
-                    <p class="text-gray-600 mb-4">Supprimer définitivement toutes les dépenses du système. Cette action est irréversible.</p>
-                    <form method="post" action="{% url 'accounts:admin_clear_depenses' %}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer TOUTES les dépenses? Cette action est irréversible!')">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                            Supprimer toutes les dépenses
-                        </button>
-                    </form>
+                    <p class="text-sm text-gray-600 mb-3">Supprimer définitivement tous les paiements du système. Cette action est irréversible.</p>
+                    <button onclick="showConfirmModal('paiements')" class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition text-sm">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Supprimer tous les paiements
+                    </button>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
-                    <div class="flex items-center mb-4">
-                        <svg class="w-8 h-8 text-yellow-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-500">
+                    <div class="flex items-center mb-3">
+                        <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        <h3 class="text-base font-semibold text-gray-900">Supprimer les dépenses</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">Supprimer définitivement toutes les dépenses du système. Cette action est irréversible.</p>
+                    <button onclick="showConfirmModal('depenses')" class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition text-sm">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Supprimer toutes les dépenses
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-500">
+                    <div class="flex items-center mb-3">
+                        <svg class="w-6 h-6 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Réinitialiser la caisse</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Réinitialiser la caisse</h3>
                     </div>
-                    <p class="text-gray-600 mb-4">Remettre le solde de la caisse à zéro. Solde actuel: {{ stats.solde_caisse }} GNF</p>
-                    <form method="post" action="{% url 'accounts:admin_reset_caisse' %}" onsubmit="return confirm('Êtes-vous sûr de vouloir réinitialiser la caisse à zéro? Cette action est irréversible!')">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition">
-                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                            </svg>
-                            Réinitialiser la caisse
-                        </button>
-                    </form>
+                    <p class="text-sm text-gray-600 mb-3">Remettre le solde de la caisse à zéro. Solde actuel: {{ stats.solde_caisse }} GNF</p>
+                    <button onclick="showConfirmModal('caisse')" class="bg-yellow-600 text-white px-3 py-2 rounded-lg hover:bg-yellow-700 transition text-sm">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Réinitialiser la caisse
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 </div>
+
+<!-- Modal de confirmation -->
+<div id="confirmModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-lg bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <div class="mt-2 text-center">
+                <h3 class="text-lg font-medium text-gray-900" id="modalTitle">Confirmation de suppression</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500" id="modalMessage">Êtes-vous sûr de vouloir continuer? Cette action est irréversible.</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <form id="confirmForm" method="post">
+                        {% csrf_token %}
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-lg shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 mr-2">
+                            Annuler
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-lg shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            Confirmer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showConfirmModal(action) {
+    const modal = document.getElementById('confirmModal');
+    const form = document.getElementById('confirmForm');
+    const title = document.getElementById('modalTitle');
+    const message = document.getElementById('modalMessage');
+    
+    // Configuration selon l'action
+    const actions = {
+        'commandes': {
+            title: 'Supprimer toutes les commandes',
+            message: 'Êtes-vous sûr de vouloir supprimer TOUTES les commandes? Cette action est irréversible et affectera toutes les données associées.',
+            url: '{% url "accounts:admin_clear_commandes" %}'
+        },
+        'paiements': {
+            title: 'Supprimer tous les paiements',
+            message: 'Êtes-vous sûr de vouloir supprimer TOUS les paiements? Cette action est irréversible et affectera la trésorerie.',
+            url: '{% url "accounts:admin_clear_paiements" %}'
+        },
+        'depenses': {
+            title: 'Supprimer toutes les dépenses',
+            message: 'Êtes-vous sûr de vouloir supprimer TOUTES les dépenses? Cette action est irréversible et affectera la comptabilité.',
+            url: '{% url "accounts:admin_clear_depenses" %}'
+        },
+        'caisse': {
+            title: 'Réinitialiser la caisse',
+            message: `Êtes-vous sûr de vouloir réinitialiser la caisse à zéro? Solde actuel: {{ stats.solde_caisse }} GNF. Cette action est irréversible.`,
+            url: '{% url "accounts:admin_reset_caisse" %}'
+        }
+    };
+    
+    const config = actions[action];
+    title.textContent = config.title;
+    message.textContent = config.message;
+    form.action = config.url;
+    
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('confirmModal').classList.add('hidden');
+}
+
+// Fermer le modal en cliquant à l'extérieur
+window.onclick = function(event) {
+    const modal = document.getElementById('confirmModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+</script>
 {% endblock %}

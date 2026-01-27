@@ -21,6 +21,33 @@
                 <p class="text-gray-600">Table {{ table.numero_table }}</p>
             </div>
 
+            <!-- Barre de navigation d'état des commandes -->
+            <div id="etat-nav-bar" class="bg-gradient-to-r from-blue-600 to-emerald-600 text-white shadow-lg transform transition-all duration-500 ease-in-out mb-6">
+                <div class="container mx-auto px-4">
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                <span class="font-semibold">Suivi en temps réel</span>
+                            </div>
+                            <div id="etat-nav-content" class="flex items-center space-x-6 text-sm">
+                                <div class="text-white/80">Chargement...</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span id="derniere-maj" class="text-xs text-white/70">--:--:--</span>
+                            <button id="toggle-nav-bar" class="text-white/80 hover:text-white transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% if commandes %}
             <!-- Liste des commandes -->
             <div class="space-y-6">
@@ -68,7 +95,7 @@
                         </div>
                         
                         <!-- Actions -->
-                        <div class="mt-6 flex space-x-4">
+                        <div class="mt-6 flex flex-wrap gap-4">
                             {% if commande.etat == 'EN_ATTENTE' %}
                             <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition" disabled>
                                 En attente de validation
@@ -82,9 +109,19 @@
                                 En cours de service
                             </button>
                             {% elif commande.etat == 'TERMINEE' %}
-                            <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition" disabled>
-                                Commande terminée
-                            </button>
+                                {% if commande.paiement %}
+                                <a href="{% url 'payments:telecharger_recu' commande.id %}" 
+                                   class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition flex items-center space-x-2 inline-flex">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span>Télécharger le reçu</span>
+                                </a>
+                                {% else %}
+                                <button class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition" disabled>
+                                    En attente de paiement
+                                </button>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -109,4 +146,159 @@
         </div>
     </div>
 </div>
+
+<script>
+// Variables globales pour la barre de navigation
+let navBarRefreshInterval;
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    initialiserNavBarEtat();
+});
+
+// Initialisation de la barre de navigation d'état
+function initialiserNavBarEtat() {
+    // Démarrer le suivi immédiatement
+    chargerEtatNavBar();
+    
+    // Rafraîchissement continu (toutes les 5 secondes pour la barre de nav)
+    navBarRefreshInterval = setInterval(chargerEtatNavBar, 5000);
+    
+    // Gestion du bouton de toggle
+    document.getElementById('toggle-nav-bar').addEventListener('click', toggleNavBar);
+}
+
+// Charger et mettre à jour la barre de navigation
+function chargerEtatNavBar() {
+    fetch('/restaurant/api/etat-commandes-cuisine/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                mettreAJourNavBar(data);
+                // Mettre à jour l'horodatage
+                const maintenant = new Date();
+                document.getElementById('derniere-maj').textContent = 
+                    maintenant.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur barre de nav:', error);
+        });
+}
+
+// Mettre à jour le contenu de la barre de navigation
+function mettreAJourNavBar(data) {
+    const commandes = data.commandes;
+    const content = document.getElementById('etat-nav-content');
+    
+    if (commandes.length === 0) {
+        content.innerHTML = '<div class="text-white/80">Aucune commande active</div>';
+        return;
+    }
+    
+    // Compter les commandes par état
+    const etats = {
+        'EN_ATTENTE': { count: 0, label: 'En attente', color: 'text-yellow-200', icon: '⏳' },
+        'EN_PREPARATION': { count: 0, label: 'Préparation', color: 'text-blue-200', icon: '👨‍🍳' },
+        'EN_COURS': { count: 0, label: 'Service', color: 'text-orange-200', icon: '🍽️' },
+        'TERMINEE': { count: 0, label: 'Terminé', color: 'text-green-200', icon: '✅' },
+        'ANNULEE': { count: 0, label: 'Annulé', color: 'text-red-200', icon: '❌' }
+    };
+    
+    commandes.forEach(commande => {
+        if (etats[commande.etat]) {
+            etats[commande.etat].count++;
+        }
+    });
+    
+    // Générer le HTML
+    let html = '';
+    Object.entries(etats).forEach(([etat, info]) => {
+        if (info.count > 0) {
+            html += `
+                <div class="flex items-center space-x-1 ${info.color} transition-all duration-300">
+                    <span class="text-lg">${info.icon}</span>
+                    <span class="font-medium">${info.count}</span>
+                    <span class="hidden sm:inline">${info.label}</span>
+                </div>
+            `;
+        }
+    });
+    
+    if (html === '') {
+        html = '<div class="text-white/80">Aucune commande active</div>';
+    } else {
+        html += `<div class="text-white/60 text-xs hidden sm:block">${commandes.length} total</div>`;
+    }
+    
+    content.innerHTML = html;
+    
+    // Ajouter une animation de mise à jour
+    const navBar = document.getElementById('etat-nav-bar');
+    navBar.style.transform = 'scale(1.02)';
+    setTimeout(() => {
+        navBar.style.transform = 'scale(1)';
+    }, 200);
+}
+
+// Toggle de la barre de navigation
+let navBarMinimized = false;
+function toggleNavBar() {
+    const navBar = document.getElementById('etat-nav-bar');
+    const toggleBtn = document.getElementById('toggle-nav-bar');
+    
+    navBarMinimized = !navBarMinimized;
+    
+    if (navBarMinimized) {
+        navBar.style.transform = 'translateY(-100%)';
+        toggleBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+            </svg>
+        `;
+    } else {
+        navBar.style.transform = 'translateY(0)';
+        toggleBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        `;
+    }
+}
+</script>
+
+<style>
+/* Animation pulse pour les changements */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Indicateur de notification pour les commandes actives */
+.etat-commandes-indicator {
+    position: relative;
+}
+
+.etat-commandes-indicator::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+</style>
 {% endblock %}

@@ -54,11 +54,11 @@
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-3">Actions</h3>
                             {% if user.role == 'Rserveur' or user.role == 'Radmin' %}
-                            <form method="post" action="/orders/changer-etat/{{ commande.id }}/" class="space-y-2">
+                            <form method="post" action="{% url 'orders:changer_etat_commande' commande.id %}" class="space-y-2">
                                 {% csrf_token %}
                                 <select name="etat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                                     <option value="">Changer l'état</option>
-                                    {% for etat_value, etat_label in commande.EtatCommande.choices %}
+                                    {% for etat_value, etat_label in etat_choices %}
                                     <option value="{{ etat_value }}" {% if commande.etat == etat_value %}selected{% endif %}>
                                         {{ etat_label }}
                                     </option>

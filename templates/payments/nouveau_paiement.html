@@ -251,15 +251,21 @@
                     Commande <span class="required">*</span>
                 </label>
                 <select name="commande" id="commande" required class="form-select">
-                    <option value="">Sélectionnez une commande</option>
+                    <option value="">-- Sélectionnez une commande obligatoirement --</option>
                     {% for commande in commandes %}
-                    <option value="{{ commande.id }}"
-                            {% if request.GET.commande == commande.id|stringformat:"s" %}selected{% endif %}
-                            data-total="{{ commande.total }}">
-                        Commande #{{ commande.id }} - Table {{ commande.table.numero_table }} ({{ commande.total }} GNF)
+                    <option value="{{ commande.id }}" {% if commande.id|stringformat:"s" == commande_id_param %}selected{% endif %}>
+                        #{{ commande.id }} - Table {{ commande.table.numero_table }} - {{ commande.total }} GNF
                     </option>
                     {% endfor %}
                 </select>
+                <div class="form-help">
+                    <strong>Obligatoire:</strong> Sélectionnez la commande à payer
+                </div>
+                {% if commande_avec_paiement %}
+                <div class="form-help" style="color: #dc2626;">
+                    <strong>Attention:</strong> Cette commande a déjà un paiement enregistré.
+                </div>
+                {% endif %}
             </div>
 
             <!-- Méthode de paiement -->
@@ -268,23 +274,32 @@
                     Méthode de paiement <span class="required">*</span>
                 </label>
                 <select name="methode" id="methode" required class="form-select">
-                    <option value="">Sélectionnez une méthode</option>
+                    <option value="">-- Sélectionnez une méthode obligatoirement --</option>
                     {% for methode_value, methode_label in methodes %}
                     <option value="{{ methode_value }}">{{ methode_label }}</option>
                     {% endfor %}
                 </select>
+                <div class="form-help">
+                    <strong>Obligatoire:</strong> Choisissez le moyen de paiement utilisé
+                </div>
             </div>
 
             <!-- Montant -->
             <div class="form-group">
                 <label for="montant" class="form-label">
-                    Montant <span class="required">*</span>
+                    Montant (GNF) <span class="required">*</span>
                 </label>
-                <input type="number" name="montant" id="montant" 
-                       step="0.01" min="0" required
-                       placeholder="0.00"
-                       class="form-input">
-                <p class="form-help">Montant en GNF</p>
+                <input type="number" 
+                       name="montant" 
+                       id="montant" 
+                       required 
+                       class="form-input" 
+                       placeholder="Entrez le montant obligatoirement" 
+                       min="0.01" 
+                       step="0.01">
+                <div class="form-help">
+                    <strong>Obligatoire:</strong> Montant supérieur à 0 GNF
+                </div>
             </div>
 
             <!-- Informations de la commande sélectionnée -->
@@ -344,29 +359,75 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Validation du formulaire
     form.addEventListener('submit', function(e) {
+        let hasError = false;
+        let errorMessage = '';
+        
+        // Validation commande
         const commandeSelected = commandeSelect.value;
-        const methodeSelected = document.getElementById('methode').value;
-        const montant = parseFloat(montantInput.value);
-        
         if (!commandeSelected) {
-            e.preventDefault();
-            alert('Veuillez sélectionner une commande.');
-            return;
+            hasError = true;
+            errorMessage += '• Veuillez sélectionner une commande obligatoirement\n';
+            commandeSelect.style.borderColor = '#ef4444';
+            commandeSelect.focus();
+        } else {
+            commandeSelect.style.borderColor = '#d1d5db';
         }
         
+        // Validation méthode
+        const methodeSelected = document.getElementById('methode').value;
         if (!methodeSelected) {
-            e.preventDefault();
-            alert('Veuillez sélectionner une méthode de paiement.');
-            return;
+            hasError = true;
+            errorMessage += '• Veuillez sélectionner une méthode de paiement obligatoirement\n';
+            document.getElementById('methode').style.borderColor = '#ef4444';
+            if (!hasError) document.getElementById('methode').focus();
+        } else {
+            document.getElementById('methode').style.borderColor = '#d1d5db';
         }
         
+        // Validation montant
+        const montant = parseFloat(montantInput.value);
         if (!montant || montant <= 0) {
+            hasError = true;
+            errorMessage += '• Veuillez entrer un montant valide et supérieur à 0\n';
+            montantInput.style.borderColor = '#ef4444';
+            if (!hasError) montantInput.focus();
+        } else {
+            montantInput.style.borderColor = '#d1d5db';
+        }
+        
+        // Afficher les erreurs
+        if (hasError) {
             e.preventDefault();
-            alert('Veuillez entrer un montant valide.');
-            return;
+            
+            // Créer ou mettre à jour le message d'erreur
+            let errorDiv = document.getElementById('form-errors');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'form-errors';
+                errorDiv.className = 'form-errors';
+                errorDiv.style.cssText = `
+                    background: #fef2f2;
+                    border: 1px solid #ef4444;
+                    color: #991b1b;
+                    padding: 1rem;
+                    border-radius: 0.5rem;
+                    margin-bottom: 1rem;
+                    font-size: 0.875rem;
+                    white-space: pre-line;
+                `;
+                form.insertBefore(errorDiv, form.firstChild);
+            }
+            
+            errorDiv.textContent = 'Veuillez corriger les erreurs suivantes:\n\n' + errorMessage;
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            // Supprimer les messages d'erreur s'ils existent
+            const errorDiv = document.getElementById('form-errors');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
         }
     });
 });
 </script>
-{% endblock %}
 {% endblock %}

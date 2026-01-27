@@ -1,0 +1,482 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Administrateur - Restaurant Management{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== ADMIN DASHBOARD ===== */
+* { box-sizing: border-box; }
+
+.admin-dashboard {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding: 1rem;
+}
+
+/* Header */
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.stat-icon.primary { background: #3b82f6; color: white; }
+.stat-icon.success { background: #10b981; color: white; }
+.stat-icon.warning { background: #f59e0b; color: white; }
+.stat-icon.danger { background: #ef4444; color: white; }
+.stat-icon.info { background: #8b5cf6; color: white; }
+.stat-icon.dark { background: #1f2937; color: white; }
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.stat-details {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* Sections */
+.section {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: #374151;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    background: white;
+    color: #3b82f6;
+}
+
+.action-btn:hover .action-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.action-text {
+    flex: 1;
+}
+
+.action-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.action-desc {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+/* Recent Activity */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    background: #3b82f6;
+    color: white;
+    font-size: 0.875rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.activity-meta {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.activity-value {
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+/* Role Distribution */
+.role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.role-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+}
+
+.role-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.role-name {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-title { font-size: 2rem; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .quick-actions { grid-template-columns: 1fr; }
+    .role-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card, .section {
+    animation: fadeIn 0.5s ease-out;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <h1 class="dashboard-title">👑 Dashboard Administrateur</h1>
+        <p class="dashboard-subtitle">Contrôle total du système de gestion restaurant</p>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon primary">📊</div>
+            <div class="stat-value">{{ total_commandes }}</div>
+            <div class="stat-label">Total Commandes</div>
+            <div class="stat-details">{{ commandes_aujourdhui }} aujourd'hui</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon success">💰</div>
+            <div class="stat-value">{{ total_entrées|floatformat:0 }} GNF</div>
+            <div class="stat-label">Total Entrées</div>
+            <div class="stat-details">{{ total_aujourdhui|floatformat:0 }} GNF aujourd'hui</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon danger">💸</div>
+            <div class="stat-value">{{ total_sorties|floatformat:0 }} GNF</div>
+            <div class="stat-label">Total Sorties</div>
+            <div class="stat-details">Dépenses totales</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon warning">📈</div>
+            <div class="stat-value">{{ solde_net|floatformat:0 }} GNF</div>
+            <div class="stat-label">Solde Net</div>
+            <div class="stat-details">Entrées - Sorties</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon info">👥</div>
+            <div class="stat-value">{{ total_utilisateurs }}</div>
+            <div class="stat-label">Total Utilisateurs</div>
+            <div class="stat-details">Tout rôle confondu</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon dark">🍽️</div>
+            <div class="stat-value">{{ commandes_par_etat.EN_COURS }}</div>
+            <div class="stat-label">Commandes Actives</div>
+            <div class="stat-details">{{ commandes_par_etat.EN_PREPARATION }} en préparation</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <section class="section">
+        <h2 class="section-title">⚡ Actions Rapides</h2>
+        <div class="quick-actions">
+            <a href="{% url 'restaurant:table_list' %}" class="action-btn">
+                <div class="action-icon">🪑</div>
+                <div class="action-text">
+                    <div class="action-title">Gérer les Tables</div>
+                    <div class="action-desc">Ajouter/modifier/supprimer</div>
+                </div>
+            </a>
+
+            <a href="{% url 'restaurant:categorie_list' %}" class="action-btn">
+                <div class="action-icon">📂</div>
+                <div class="action-text">
+                    <div class="action-title">Catégories</div>
+                    <div class="action-desc">Gérer les catégories</div>
+                </div>
+            </a>
+
+            <a href="{% url 'restaurant:menu_list' %}" class="action-btn">
+                <div class="action-icon">🍜</div>
+                <div class="action-text">
+                    <div class="action-title">Menu</div>
+                    <div class="action-desc">Gérer les plats</div>
+                </div>
+            </a>
+
+            <a href="{% url 'accounts:admin_user_list' %}" class="action-btn">
+                <div class="action-icon">👤</div>
+                <div class="action-text">
+                    <div class="action-title">Utilisateurs</div>
+                    <div class="action-desc">Gérer les comptes</div>
+                </div>
+            </a>
+
+            <a href="{% url 'payments:paiement_list' %}" class="action-btn">
+                <div class="action-icon">💳</div>
+                <div class="action-text">
+                    <div class="action-title">Paiements</div>
+                    <div class="action-desc">Voir tous les paiements</div>
+                </div>
+            </a>
+
+            <a href="{% url 'payments:caisse_dashboard' %}" class="action-btn">
+                <div class="action-icon">🏪</div>
+                <div class="action-text">
+                    <div class="action-title">Caisse</div>
+                    <div class="action-desc">Gérer la caisse</div>
+                </div>
+            </a>
+
+            <a href="{% url 'restaurant:serveur_home' %}" class="action-btn">
+                <div class="action-icon">🧑‍🍳</div>
+                <div class="action-text">
+                    <div class="action-title">Serveur</div>
+                    <div class="action-desc">Vue serveur</div>
+                </div>
+            </a>
+
+            <a href="{% url 'restaurant:cuisinier_home' %}" class="action-btn">
+                <div class="action-icon">👨‍🍳</div>
+                <div class="action-text">
+                    <div class="action-title">Cuisine</div>
+                    <div class="action-desc">Vue cuisine</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Command States -->
+    <section class="section">
+        <h2 class="section-title">📊 État des Commandes</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon warning">⏳</div>
+                <div class="stat-value">{{ commandes_par_etat.EN_ATTENTE }}</div>
+                <div class="stat-label">En Attente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon info">👨‍🍳</div>
+                <div class="stat-value">{{ commandes_par_etat.EN_PREPARATION }}</div>
+                <div class="stat-label">En Préparation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon primary">🍽️</div>
+                <div class="stat-value">{{ commandes_par_etat.EN_COURS }}</div>
+                <div class="stat-label">En Cours</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon success">✅</div>
+                <div class="stat-value">{{ commandes_par_etat.TERMINEE }}</div>
+                <div class="stat-label">Terminées</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon danger">❌</div>
+                <div class="stat-value">{{ commandes_par_etat.ANNULEE }}</div>
+                <div class="stat-label">Annulées</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role Distribution -->
+    <section class="section">
+        <h2 class="section-title">👥 Distribution des Rôles</h2>
+        <div class="role-grid">
+            <div class="role-item">
+                <div class="role-count">{{ utilisateurs_par_role.Rtable }}</div>
+                <div class="role-name">Tables</div>
+            </div>
+            <div class="role-item">
+                <div class="role-count">{{ utilisateurs_par_role.Rserveur }}</div>
+                <div class="role-name">Serveurs</div>
+            </div>
+            <div class="role-item">
+                <div class="role-count">{{ utilisateurs_par_role.Rcuisinier }}</div>
+                <div class="role-name">Cuisiniers</div>
+            </div>
+            <div class="role-item">
+                <div class="role-count">{{ utilisateurs_par_role.Rcaissier }}</div>
+                <div class="role-name">Caissiers</div>
+            </div>
+            <div class="role-item">
+                <div class="role-count">{{ utilisateurs_par_role.Rcomptable }}</div>
+                <div class="role-name">Comptables</div>
+            </div>
+            <div class="role-item">
+                <div class="role-count">{{ utilisateurs_par_role.Radmin }}</div>
+                <div class="role-name">Admins</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="section">
+        <h2 class="section-title">🕐 Activité Récente</h2>
+        <div class="activity-list">
+            {% for commande in commandes_recentes %}
+            <div class="activity-item">
+                <div class="activity-icon">📝</div>
+                <div class="activity-content">
+                    <div class="activity-title">Commande #{{ commande.id }}</div>
+                    <div class="activity-meta">Table {{ commande.table.numero_table }} • {{ commande.date_commande|date:"H:i" }}</div>
+                </div>
+                <div class="activity-value">{{ commande.total }} GNF</div>
+            </div>
+            {% endfor %}
+            
+            {% for paiement in paiements_recentes %}
+            <div class="activity-item">
+                <div class="activity-icon">💳</div>
+                <div class="activity-content">
+                    <div class="activity-title">Paiement #{{ paiement.id }}</div>
+                    <div class="activity-meta">Commande #{{ paiement.commande.id }} • {{ paiement.date_paiement|date:"H:i" }}</div>
+                </div>
+                <div class="activity-value">{{ paiement.montant }} GNF</div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

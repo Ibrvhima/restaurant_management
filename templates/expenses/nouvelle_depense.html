@@ -9,15 +9,15 @@
 /* Optimisations spécifiques pour le formulaire de dépense mobile-first */
 .depense-form-container {
     min-height: 100vh;
-    background: var(--gray-50);
+    background: #f8f9fa;
 }
 
 .form-section {
     background: white;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: var(--space-md);
-    margin-bottom: var(--space-lg);
+    padding: 20px;
+    margin-bottom: 20px;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -25,48 +25,48 @@
 
 @media (min-width: 640px) {
     .form-section {
-        padding: var(--space-lg);
-        margin-bottom: var(--space-xl);
+        padding: 30px;
+        margin-bottom: 30px;
     }
 }
 
 .form-header {
-    margin-bottom: var(--space-lg);
+    margin-bottom: 20px;
 }
 
 .form-title {
-    font-size: var(--text-2xl);
+    font-size: 28px;
     font-weight: 700;
-    color: var(--gray-900);
-    margin-bottom: var(--space-xs);
+    color: #1a1a1a;
+    margin-bottom: 8px;
 }
 
 @media (min-width: 640px) {
     .form-title {
-        font-size: var(--text-3xl);
+        font-size: 32px;
     }
 }
 
 .form-group {
-    margin-bottom: var(--space-lg);
+    margin-bottom: 20px;
 }
 
 .form-label {
     display: block;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--gray-700);
-    margin-bottom: var(--space-xs);
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
     width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-base);
-    border: 1px solid var(--gray-300);
-    border-radius: 0.5rem;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
     background: white;
     transition: all 0.2s ease-in-out;
     min-height: 44px;
@@ -81,33 +81,33 @@
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-    color: var(--gray-400);
+    color: #9ca3af;
 }
 
 .form-help {
-    font-size: var(--text-xs);
-    color: var(--gray-500);
-    margin-top: var(--space-xs);
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 6px;
 }
 
 .form-error {
     color: #dc2626;
-    font-size: var(--text-xs);
-    margin-top: var(--space-xs);
+    font-size: 12px;
+    margin-top: 6px;
 }
 
 /* Messages */
 .alert {
-    padding: var(--space-md);
-    border-radius: 0.5rem;
-    margin-bottom: var(--space-lg);
-    font-size: var(--text-sm);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
 }
 
 .alert-error {
@@ -120,16 +120,16 @@
 .form-actions {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--gray-200);
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
 }
 
 @media (min-width: 640px) {
     .form-actions {
         flex-direction: row;
         justify-content: space-between;
-        gap: var(--space-md);
+        gap: 16px;
     }
 }
 
@@ -137,15 +137,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-sm);
+    padding: 12px 16px;
+    font-size: 14px;
     font-weight: 500;
-    border-radius: 0.5rem;
+    border-radius: 6px;
     border: 1px solid transparent;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    min-height: 40px; /* Réduit de 44px à 40px */
+    min-height: 40px;
     width: 100%;
 }
 
@@ -157,9 +157,9 @@
 }
 
 .action-btn-primary {
-    background: var(--success-soft);
+    background: #10b981;
     color: white;
-    border-color: var(--success-soft);
+    border-color: #10b981;
 }
 
 .action-btn-primary:hover {
@@ -168,13 +168,13 @@
 }
 
 .action-btn-secondary {
-    background: var(--gray-200);
-    color: var(--gray-700);
-    border-color: var(--gray-300);
+    background: #6b7280;
+    color: white;
+    border-color: #6b7280;
 }
 
 .action-btn-secondary:hover {
-    background: var(--gray-300);
+    background: #4b5563;
     transform: translateY(-1px);
 }
 
@@ -199,7 +199,7 @@
 .form-select:focus-visible,
 .form-textarea:focus-visible,
 .action-btn:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
 }
 </style>
@@ -249,15 +249,16 @@
                 <!-- Catégorie -->
                 <div class="form-group">
                     <label for="categorie" class="form-label">
-                        Catégorie *
+                        Catégorie (optionnel)
                     </label>
-                    <select name="categorie" id="categorie" required
+                    <select name="categorie" id="categorie"
                             class="form-select">
                         <option value="">Sélectionnez une catégorie</option>
                         {% for categorie in categories %}
                         <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
                         {% endfor %}
                     </select>
+                    <p class="form-help">Laissez vide si aucune catégorie spécifique</p>
                 </div>
 
                 <!-- Date -->
@@ -278,6 +279,7 @@
                         Annuler
                     </a>
                     <button type="submit" 
+                            id="submit-btn"
                             class="action-btn action-btn-primary">
                         Enregistrer la dépense
                     </button>
@@ -286,4 +288,30 @@
         </main>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submit-btn');
+    let isSubmitting = false;
+    
+    form.addEventListener('submit', function(e) {
+        if (isSubmitting) {
+            e.preventDefault();
+            return false;
+        }
+        
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enregistrement en cours...';
+        
+        // Réactiver le bouton après 5 secondes au cas où
+        setTimeout(function() {
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Enregistrer la dépense';
+        }, 5000);
+    });
+});
+</script>
 {% endblock %}

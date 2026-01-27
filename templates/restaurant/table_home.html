@@ -30,12 +30,39 @@
                         <span class="hidden sm:inline">Mes Commandes</span>
                         <span class="sm:hidden">📋</span>
                     </a>
-                    <!-- État Commandes Cuisine -->
+                    <!-- État Commandes -->
                     <button id="etat-commandes-btn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
-                        <span>État Cuisine</span>
+                        <span id="etat-btn-text">Suivre mes commandes</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre de navigation d'état des commandes -->
+    <div id="etat-nav-bar" class="bg-gradient-to-r from-blue-600 to-emerald-600 text-white shadow-lg transform transition-all duration-500 ease-in-out">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-3">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span class="font-semibold">Suivi en temps réel</span>
+                    </div>
+                    <div id="etat-nav-content" class="flex items-center space-x-6 text-sm">
+                        <div class="text-white/80">Chargement...</div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="derniere-maj" class="text-xs text-white/70">--:--:--</span>
+                    <button id="toggle-nav-bar" class="text-white/80 hover:text-white transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -287,8 +314,24 @@ document.addEventListener('click', function(e) {
 document.addEventListener('click', function(e) {
     if (e.target.closest('.supprimer-plat')) {
         const platId = e.target.closest('.supprimer-plat').dataset.platId;
+        const platName = e.target.closest('.panier-item').querySelector('.plat-nom').textContent;
+        const platQuantite = e.target.closest('.panier-item').querySelector('.item-quantite').textContent;
         
-        if (confirm('Voulez-vous supprimer ce plat du panier ?')) {
+        const title = 'Supprimer du panier';
+        const message = `Êtes-vous sûr de vouloir supprimer cet article du panier ?`;
+        const details = `
+            <div style="margin-bottom: 12px;">
+                <strong>Article:</strong> ${platName}
+            </div>
+            <div style="margin-bottom: 12px;">
+                <strong>Quantité:</strong> ${platQuantite}
+            </div>
+            <div style="color: #ef4444; font-size: 12px;">
+                ⚠️ Cet article sera retiré de votre commande
+            </div>
+        `;
+        
+        showConfirmationModal(title, message, details, function() {
             fetch('/restaurant/table/panier/', {
                 method: 'POST',
                 headers: {
@@ -470,58 +513,120 @@ function chargerEtatCommandes() {
         });
 }
 
-function afficherEtatCommandes(commandes) {
+function afficherEtatCommandes(data) {
+    const commandes = data.commandes;
     let html = '';
+    
+    // Titre contextuel selon le rôle
+    let titre = 'État des Commandes en Cuisine';
+    if (data.user_role === 'Rtable') {
+        titre = `Vos Commandes - Table ${data.table_numero}`;
+    }
     
     if (commandes.length === 0) {
         html = `
             <div class="text-center py-8">
-                <p class="text-slate-600">Aucune commande en cours en cuisine</p>
+                <svg class="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <p class="text-slate-600 text-lg font-medium">Aucune commande en cours</p>
+                <p class="text-slate-500 text-sm mt-2">
+                    ${data.user_role === 'Rtable' ? 'Vous n\'avez aucune commande active' : 'Aucune commande en cours en cuisine'}
+                </p>
             </div>
         `;
     } else {
-        html = '<div class="space-y-6">';
+        html = `
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-slate-900">${titre}</h3>
+                <p class="text-sm text-slate-600">${commandes.length} commande(s) en cours</p>
+            </div>
+            <div class="space-y-4">
+        `;
         
         commandes.forEach(commande => {
             const couleurEtat = {
                 'EN_ATTENTE': 'bg-amber-100 text-amber-800 border-amber-200',
-                'EN_PREPARATION': 'bg-slate-100 text-slate-800 border-slate-200',
+                'EN_PREPARATION': 'bg-blue-100 text-blue-800 border-blue-200',
                 'EN_COURS': 'bg-orange-100 text-orange-800 border-orange-200',
-                'TERMINEE': 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                'TERMINEE': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                'ANNULEE': 'bg-red-100 text-red-800 border-red-200'
             }[commande.etat] || 'bg-slate-100 text-slate-800 border-slate-200';
             
+            const iconeEtat = {
+                'EN_ATTENTE': '⏳',
+                'EN_PREPARATION': '👨‍🍳',
+                'EN_COURS': '🍽️',
+                'TERMINEE': '✅',
+                'ANNULEE': '❌'
+            }[commande.etat] || '📋';
+            
+            // Séparer les plats selon le type de préparation
+            const platsCuisine = commande.plats.filter(p => p.necessite_preparation);
+            const platsServiceDirect = commande.plats.filter(p => !p.necessite_preparation);
+            
             html += `
-                <div class="border rounded-lg overflow-hidden ${couleurEtat}">
+                <div class="border rounded-lg overflow-hidden ${couleurEtat} shadow-sm">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h3 class="text-lg font-semibold">Commande #${commande.id}</h3>
-                                <p class="text-sm opacity-75">Table ${commande.table_numero}</p>
-                                <p class="text-sm opacity-75">${commande.heure}</p>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">${iconeEtat}</span>
+                                    <h3 class="text-lg font-semibold">Commande #${commande.id}</h3>
+                                </div>
+                                <p class="text-sm opacity-75">
+                                    ${data.user_role !== 'Rtable' ? `Table ${commande.table_numero} • ` : ''}
+                                    ${commande.heure}
+                                </p>
+                                ${commande.date_modification ? `<p class="text-xs opacity-60">Mis à jour: ${commande.date_modification}</p>` : ''}
                             </div>
-                            <span class="px-3 py-1 rounded-full text-sm font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-medium border">
                                 ${commande.etat_display}
                             </span>
                         </div>
                         
                         <div class="mb-3">
-                            <h4 class="font-medium mb-2">Plats :</h4>
-                            <div class="space-y-1">
-                                ${commande.plats.map(plat => `
-                                    <div class="flex justify-between items-center bg-white bg-opacity-50 p-2 rounded">
-                                        <span class="text-sm">${plat.nom} (×${plat.quantite})</span>
-                                        <span class="text-sm font-medium">${plat.sous_total} GNF</span>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                ${platsCuisine.length > 0 ? `
+                                    <div>
+                                        <h4 class="font-medium mb-2 text-sm flex items-center gap-1">
+                                            <span>👨‍🍳</span> Cuisine (${platsCuisine.length})
+                                        </h4>
+                                        <div class="space-y-1">
+                                            ${platsCuisine.map(plat => `
+                                                <div class="flex justify-between items-center bg-white bg-opacity-60 p-2 rounded text-xs">
+                                                    <span>${plat.nom} (×${plat.quantite})</span>
+                                                    <span class="font-medium">${plat.sous_total} GNF</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
                                     </div>
-                                `).join('')}
+                                ` : ''}
+                                
+                                ${platsServiceDirect.length > 0 ? `
+                                    <div>
+                                        <h4 class="font-medium mb-2 text-sm flex items-center gap-1">
+                                            <span>⚡</span> Service direct (${platsServiceDirect.length})
+                                        </h4>
+                                        <div class="space-y-1">
+                                            ${platsServiceDirect.map(plat => `
+                                                <div class="flex justify-between items-center bg-white bg-opacity-60 p-2 rounded text-xs">
+                                                    <span>${plat.nom} (×${plat.quantite})</span>
+                                                    <span class="font-medium">${plat.sous_total} GNF</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
                         
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center pt-3 border-t border-current border-opacity-20">
                             <div class="text-lg font-bold">
                                 Total : ${commande.total} GNF
                             </div>
-                            <div class="text-sm text-gray-600">
-                                ${commande.temps_estime ? `⏱️ ${commande.temps_estime} min` : ''}
+                            <div class="text-sm">
+                                ${commande.temps_estime ? `⏱️ ~${commande.temps_estime} min` : ''}
                             </div>
                         </div>
                     </div>
@@ -535,10 +640,133 @@ function afficherEtatCommandes(commandes) {
     document.getElementById('etat-commandes-content').innerHTML = html;
 }
 
-// Auto-rafraîchissement toutes les 30 secondes
+// Auto-rafraîchissement intelligent
 let refreshInterval;
+let lastData = null;
+let navBarRefreshInterval;
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    chargerPanier();
+    setupFilters();
+    initialiserNavBarEtat();
+});
+
+// Initialisation de la barre de navigation d'état
+function initialiserNavBarEtat() {
+    // Démarrer le suivi immédiatement
+    chargerEtatNavBar();
+    
+    // Rafraîchissement continu (toutes les 5 secondes pour la barre de nav)
+    navBarRefreshInterval = setInterval(chargerEtatNavBar, 5000);
+    
+    // Gestion du bouton de toggle
+    document.getElementById('toggle-nav-bar').addEventListener('click', toggleNavBar);
+}
+
+// Charger et mettre à jour la barre de navigation
+function chargerEtatNavBar() {
+    fetch('/restaurant/api/etat-commandes-cuisine/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                mettreAJourNavBar(data);
+                // Mettre à jour l'horodatage
+                const maintenant = new Date();
+                document.getElementById('derniere-maj').textContent = 
+                    maintenant.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur barre de nav:', error);
+        });
+}
+
+// Mettre à jour le contenu de la barre de navigation
+function mettreAJourNavBar(data) {
+    const commandes = data.commandes;
+    const content = document.getElementById('etat-nav-content');
+    
+    if (commandes.length === 0) {
+        content.innerHTML = '<div class="text-white/80">Aucune commande active</div>';
+        return;
+    }
+    
+    // Compter les commandes par état
+    const etats = {
+        'EN_ATTENTE': { count: 0, label: 'En attente', color: 'text-yellow-200', icon: '⏳' },
+        'EN_PREPARATION': { count: 0, label: 'Préparation', color: 'text-blue-200', icon: '👨‍🍳' },
+        'EN_COURS': { count: 0, label: 'Service', color: 'text-orange-200', icon: '🍽️' },
+        'TERMINEE': { count: 0, label: 'Terminé', color: 'text-green-200', icon: '✅' },
+        'ANNULEE': { count: 0, label: 'Annulé', color: 'text-red-200', icon: '❌' }
+    };
+    
+    commandes.forEach(commande => {
+        if (etats[commande.etat]) {
+            etats[commande.etat].count++;
+        }
+    });
+    
+    // Générer le HTML
+    let html = '';
+    Object.entries(etats).forEach(([etat, info]) => {
+        if (info.count > 0) {
+            html += `
+                <div class="flex items-center space-x-1 ${info.color} transition-all duration-300">
+                    <span class="text-lg">${info.icon}</span>
+                    <span class="font-medium">${info.count}</span>
+                    <span class="hidden sm:inline">${info.label}</span>
+                </div>
+            `;
+        }
+    });
+    
+    if (html === '') {
+        html = '<div class="text-white/80">Aucune commande active</div>';
+    } else {
+        html += `<div class="text-white/60 text-xs hidden sm:block">${commandes.length} total</div>`;
+    }
+    
+    content.innerHTML = html;
+    
+    // Ajouter une animation de mise à jour
+    const navBar = document.getElementById('etat-nav-bar');
+    navBar.style.transform = 'scale(1.02)';
+    setTimeout(() => {
+        navBar.style.transform = 'scale(1)';
+    }, 200);
+}
+
+// Toggle de la barre de navigation
+let navBarMinimized = false;
+function toggleNavBar() {
+    const navBar = document.getElementById('etat-nav-bar');
+    const toggleBtn = document.getElementById('toggle-nav-bar');
+    
+    navBarMinimized = !navBarMinimized;
+    
+    if (navBarMinimized) {
+        navBar.style.transform = 'translateY(-100%)';
+        toggleBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+            </svg>
+        `;
+    } else {
+        navBar.style.transform = 'translateY(0)';
+        toggleBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        `;
+    }
+}
+
 document.getElementById('etat-commandes-btn').addEventListener('click', function() {
-    refreshInterval = setInterval(chargerEtatCommandes, 30000);
+    chargerEtatCommandes();
+    // Rafraîchissement plus fréquent pour les tables (10s) que pour les autres (30s)
+    const intervalle = document.body.dataset.userRole === 'Rtable' ? 10000 : 30000;
+    refreshInterval = setInterval(chargerEtatCommandes, intervalle);
 });
 
 document.getElementById('close-etat-modal').addEventListener('click', function() {
@@ -546,6 +774,46 @@ document.getElementById('close-etat-modal').addEventListener('click', function()
         clearInterval(refreshInterval);
     }
 });
+
+// Fonction de rafraîchissement améliorée
+function chargerEtatCommandes() {
+    fetch('/restaurant/api/etat-commandes-cuisine/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Vérifier si les données ont changé avant de mettre à jour l'UI
+                const currentData = JSON.stringify(data.commandes);
+                if (currentData !== JSON.stringify(lastData)) {
+                    afficherEtatCommandes(data);
+                    lastData = data.commandes;
+                    
+                    // Notification visuelle si changement détecté
+                    if (lastData && data.commandes.length > 0) {
+                        const modal = document.getElementById('etat-commandes-modal');
+                        if (!modal.classList.contains('hidden')) {
+                            // Ajouter une animation subtile pour indiquer le changement
+                            const content = document.getElementById('etat-commandes-content');
+                            content.style.animation = 'pulse 0.5s ease-in-out';
+                            setTimeout(() => {
+                                content.style.animation = '';
+                            }, 500);
+                        }
+                    }
+                }
+            } else {
+                throw new Error(data.error || 'Erreur inconnue');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur API:', error);
+            document.getElementById('etat-commandes-content').innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-red-600">Erreur lors du chargement des commandes</p>
+                    <p class="text-sm text-slate-500 mt-2">Veuillez réessayer ultérieurement</p>
+                </div>
+            `;
+        });
+}
 
 </script>
 
@@ -559,6 +827,39 @@ document.getElementById('close-etat-modal').addEventListener('click', function()
 #panier-content {
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+/* Animation pulse pour les changements */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Indicateur de notification pour les commandes actives */
+.etat-commandes-indicator {
+    position: relative;
+}
+
+.etat-commandes-indicator::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
 }
 </style>
 {% endblock %}

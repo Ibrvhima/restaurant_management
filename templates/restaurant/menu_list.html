@@ -4,78 +4,119 @@
 {% block title %}Menu - Restaurant Management{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/mobile-first.css' %}">
 <style>
-/* Optimisations spécifiques pour la page menu mobile-first */
+/* Enhanced Menu Design */
 .menu-container {
     min-height: 100vh;
-    background: var(--gray-50);
+    background: #f8fafc;
 }
 
-/* Header Section */
+/* Enhanced Header */
 .menu-header {
-    background: white;
-    border-bottom: 1px solid var(--gray-200);
-    padding: var(--space-lg) 0;
-    margin-bottom: var(--space-lg);
+    background: #ffffff;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-@media (min-width: 768px) {
-    .menu-header {
-        padding: var(--space-xl) 0;
-        margin-bottom: var(--space-xl);
-    }
+.menu-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .menu-title {
-    font-size: var(--text-2xl);
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--gray-900);
-    margin-bottom: var(--space-xs);
-}
-
-@media (min-width: 768px) {
-    .menu-title {
-        font-size: var(--text-3xl);
-    }
+    color: #1f2937;
+    margin-bottom: 0.5rem;
 }
 
 .menu-subtitle {
-    color: var(--gray-600);
-    font-size: var(--text-sm);
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 400;
 }
 
-/* Section Filtres */
-.filters-section {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: var(--space-md);
-    margin-bottom: var(--space-lg);
-    border: 1px solid var(--gray-200);
+/* Header Layout */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
 }
 
-@media (min-width: 640px) {
-    .filters-section {
-        padding: var(--space-lg);
+.header-text {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
+}
+
+/* Dashboard Button */
+.dashboard-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    white-space: nowrap;
+}
+
+.dashboard-btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.dashboard-btn:active {
+    transform: translateY(0);
+}
+
+.dashboard-btn svg {
+    flex-shrink: 0;
+}
+
+/* Enhanced Filters Section */
+.filters-section {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e5e7eb;
 }
 
 .filters-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: 1rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
     .filters-form {
         flex-direction: row;
         align-items: flex-end;
-        gap: var(--space-lg);
+        gap: 1rem;
     }
 }
 
-/* Recherche */
+/* Enhanced Search */
 .search-container {
     position: relative;
     flex: 1;
@@ -83,57 +124,58 @@
 
 .search-input {
     width: 100%;
-    padding: var(--space-sm) var(--space-md) var(--space-sm) 2.5rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 0.5rem;
-    font-size: var(--text-base);
-    background: white;
-    color: var(--gray-900);
-    transition: all 0.2s ease-in-out;
-    min-height: 44px;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #f8fafc;
+    color: #1f2937;
+    transition: all 0.3s ease;
+    min-height: 48px;
 }
 
 .search-input:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: #3b82f6;
+    background: #ffffff;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .search-input::placeholder {
-    color: var(--gray-400);
+    color: #9ca3af;
 }
 
 .search-icon {
     position: absolute;
-    left: var(--space-md);
+    left: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--gray-400);
+    color: #6b7280;
     pointer-events: none;
     z-index: 1;
 }
 
-/* Suggestions dropdown */
+/* Enhanced Suggestions */
 .search-suggestions {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     z-index: 50;
-    max-height: 200px;
+    max-height: 240px;
     overflow-y: auto;
-    margin-top: var(--space-xs);
+    margin-top: 0.5rem;
 }
 
 .suggestion-item {
-    padding: var(--space-sm) var(--space-md);
+    padding: 0.75rem 1rem;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    border-bottom: 1px solid var(--gray-100);
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
 }
 
 .suggestion-item:last-child {
@@ -141,124 +183,125 @@
 }
 
 .suggestion-item:hover {
-    background: var(--gray-50);
+    background: #f8fafc;
 }
 
 .suggestion-name {
-    font-weight: 500;
-    color: var(--gray-900);
+    font-weight: 600;
+    color: #1f2937;
 }
 
 .suggestion-price {
     font-weight: 700;
-    color: var(--primary);
-    font-size: var(--text-sm);
+    color: #3b82f6;
+    font-size: 0.875rem;
 }
 
-/* Filtres selects */
+/* Enhanced Filter Selects */
 .filter-group {
     min-width: 0;
     flex: 1;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
     .filter-group {
-        min-width: 150px;
+        min-width: 180px;
     }
 }
 
 .filter-select {
     width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--gray-300);
-    border-radius: 0.5rem;
-    font-size: var(--text-base);
-    background: white;
-    color: var(--gray-900);
-    transition: all 0.2s ease-in-out;
-    min-height: 44px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #f8fafc;
+    color: #1f2937;
+    transition: all 0.3s ease;
+    min-height: 48px;
     cursor: pointer;
 }
 
 .filter-select:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: #3b82f6;
+    background: #ffffff;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Bouton reset */
+/* Enhanced Reset Button */
 .reset-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: var(--text-sm);
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.8rem;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    min-height: 44px;
+    transition: all 0.2s ease;
+    min-height: 40px;
     white-space: nowrap;
 }
 
 .reset-btn:hover {
-    background: var(--primary-light);
-    transform: translateY(-1px);
+    background: #e5e7eb;
+    color: #1f2937;
+    border-color: #9ca3af;
 }
 
-/* Filtres rapides */
+/* Enhanced Quick Filters */
 .quick-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .quick-filter-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-sm);
-    border: 1px solid var(--gray-300);
-    border-radius: 0.375rem;
-    font-size: var(--text-xs);
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 500;
-    background: white;
-    color: var(--gray-600);
+    background: #ffffff;
+    color: #6b7280;
     text-decoration: none;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease;
     min-height: 32px;
 }
 
 .quick-filter-btn:hover {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    transform: translateY(-1px);
+    background: #f3f4f6;
+    color: #374151;
+    border-color: #d1d5db;
 }
 
 .quick-filter-btn.active {
-    background: var(--primary);
+    background: #3b82f6;
     color: white;
-    border-color: var(--primary);
+    border-color: #3b82f6;
 }
 
-/* Grille des plats */
+/* Enhanced Plats Grid */
 .plats-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
     .plats-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-lg);
+        gap: 1.5rem;
     }
 }
 
@@ -268,25 +311,26 @@
     }
 }
 
-/* Carte plat */
+/* Enhanced Plat Card */
 .plat-card {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    transition: all 0.2s ease-in-out;
-    border: 1px solid var(--gray-200);
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+    position: relative;
 }
 
 .plat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.12);
 }
 
 .plat-image-container {
     position: relative;
     height: 160px;
-    background: var(--gray-100);
+    background: #f8fafc;
     overflow: hidden;
 }
 
@@ -294,63 +338,71 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.plat-card:hover .plat-image {
+    transform: scale(1.03);
 }
 
 .plat-badge {
     position: absolute;
-    top: var(--space-sm);
-    right: var(--space-sm);
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: 0.25rem;
-    font-size: var(--text-xs);
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.025em;
 }
 
 .plat-badge.available {
-    background: var(--success-bg);
-    color: var(--success-soft);
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
 }
 
 .plat-badge.unavailable {
-    background: var(--danger-bg);
-    color: var(--danger-soft);
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
 }
 
 .plat-content {
-    padding: var(--space-md);
+    padding: 1rem;
 }
 
 .plat-name {
-    font-size: var(--text-lg);
+    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--gray-900);
-    margin-bottom: var(--space-xs);
+    color: #1f2937;
+    margin-bottom: 0.5rem;
     line-height: 1.3;
 }
 
 .plat-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin-bottom: var(--space-sm);
+    gap: 0.375rem;
+    margin-bottom: 0.75rem;
 }
 
 .plat-type,
 .plat-category {
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--gray-100);
-    color: var(--gray-600);
-    border-radius: 0.25rem;
-    font-size: var(--text-xs);
+    padding: 0.25rem 0.5rem;
+    background: #f8fafc;
+    color: #6b7280;
+    border-radius: 6px;
+    font-size: 0.7rem;
     font-weight: 500;
+    border: 1px solid #e5e7eb;
 }
 
 .plat-description {
-    color: var(--gray-600);
-    font-size: var(--text-sm);
-    margin-bottom: var(--space-md);
+    color: #6b7280;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
     line-height: 1.5;
 }
 
@@ -358,90 +410,94 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: var(--space-sm);
-    border-top: 1px solid var(--gray-100);
+    padding-top: 0.75rem;
+    border-top: 1px solid #f3f4f6;
 }
 
 .plat-price {
-    font-size: var(--text-lg);
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--primary);
+    color: #1f2937;
 }
 
 .plat-actions {
     display: flex;
-    gap: var(--space-xs);
+    gap: 0.375rem;
 }
 
 .action-btn {
-    padding: var(--space-xs) var(--space-sm);
-    font-size: var(--text-xs);
-    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.7rem;
+    border-radius: 6px;
     border: 1px solid;
     text-decoration: none;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease;
     min-height: 28px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-
-.action-view {
-    background: white;
-    color: var(--accent);
-    border-color: var(--accent);
-}
-
-.action-view:hover {
-    background: var(--accent);
-    color: white;
-}
-
-.action-edit {
-    background: white;
-    color: var(--warning-soft);
-    border-color: var(--warning-soft);
-}
-
-.action-edit:hover {
-    background: var(--warning-soft);
-    color: white;
-}
-
-/* Empty state */
-.empty-state {
-    text-align: center;
-    padding: var(--space-2xl);
-    background: white;
-    border-radius: 0.5rem;
-    border: 2px dashed var(--gray-300);
-    margin: var(--space-lg) 0;
-}
-
-.empty-state-icon {
-    width: 3rem;
-    height: 3rem;
-    margin: 0 auto var(--space-lg);
-    color: var(--gray-300);
-}
-
-.empty-state-text {
-    color: var(--gray-600);
-    font-size: var(--text-lg);
     font-weight: 500;
 }
 
-/* Loading et no suggestions */
-.search-loading,
-.no-suggestions {
-    padding: var(--space-md);
-    text-align: center;
-    color: var(--gray-500);
-    font-style: italic;
-    font-size: var(--text-sm);
+.action-view {
+    background: #ffffff;
+    color: #6b7280;
+    border-color: #d1d5db;
 }
 
-/* Animation d'entrée */
+.action-view:hover {
+    background: #f3f4f6;
+    color: #374151;
+    border-color: #9ca3af;
+}
+
+.action-edit {
+    background: #ffffff;
+    color: #6b7280;
+    border-color: #d1d5db;
+}
+
+.action-edit:hover {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fcd34d;
+}
+
+/* Enhanced Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 16px;
+    border: 2px dashed #cbd5e1;
+    margin: 2rem 0;
+}
+
+.empty-state-icon {
+    width: 5rem;
+    height: 5rem;
+    margin: 0 auto 1.5rem;
+    color: #94a3b8;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-state-text {
+    color: #475569;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Enhanced Loading */
+.search-loading,
+.no-suggestions {
+    padding: 1rem;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    font-size: 0.875rem;
+}
+
+/* Animations */
 @keyframes slideUp {
     from {
         opacity: 0;
@@ -453,16 +509,21 @@
     }
 }
 
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
 .plat-card {
     animation: slideUp 0.5s ease-out;
 }
 
-/* Focus visible pour accessibilité */
+/* Focus Accessibility */
 .search-input:focus-visible,
 .filter-select:focus-visible,
 .reset-btn:focus-visible,
 .quick-filter-btn:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
 }
 </style>
@@ -470,12 +531,30 @@
 
 {% block content %}
 <div class="menu-container">
-    <div class="container-mobile">
-        <!-- Header Section -->
-        <header class="menu-header">
-            <h1 class="menu-title">Menu du Restaurant</h1>
-            <p class="menu-subtitle">Découvrez nos plats délicieux et créatifs</p>
-        </header>
+    <!-- Enhanced Header Section -->
+    <header class="menu-header">
+        <div class="menu-content">
+            <div class="header-top">
+                <div class="header-text">
+                    <h1 class="menu-title">Menu du Restaurant</h1>
+                    <p class="menu-subtitle">Découvrez nos plats délicieux et créatifs</p>
+                </div>
+                {% if user.is_cuisinier %}
+                <a href="{% url 'restaurant:cuisinier_home' %}" class="dashboard-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Dashboard Cuisinier
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="menu-content">
 
         <!-- Filtres Section -->
         <section class="filters-section">
@@ -536,7 +615,7 @@
             </form>
         </section>
 
-        <!-- Filtres rapides par catégorie -->
+        <!-- Enhanced Quick Filters -->
         <div class="quick-filters">
             <a href="{% url 'restaurant:menu_list' %}" class="quick-filter-btn {% if not categorie_filter %}active{% endif %}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -551,13 +630,13 @@
             {% endfor %}
         </div>
 
-        <!-- Grille des plats -->
+        <!-- Enhanced Plats Grid -->
         <main>
             {% if plats %}
                 <div class="plats-grid">
                     {% for plat in plats %}
-                    <div class="plat-card interactive">
-                        <!-- Image du plat -->
+                    <div class="plat-card">
+                        <!-- Enhanced Image Container -->
                         <div class="plat-image-container">
                             {% if plat.image %}
                             <img src="{{ plat.image.url }}" alt="{{ plat.nom }}" class="plat-image">
@@ -569,16 +648,17 @@
                             </div>
                             {% endif %}
                             
-                            <!-- Badge de disponibilité -->
+                            <!-- Enhanced Availability Badge -->
                             <div class="plat-badge {% if plat.disponible %}available{% else %}unavailable{% endif %}">
                                 {% if plat.disponible %}
-                                    Disponible
+                                    ✅ Disponible
                                 {% else %}
-                                    Indisponible
+                                    ❌ Indisponible
                                 {% endif %}
                             </div>
                         </div>
                         
+                        <!-- Enhanced Content -->
                         <div class="plat-content">
                             <h3 class="plat-name">{{ plat.nom }}</h3>
                             
@@ -597,10 +677,10 @@
                                 <span class="plat-price">{{ plat.prix_unitaire }} GNF</span>
                                 <div class="plat-actions">
                                     <a href="{% url 'restaurant:plat_detail' plat.id %}" class="action-btn action-view">
-                                        Voir
+                                        👁️ Voir
                                     </a>
                                     <a href="{% url 'restaurant:modifier_plat' plat.id %}" class="action-btn action-edit">
-                                        Modifier
+                                        ✏️ Modifier
                                     </a>
                                 </div>
                             </div>
@@ -609,6 +689,7 @@
                     {% endfor %}
                 </div>
             {% else %}
+                <!-- Enhanced Empty State -->
                 <div class="empty-state">
                     <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
@@ -622,12 +703,21 @@
 </div>
 
 <script>
-// Gestion des suggestions de recherche
+// Gestion des suggestions de recherche et filtres
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const suggestionsContainer = document.getElementById('searchSuggestions');
+    const typePlatFilter = document.getElementById('typePlatFilter');
+    const categorieFilter = document.getElementById('categorieFilter');
     let debounceTimer;
 
+    // Fonction pour soumettre le formulaire automatiquement
+    function submitFilters() {
+        const form = searchInput.closest('form');
+        form.submit();
+    }
+
+    // Recherche avec suggestions
     searchInput.addEventListener('input', function() {
         clearTimeout(debounceTimer);
         const query = this.value.trim();
@@ -642,6 +732,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     });
 
+    // Soumettre automatiquement quand on change les filtres
+    typePlatFilter.addEventListener('change', submitFilters);
+    categorieFilter.addEventListener('change', submitFilters);
+
     // Fermer les suggestions quand on clique ailleurs
     document.addEventListener('click', function(e) {
         if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
@@ -649,15 +743,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    function fetchSuggestions(query) {
-        // Simulation de suggestions (remplacer par un appel AJAX réel)
-        const mockSuggestions = [
-            { name: 'Thieboudienne', price: 15000 },
-            { name: 'Yassa Poulet', price: 12000 },
-            { name: 'Mafé', price: 10000 }
-        ].filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
+    // Cliquer sur une suggestion pour la sélectionner
+    suggestionsContainer.addEventListener('click', function(e) {
+        const suggestionItem = e.target.closest('.suggestion-item');
+        if (suggestionItem) {
+            const platName = suggestionItem.querySelector('.suggestion-name').textContent;
+            searchInput.value = platName;
+            suggestionsContainer.classList.add('hidden');
+            submitFilters();
+        }
+    });
 
-        displaySuggestions(mockSuggestions);
+    function fetchSuggestions(query) {
+        // URL de l'API pour les suggestions
+        const url = `{% url 'restaurant:menu_list' %}?search=${encodeURIComponent(query)}&suggestions=1`;
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                displaySuggestions(data.suggestions || []);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des suggestions:', error);
+                // En cas d'erreur, afficher un message
+                suggestionsContainer.innerHTML = '<div class="no-suggestions">Erreur de chargement</div>';
+                suggestionsContainer.classList.remove('hidden');
+            });
     }
 
     function displaySuggestions(suggestions) {
@@ -665,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function() {
             suggestionsContainer.innerHTML = '<div class="no-suggestions">Aucune suggestion</div>';
         } else {
             suggestionsContainer.innerHTML = suggestions.map(item => `
-                <div class="suggestion-item">
+                <div class="suggestion-item" data-plat-id="${item.id}">
                     <div class="suggestion-name">${item.name}</div>
                     <div class="suggestion-price">${item.price} GNF</div>
                 </div>
@@ -673,6 +784,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         suggestionsContainer.classList.remove('hidden');
+    }
+
+    // Gestion du bouton reset
+    const resetBtn = document.querySelector('.reset-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Réinitialiser tous les filtres
+            searchInput.value = '';
+            typePlatFilter.value = '';
+            categorieFilter.value = '';
+            submitFilters();
+        });
     }
 });
 </script>

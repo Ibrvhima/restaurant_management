@@ -5,180 +5,539 @@
 
 {% block extra_css %}
 <style>
-/* ===== MOBILE-FIRST COMMANDES ===== */
-* { box-sizing: border-box; }
+/* ===== MODERN COMMANDS DESIGN ===== */
+* { 
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #fafbfc;
+}
 
 .commandes-container {
     min-height: 100vh;
-    background: #f9fafb;
-    padding: 1rem;
+    background: linear-gradient(135deg, #fafbfc 0%, #f1f3f4 100%);
+    padding: 2rem;
 }
 
-/* Header */
+/* Modern Header */
 .header-section {
     background: white;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
 }
 
 .header-title {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    color: #111827;
-    margin-bottom: 0.25rem;
-}
-
-@media (min-width: 768px) {
-    .header-title { font-size: 2rem; }
+    color: #0f172a;
+    margin-bottom: 0.5rem;
 }
 
 .header-subtitle {
-    color: #6b7280;
-    font-size: 0.875rem;
-}
-
-/* Filtres */
-.filters-section {
-    background: white;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
-}
-
-@media (min-width: 640px) {
-    .filters-section { padding: 1.5rem; }
-}
-
-.filters-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-@media (min-width: 640px) {
-    .filters-form {
-        flex-direction: row;
-        align-items: flex-end;
-        gap: 1.5rem;
-    }
-}
-
-.filter-group { flex: 1; }
-
-.filter-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 0.25rem;
-}
-
-.filter-input {
-    width: 100%;
-    padding: 0.5rem 1rem;
+    color: #64748b;
     font-size: 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    background: white;
-    min-height: 44px;
-    transition: all 0.2s ease-in-out;
 }
 
-.filter-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.filter-btn {
-    padding: 0.5rem 1.5rem;
+/* Primary Button */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
     background: #3b82f6;
     color: white;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 8px;
     font-size: 0.875rem;
     font-weight: 500;
+    text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    min-height: 44px;
-    white-space: nowrap;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 
-.filter-btn:hover {
+.btn-primary:hover {
     background: #2563eb;
     transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
 }
 
-/* Actions rapides */
-.quick-actions {
+/* Actions Section */
+.actions-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.actions-header {
+    margin-bottom: 1.5rem;
+}
+
+.actions-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+
+.actions-subtitle {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .actions-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #3b82f6;
+}
+
+.action-card:hover::before {
+    opacity: 0.05;
+}
+
+.action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.action-card:hover .action-icon {
+    background: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.action-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: #64748b;
+    transition: stroke 0.2s ease;
+}
+
+.action-card:hover .action-icon svg {
+    stroke: white;
+}
+
+.action-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.action-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.action-card:hover .action-name {
+    color: #3b82f6;
+}
+
+.action-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+    transition: color 0.2s ease;
+}
+
+.action-card:hover .action-desc {
+    color: #475569;
+}
+
+/* Modern Table Section */
+.table-section {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+/* Modern Table */
+.table-desktop {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+}
+
+.table-desktop th {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+}
+
+.table-desktop td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.875rem;
+    color: #374151;
+    vertical-align: middle;
+}
+
+.table-desktop tbody tr {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.table-desktop tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    transform: scale(1.01);
+}
+
+.table-desktop tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Modern Cards */
+.cards-container {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .cards-container { display: none; }
+}
+
+.commande-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(229, 231, 235, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.commande-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.commande-card:hover::before {
+    transform: scaleX(1);
+}
+
+.commande-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.card-id {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1f2937;
+    letter-spacing: -0.025em;
+}
+
+.card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
 @media (min-width: 640px) {
-    .quick-actions {
-        flex-direction: row;
-        gap: 1rem;
+    .card-details {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
-.action-btn {
+.card-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.card-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.card-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.card-montant {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #059669;
+    letter-spacing: -0.025em;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Modern Status Badges */
+.status-badge {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
     border: 1px solid transparent;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    min-height: 40px;
-    width: 100%;
 }
 
-@media (min-width: 640px) {
-    .action-btn {
-        width: auto;
-        min-width: 120px;
+.status-badge.en-attente {
+    background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+    color: #92400e;
+    border-color: #f59e0b;
+}
+
+.status-badge.en-preparation {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border-color: #3b82f6;
+}
+
+.status-badge.en-cours {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #3730a3;
+    border-color: #6366f1;
+}
+
+.status-badge.terminee {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    color: #065f46;
+    border-color: #10b981;
+}
+
+.status-badge.annulee {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    color: #991b1b;
+    border-color: #ef4444;
+}
+
+
+/* Modern Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b7280;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #e5e7eb;
+    margin: 2rem 0;
+}
+
+.empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.5rem;
+    color: #d1d5db;
+}
+
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+}
+
+.empty-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Modern Loading Spinner */
+.loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #e5e7eb;
+    margin: 2rem 0;
+}
+
+.loading-spinner.active {
+    display: block;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modern Animations */
+@keyframes slideUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(30px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
     }
 }
 
-.action-btn-green {
-    background: #10b981;
-    color: white;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-.action-btn-green:hover {
-    background: #059669;
-    transform: translateY(-1px);
+.commande-card { 
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
-.action-btn-yellow {
-    background: #f59e0b;
-    color: white;
+.table-desktop tbody tr {
+    animation: fadeIn 0.3s ease-out;
 }
 
-.action-btn-yellow:hover {
-    background: #d97706;
-    transform: translateY(-1px);
+/* Focus States */
+.filter-input:focus-visible,
+.filter-btn:focus-visible,
+.action-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
 }
 
-/* Table responsive */
-.table-section {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    border: 1px solid #e5e7eb;
+/* Responsive Improvements */
+@media (max-width: 767px) {
+    .commandes-container {
+        padding: 1rem;
+    }
+    
+    .header-section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.5rem;
+    }
+    
+    .filters-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-details {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
 
 /* Version Desktop: Table */
@@ -311,52 +670,217 @@
     border-top: 1px solid #f3f4f6;
 }
 
-.card-action-btn {
-    flex: 1;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    border-radius: 0.375rem;
-    border: 1px solid;
-    text-decoration: none;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-    min-height: 32px;
-    display: flex;
+/* Icônes d'actions SVG */
+.action-btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-
-.card-action-view {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
     background: white;
-    color: #3b82f6;
-    border-color: #3b82f6;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
 }
 
-.card-action-view:hover {
-    background: #3b82f6;
-    color: white;
+.action-btn:hover {
+    border-color: #9ca3af;
+    background: #f9fafb;
 }
 
-.card-action-edit {
+.action-btn:active {
+    background: #f3f4f6;
+    transform: translateY(0);
+}
+
+.action-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: #6b7280;
+    transition: stroke 0.15s ease;
+}
+
+.action-btn:hover svg {
+    stroke: #374151;
+}
+
+.action-btn.view:hover svg {
+    stroke: #1e40af;
+}
+
+.action-btn.edit:hover svg {
+    stroke: #92400e;
+}
+
+.action-btn.delete:hover svg {
+    stroke: #991b1b;
+}
+
+/* Actions container */
+.actions-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Table améliorée */
+.table-desktop {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
     background: white;
-    color: #f59e0b;
-    border-color: #f59e0b;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
 }
 
-.card-action-edit:hover {
-    background: #f59e0b;
-    color: white;
+.table-desktop th {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.card-action-delete {
+.table-desktop td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    color: #374151;
+    vertical-align: middle;
+}
+
+.table-desktop tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table-desktop tbody tr:hover {
+    background: #f9fafb;
+}
+
+.table-desktop tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Cards améliorées */
+.commande-card {
     background: white;
-    color: #ef4444;
-    border-color: #ef4444;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: all 0.15s ease;
+    position: relative;
 }
 
-.card-action-delete:hover {
-    background: #ef4444;
-    color: white;
+.commande-card:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: all 0.15s ease;
+}
+
+.status-badge.en-attente {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.status-badge.en-preparation {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.status-badge.en-cours {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+.status-badge.terminee {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.status-badge.annulee {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.loading-spinner.active {
+    display: block;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f4f6;
+    border-top: 3px solid #6b7280;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Search bar */
+.search-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: white;
+    transition: all 0.2s ease-in-out;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6b7280;
+    box-shadow: 0 0 0 1px #6b7280;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    pointer-events: none;
 }
 
 /* Empty state */
@@ -391,14 +915,6 @@
 
 .commande-card { animation: slideUp 0.5s ease-out; }
 
-/* Focus visible */
-.filter-input:focus-visible,
-.filter-btn:focus-visible,
-.action-btn:focus-visible,
-.card-action-btn:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-}
 </style>
 {% endblock %}
 
@@ -406,167 +922,183 @@
 <div class="commandes-container">
     <!-- Header -->
     <header class="header-section">
-        <h1 class="header-title">Liste des Commandes</h1>
-        <p class="header-subtitle">Gestion des commandes</p>
+        <div>
+            <h1 class="header-title">Liste des Commandes</h1>
+            <p class="header-subtitle">Gestion des commandes</p>
+        </div>
+        <a href="{% url 'orders:nouvelle_commande' %}" class="btn-primary">
+            + Nouvelle commande
+        </a>
     </header>
 
-    <!-- Filtres -->
-    <section class="filters-section">
-        <form method="get" class="filters-form">
-            <div class="filter-group">
-                <label class="filter-label">État</label>
-                <select name="etat" class="filter-input">
-                    <option value="">Tous</option>
-                    {% for etat_value, etat_label in etats %}
-                    <option value="{{ etat_value }}" {% if etat_filter == etat_value %}selected{% endif %}>
-                        {{ etat_label }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="filter-group">
-                <label class="filter-label">Date</label>
-                <input type="date" name="date" value="{{ date_filter }}" 
-                       class="filter-input">
-            </div>
-            <div>
-                <button type="submit" class="filter-btn">
-                    Filtrer
-                </button>
-            </div>
-        </form>
-    </section>
-
-    <!-- Actions rapides -->
-    <section class="quick-actions">
-        <a href="{% url 'orders:nouvelle_commande' %}" class="action-btn action-btn-green">
-            Nouvelle commande
-        </a>
-        <a href="{% url 'orders:commandes_en_cours' %}" class="action-btn action-btn-yellow">
-            Commandes en cours
-        </a>
+    <!-- Actions Section -->
+    <section class="actions-section">
+        <div class="actions-header">
+            <h2 class="actions-title">Actions rapides</h2>
+            <p class="actions-subtitle">Gestion globale des commandes</p>
+        </div>
+        <div class="actions-grid">
+            <a href="{% url 'orders:commandes_en_cours' %}" class="action-card">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                </div>
+                <div class="action-content">
+                    <h3 class="action-name">Commandes en cours</h3>
+                    <p class="action-desc">Voir les commandes actives</p>
+                </div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                </div>
+                <div class="action-content">
+                    <h3 class="action-name">Rapport journalier</h3>
+                    <p class="action-desc">Exporter les statistiques</p>
+                </div>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </div>
+                <div class="action-content">
+                    <h3 class="action-name">Export</h3>
+                    <p class="action-desc">Télécharger les données</p>
+                </div>
+            </a>
+        </div>
     </section>
 
     <!-- Tableau/Cards des commandes -->
     <main class="table-section">
-        {% if commandes %}
-            <!-- Version Mobile: Cards -->
-            <div class="cards-container">
-                {% for commande in commandes %}
-                <div class="commande-card">
-                    <div class="card-header">
-                        <span class="card-id">#{{ commande.id }}</span>
-                        <span class="card-status status-{{ commande.etat|slugify }}">
+        <!-- Loading spinner -->
+        <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Chargement des commandes...</p>
+        </div>
+
+        <!-- Conteneur pour les commandes -->
+        <div id="commandesContainer">
+            {% if commandes %}
+                <!-- Version Mobile: Cards -->
+                <div class="cards-container" id="cardsContainer">
+                    {% for commande in commandes %}
+                    <div class="commande-card" data-commande-id="{{ commande.id }}" 
+                         data-search-text="{{ commande.id }} {{ commande.table.numero_table }} {{ commande.serveur.login }} {{ commande.get_etat_display }}"
+                         data-etat="{{ commande.etat }}">
+                        <div class="card-header">
+                            <span class="card-id">#{{ commande.id }}</span>
+                            <span class="status-badge {{ commande.etat|slugify }}">
                             {{ commande.get_etat_display }}
                         </span>
+                        </div>
+                        
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <span class="card-label">Table</span>
+                                <span class="card-value">{{ commande.table.numero_table }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="card-label">Serveur</span>
+                                <span class="card-value">{{ commande.serveur.login }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="card-label">Date</span>
+                                <span class="card-value">{{ commande.date_commande|date:"d/m/Y H:i" }}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="card-label">Montant</span>
+                                <span class="card-montant">{{ commande.total }} GNF</span>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="card-details">
-                        <div class="card-detail">
-                            <span class="card-label">Table</span>
-                            <span class="card-value">{{ commande.table.numero_table }}</span>
-                        </div>
-                        <div class="card-detail">
-                            <span class="card-label">Serveur</span>
-                            <span class="card-value">{{ commande.serveur.login }}</span>
-                        </div>
-                        <div class="card-detail">
-                            <span class="card-label">Date</span>
-                            <span class="card-value">{{ commande.date_commande|date:"d/m/Y H:i" }}</span>
-                        </div>
-                        <div class="card-detail">
-                            <span class="card-label">Montant</span>
-                            <span class="card-montant">{{ commande.total }} GNF</span>
-                        </div>
-                    </div>
-                    
-                    <div class="card-actions">
-                        <a href="{% url 'orders:commande_detail' commande.id %}" class="card-action-btn card-action-view">
-                            Voir
-                        </a>
-                        {% if user.is_serveur or user.is_admin %}
-                        <a href="{% url 'orders:modifier_commande' commande.id %}" class="card-action-btn card-action-edit">
-                            Modifier
-                        </a>
-                        {% endif %}
-                        {% if user.is_admin %}
-                        <form method="post" action="{% url 'orders:supprimer_commande' commande.id %}" class="card-action-btn card-action-delete">
-                            {% csrf_token %}
-                            <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font-size: inherit; padding: 0; width: 100%;"
-                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?')">
-                                Supprimer
-                            </button>
-                        </form>
-                        {% endif %}
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
 
-            <!-- Version Desktop: Table -->
-            <div class="table-desktop">
-                <table class="table-desktop">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Table</th>
-                            <th>Serveur</th>
-                            <th>État</th>
-                            <th>Date</th>
-                            <th>Montant</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for commande in commandes %}
-                        <tr>
-                            <td>#{{ commande.id }}</td>
-                            <td>{{ commande.table.numero_table }}</td>
-                            <td>{{ commande.serveur.login }}</td>
-                            <td>
-                                <span class="card-status status-{{ commande.etat|slugify }}">
-                                    {{ commande.get_etat_display }}
-                                </span>
-                            </td>
-                            <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
-                            <td class="card-montant">{{ commande.total }} GNF</td>
-                            <td>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <a href="{% url 'orders:commande_detail' commande.id %}" 
-                                       class="card-action-btn card-action-view" style="width: auto;">
-                                        Voir
-                                    </a>
-                                    {% if user.is_serveur or user.is_admin %}
-                                    <a href="{% url 'orders:modifier_commande' commande.id %}" 
-                                       class="card-action-btn card-action-edit" style="width: auto;">
-                                        Modifier
-                                    </a>
-                                    {% endif %}
-                                    {% if user.is_admin %}
-                                    <form method="post" action="{% url 'orders:supprimer_commande' commande.id %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="card-action-btn card-action-delete" style="width: auto;"
-                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande?')">
-                                            Supprimer
-                                        </button>
-                                    </form>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="empty-state">
-                <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                <h3 class="empty-title">Aucune commande trouvée</h3>
-                <p class="empty-text">Essayez de modifier les filtres ou créez une nouvelle commande.</p>
-            </div>
-        {% endif %}
+                <!-- Version Desktop: Table -->
+                <div class="table-desktop" id="tableContainer">
+                    <table class="table-desktop">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Table</th>
+                                <th>Serveur</th>
+                                <th>État</th>
+                                <th>Date</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for commande in commandes %}
+                            <tr data-commande-id="{{ commande.id }}" 
+                                data-search-text="{{ commande.id }} {{ commande.table.numero_table }} {{ commande.serveur.login }} {{ commande.get_etat_display }}"
+                                data-etat="{{ commande.etat }}">
+                                <td>#{{ commande.id }}</td>
+                                <td>{{ commande.table.numero_table }}</td>
+                                <td>{{ commande.serveur.login }}</td>
+                                <td>
+                                    <span class="status-badge {{ commande.etat|slugify }}">
+                                        {{ commande.get_etat_display }}
+                                    </span>
+                                </td>
+                                <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+                                <td class="card-montant">{{ commande.total }} GNF</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state" id="emptyState">
+                    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <h3 class="empty-title">Aucune commande trouvée</h3>
+                    <p class="empty-text">Essayez de modifier les filtres ou créez une nouvelle commande.</p>
+                </div>
+            {% endif %}
+        </div>
     </main>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animation d'entrée pour les commandes
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '0';
+                entry.target.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    entry.target.style.transition = 'all 0.5s ease-out';
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, 100);
+            }
+        });
+    });
+    
+    // Observer toutes les commandes
+    const allCommandes = document.querySelectorAll('.commande-card, .table-desktop tbody tr');
+    allCommandes.forEach(element => {
+        observer.observe(element);
+    });
+});
+</script>
+
 {% endblock %}
