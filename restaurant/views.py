@@ -1361,12 +1361,14 @@ def api_generer_qr_code(request, table_id):
         # Détection de l'environnement pour l'affichage
         from django.conf import settings
         
-        if hasattr(settings, 'PRODUCTION_URL') and settings.PRODUCTION_URL:
-            # En production (Render)
-            base_url = settings.PRODUCTION_URL
-            display_ip = settings.PRODUCTION_URL
+        production_url = getattr(settings, 'PRODUCTION_URL', None)
+        
+        if production_url and production_url != 'https://votre-app.onrender.com':
+            # En production (Render) avec URL réelle
+            base_url = production_url
+            display_ip = production_url
         else:
-            # En développement local
+            # En développement local ou fallback
             import socket
             try:
                 hostname = socket.gethostname()

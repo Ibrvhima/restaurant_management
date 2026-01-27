@@ -156,3 +156,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your-email@gmail.com'
 EMAIL_HOST_PASSWORD = 'your-app-password'
 DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
+
+# Production URL configuration for QR codes
+# This will be automatically set by Render environment variable
+import os
+PRODUCTION_URL = os.getenv('RENDER_EXTERNAL_URL', '').rstrip('/') or 'https://votre-app.onrender.com'

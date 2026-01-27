@@ -229,11 +229,13 @@ class QRCode(models.Model):
         from django.conf import settings
         
         # Détection de l'environnement
-        if hasattr(settings, 'PRODUCTION_URL') and settings.PRODUCTION_URL:
-            # En production (Render)
-            base_url = settings.PRODUCTION_URL
+        production_url = getattr(settings, 'PRODUCTION_URL', None)
+        
+        if production_url and production_url != 'https://votre-app.onrender.com':
+            # En production (Render) avec URL réelle
+            base_url = production_url
         else:
-            # En développement local
+            # En développement local ou fallback
             import socket
             local_ip = None
             try:
