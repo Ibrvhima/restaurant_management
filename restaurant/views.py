@@ -411,26 +411,38 @@ def search_suggestions(request):
 
 
 # Vues pour les tables (Rtable)
-@admin_or_table_required
 def table_home(request):
-    """Page d'accueil pour les tables (et admin)"""
+    """Page d'accueil pour les tables (publique et admin)"""
     
-    # Récupérer la table associée à l'utilisateur
-    if request.user.role == 'Radmin':
-        # Pour l'admin, afficher la première table ou permettre de choisir
-        tables = TableRestaurant.objects.all()
-        if not tables.exists():
-            messages.error(request, "Aucune table disponible.")
-            return redirect('restaurant:table_list')
-        # Pour l'instant, on prend la première table
-        table = tables.first()
-        messages.info(request, f"Vue en tant qu'administrateur - Table {table.numero_table}")
+    # Récupérer la table - soit depuis l'utilisateur connecté, soit depuis la session/paramètre
+    table = None
+    
+    if request.user.is_authenticated:
+        if request.user.role == 'Radmin':
+            # Pour l'admin, afficher la première table ou permettre de choisir
+            tables = TableRestaurant.objects.all()
+            if not tables.exists():
+                messages.error(request, "Aucune table disponible.")
+                return redirect('restaurant:table_list')
+            # Pour l'instant, on prend la première table
+            table = tables.first()
+            messages.info(request, f"Vue en tant qu'administrateur - Table {table.numero_table}")
+        elif hasattr(request.user, 'table'):
+            try:
+                table = request.user.table
+            except TableRestaurant.DoesNotExist:
+                messages.error(request, "Aucune table associée à votre compte.")
+                return redirect('accounts:login')
+        else:
+            # Utilisateur connecté mais sans table, prendre la première table disponible
+            table = TableRestaurant.objects.first()
+            if table:
+                messages.info(request, f"Table {table.numero_table} sélectionnée")
     else:
-        try:
-            table = request.user.table
-        except TableRestaurant.DoesNotExist:
-            messages.error(request, "Aucune table associée à votre compte.")
-            return redirect('accounts:login')
+        # Client non connecté - prendre la première table disponible
+        table = TableRestaurant.objects.first()
+        if not table:
+            return render(request, 'restaurant/qr_code_erreur.html', {'erreur': 'Aucune table disponible'})
     
     # Récupérer les plats disponibles
     plats = Plat.objects.filter(disponible=True).order_by('nom')
@@ -439,7 +451,8 @@ def table_home(request):
     context = {
         'table': table,
         'plats': plats,
-        'categories': categories
+        'categories': categories,
+        'is_client': not request.user.is_authenticated  # Indicateur pour le template
     }
     return render(request, 'restaurant/table_home.html', context)
 

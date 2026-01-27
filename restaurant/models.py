@@ -256,7 +256,7 @@ class QRCode(models.Model):
             
             base_url = "http://{}:8000".format(local_ip)
         
-        url = "{}/restaurant/menu-client/{}/".format(base_url, self.table.id)
+        url = "{}/restaurant/table/home/".format(base_url)
         
         # Créer le QR code
         qr = qrcode.QRCode(
