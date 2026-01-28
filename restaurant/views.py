@@ -457,7 +457,6 @@ def table_home(request):
     return render(request, 'restaurant/table_home.html', context)
 
 
-@admin_or_table_required
 def table_panier(request):
     """Gestion du panier pour les tables (et admin)"""
     
@@ -531,7 +530,6 @@ def table_panier(request):
     return JsonResponse({'panier': panier})
 
 
-@admin_or_table_required
 def table_valider_commande(request):
     """Validation du panier et création de commande (et admin)"""
     
@@ -541,18 +539,25 @@ def table_valider_commande(request):
         messages.error(request, "Votre panier est vide.")
         return redirect('restaurant:table_home')
     
-    if request.user.role == 'Radmin':
+    # Récupérer la table
+    if request.user.is_authenticated and request.user.role == 'Radmin':
         # Pour l'admin, utiliser la première table
         table = TableRestaurant.objects.first()
         if not table:
             messages.error(request, "Aucune table disponible.")
             return redirect('restaurant:table_list')
-    else:
+    elif request.user.is_authenticated and hasattr(request.user, 'table'):
         try:
             table = request.user.table
         except TableRestaurant.DoesNotExist:
             messages.error(request, "Aucune table associée à votre compte.")
             return redirect('accounts:login')
+    else:
+        # Client non connecté - utiliser la première table disponible
+        table = TableRestaurant.objects.first()
+        if not table:
+            messages.error(request, "Aucune table disponible.")
+            return redirect('restaurant:table_home')
     
     if request.method == 'POST':
         from orders.models import Commande, CommandePlat, EtatCommande
