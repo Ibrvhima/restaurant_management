@@ -280,34 +280,57 @@ function updatePanierUI() {
 }
 
 // Ajouter un plat au panier
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('ajouter-panier')) {
-        e.preventDefault(); // Empêcher la redirection
-        const platId = e.target.dataset.platId;
-        console.log('Clic sur ajouter panier - platId:', platId);
-        
-        fetch('/restaurant/table/panier/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: `action=ajouter&plat_id=${platId}&quantite=1`
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Réponse du serveur:', data);
-            if (data.success) {
-                panier = data.panier;
-                updatePanierUI();
-                showMessage('Plat ajouté au panier', 'success');
-            } else {
-                showMessage(data.error || 'Erreur lors de l\'ajout', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur AJAX:', error);
-            showMessage('Erreur de connexion', 'error');
+function ajouterAuPanier(platId) {
+    fetch('/restaurant/table/panier/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `action=ajouter&plat_id=${platId}&quantite=1`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            panier = data.panier;
+            updatePanierUI();
+            alert('Plat ajouté au panier !');
+        } else {
+            alert(data.error || 'Erreur lors de l\'ajout');
+        }
+    })
+    .catch(error => {
+        alert('Erreur de connexion');
+    });
+}
+
+// Attacher les événements au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    // Boutons ajouter
+    document.querySelectorAll('.ajouter-panier').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const platId = this.dataset.platId;
+            ajouterAuPanier(platId);
+        });
+    });
+    
+    // Modal panier
+    const panierBtn = document.getElementById('panier-btn');
+    const panierModal = document.getElementById('panier-modal');
+    const closePanier = document.getElementById('close-panier');
+    
+    if (panierBtn && panierModal) {
+        panierBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            panierModal.classList.remove('hidden');
+        });
+    }
+    
+    if (closePanier && panierModal) {
+        closePanier.addEventListener('click', function(e) {
+            e.preventDefault();
+            panierModal.classList.add('hidden');
         });
     }
 });
@@ -408,32 +431,6 @@ document.getElementById('vider-panier').addEventListener('click', function() {
     }
 });
 
-// Modal panier
-document.addEventListener('DOMContentLoaded', function() {
-    const panierBtn = document.getElementById('panier-btn');
-    const panierModal = document.getElementById('panier-modal');
-    const closePanier = document.getElementById('close-panier');
-    
-    console.log('Initialisation panier - panierBtn:', panierBtn, 'panierModal:', panierModal);
-    
-    if (panierBtn) {
-        panierBtn.addEventListener('click', function() {
-            console.log('Clic sur bouton panier');
-            if (panierModal) {
-                panierModal.classList.remove('hidden');
-            }
-        });
-    }
-    
-    if (closePanier) {
-        closePanier.addEventListener('click', function() {
-            console.log('Fermeture modal panier');
-            if (panierModal) {
-                panierModal.classList.add('hidden');
-            }
-        });
-    }
-});
 
 
 // Filtres
