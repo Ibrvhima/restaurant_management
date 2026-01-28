@@ -151,7 +151,7 @@
                 <div class="p-2 sm:p-3">
                     <div class="flex justify-between items-start mb-1">
                         <h3 class="font-medium text-sm sm:text-base text-slate-900 flex-1 pr-2">{{ plat.nom }}</h3>
-                        <span class="text-sm sm:text-base font-bold text-slate-700 whitespace-nowrap">{{ plat.prix }} GNF</span>
+                        <span class="text-sm sm:text-base font-bold text-slate-700 whitespace-nowrap">{{ plat.prix_unitaire }} GNF</span>
                     </div>
                     {% if plat.categorie %}
                         <p class="text-xs text-slate-500 mb-1">{{ plat.categorie.nom }}</p>
@@ -161,7 +161,7 @@
                     {% endif %}
                     <div class="flex gap-1">
                         <button type="button" class="ajouter-panier flex-1 bg-slate-600 hover:bg-slate-700 text-white px-2 py-1.5 sm:px-3 sm:py-2 rounded text-xs sm:text-sm transition flex items-center justify-center" 
-                                data-plat-id="{{ plat.id }}" data-plat-nom="{{ plat.nom }}" data-prix="{{ plat.prix }}">
+                                data-plat-id="{{ plat.id }}" data-plat-nom="{{ plat.nom }}" data-prix="{{ plat.prix_unitaire }}">
                             <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                             </svg>
@@ -281,37 +281,57 @@ function updatePanierUI() {
 
 // Ajouter un plat au panier
 function ajouterAuPanier(platId) {
+    const formData = new FormData();
+    formData.append('action', 'ajouter');
+    formData.append('plat_id', platId);
+    formData.append('quantite', '1');
+    formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+    
     fetch('/restaurant/table/panier/', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: `action=ajouter&plat_id=${platId}&quantite=1`
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             panier = data.panier;
             updatePanierUI();
-            alert('Plat ajouté au panier !');
+            alert('✅ Plat ajouté au panier !');
         } else {
-            alert(data.error || 'Erreur lors de l\'ajout');
+            alert('❌ ' + (data.error || 'Erreur lors de l\'ajout'));
         }
     })
     .catch(error => {
-        alert('Erreur de connexion');
+        alert('🔴 Erreur de connexion');
     });
 }
 
 // Attacher les événements au chargement
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM chargé - Initialisation des boutons');
+    
     // Boutons ajouter
-    document.querySelectorAll('.ajouter-panier').forEach(btn => {
+    const boutonsAjouter = document.querySelectorAll('.ajouter-panier');
+    console.log('Boutons ajouter trouvés:', boutonsAjouter.length);
+    
+    boutonsAjouter.forEach((btn, index) => {
+        console.log(`Bouton ${index}:`, btn.dataset.platId);
         btn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            console.log('Clic détecté sur:', this.dataset.platId);
             const platId = this.dataset.platId;
-            ajouterAuPanier(platId);
+            if (platId) {
+                ajouterAuPanier(platId);
+            } else {
+                alert('Erreur: ID du plat manquant');
+            }
+        });
+        
+        // Ajouter support pour touch events
+        btn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.click();
         });
     });
     
@@ -320,16 +340,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const panierModal = document.getElementById('panier-modal');
     const closePanier = document.getElementById('close-panier');
     
+    console.log('Éléments panier:', { panierBtn, panierModal, closePanier });
+    
     if (panierBtn && panierModal) {
         panierBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log('Ouverture modal panier');
             panierModal.classList.remove('hidden');
+        });
+        
+        panierBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.click();
         });
     }
     
     if (closePanier && panierModal) {
         closePanier.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log('Fermeture modal panier');
             panierModal.classList.add('hidden');
         });
     }
