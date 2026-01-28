@@ -284,6 +284,7 @@ document.addEventListener('click', function(e) {
     if (e.target.classList.contains('ajouter-panier')) {
         e.preventDefault(); // Empêcher la redirection
         const platId = e.target.dataset.platId;
+        console.log('Clic sur ajouter panier - platId:', platId);
         
         fetch('/restaurant/table/panier/', {
             method: 'POST',
@@ -295,6 +296,7 @@ document.addEventListener('click', function(e) {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Réponse du serveur:', data);
             if (data.success) {
                 panier = data.panier;
                 updatePanierUI();
@@ -302,6 +304,10 @@ document.addEventListener('click', function(e) {
             } else {
                 showMessage(data.error || 'Erreur lors de l\'ajout', 'error');
             }
+        })
+        .catch(error => {
+            console.error('Erreur AJAX:', error);
+            showMessage('Erreur de connexion', 'error');
         });
     }
 });
@@ -403,13 +409,32 @@ document.getElementById('vider-panier').addEventListener('click', function() {
 });
 
 // Modal panier
-document.getElementById('panier-btn').addEventListener('click', function() {
-    document.getElementById('panier-modal').classList.remove('hidden');
+document.addEventListener('DOMContentLoaded', function() {
+    const panierBtn = document.getElementById('panier-btn');
+    const panierModal = document.getElementById('panier-modal');
+    const closePanier = document.getElementById('close-panier');
+    
+    console.log('Initialisation panier - panierBtn:', panierBtn, 'panierModal:', panierModal);
+    
+    if (panierBtn) {
+        panierBtn.addEventListener('click', function() {
+            console.log('Clic sur bouton panier');
+            if (panierModal) {
+                panierModal.classList.remove('hidden');
+            }
+        });
+    }
+    
+    if (closePanier) {
+        closePanier.addEventListener('click', function() {
+            console.log('Fermeture modal panier');
+            if (panierModal) {
+                panierModal.classList.add('hidden');
+            }
+        });
+    }
 });
 
-document.getElementById('close-panier').addEventListener('click', function() {
-    document.getElementById('panier-modal').classList.add('hidden');
-});
 
 // Filtres
 function setupFilters() {
